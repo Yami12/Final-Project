@@ -27,7 +27,7 @@ class InstallTests(unittest.TestCase):
 
     def test_single_player_mode(self):
         "Test the Chess app launches correctly and click on Play button"
-        sleep(5)
+        sleep(6)
         start_onboarding_button = self.driver.find_element_by_id("com.keepers:id/start_onboarding_button")
         start_onboarding_button.click()
         start_onboarding_button.click()
@@ -40,29 +40,38 @@ class InstallTests(unittest.TestCase):
 
 
     def install_child_side(self):
-        sleep(5)
+        sleep(6)
         check_i_accept = self.driver.find_element_by_id("com.keepers:id/check_i_accept")
         check_i_accept.click()
 
         child_button = self.driver.find_element_by_id("com.keepers:id/activity_terms_child_button")
         child_button.click()
-
+        sleep(6)
         child_name_input = self.driver.find_element_by_id("com.keepers:id/input_child_name")
         child_name_input.send_keys("ימי")
 
         date_of_birth_input = self.driver.find_element_by_id("com.keepers:id/input_date_of_birth")
-        date_of_birth_input.send_keys("1/1/2010")
+        date_of_birth_input.send_keys("1.1.2010")
 
         email_input = self.driver.find_element_by_id("com.keepers:id/input_email")
         email_input.send_keys("yechialmiller@gmail.com")
 
-        password_input = self.driver.find_element_by_id("com.keepers: id / input_password")
+        password_input = self.driver.find_element_by_id("com.keepers:id/input_password")
         password_input.send_keys("ym754321")
 
-        button_proceed = self.driver.find_element_by_id("com.keepers: id / button_proceed")
+        self.driver.hide_keyboard()
+        button_proceed = self.driver.find_element_by_id("com.keepers:id/button_proceed")
         button_proceed.click()
 
         print("succeeded to install level 2")
+        sleep(5)
+        #country_name = self.driver.find_element_by_id("com.keepers:id/countries")
+        country_name = self.driver.find_element_by_xpath("//*[@resource-id = 'com.keepers:id/countries' and @index ='1']")
+        country_name.click()
+        sleep(5)
+        button_proceed = self.driver.find_element_by_id("com.keepers:id/button_proceed")
+        button_proceed.click()
+
 
 # ---START OF SCRIPT
 if __name__ == '__main__':
