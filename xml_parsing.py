@@ -11,9 +11,10 @@ print(dict)
 
 #parse list of dictionaries to xml file
 root = et.Element("buttonTests")
-doc = et.SubElement(root, "test")
+
 for dic in dict:
+    doc = et.SubElement(root, "test")
     for key in  dic.keys():
         et.SubElement(doc, key).text = dic[key]
-tree = et.ElementTree(root)
+    tree = et.ElementTree(root)
 tree.write("output.xml")
