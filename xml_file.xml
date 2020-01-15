@@ -1,16 +1,40 @@
-<buttonTests>
-  <test>
-   <Name>try 1</Name>
-   <resourceId>com.keepers:id/start_onboarding_button</resourceId>
-   <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
-   <actionType>click</actionType>
-   <expectedResult>disabled</expectedResult>
-  </test>
-  <test>
-   <Name>try 2</Name>
-   <resourceId>Gogo (after 3.0)</resourceId>
-   <appActivity>131</appActivity>
-   <actionType>131</actionType>
-   <expectedResult>131</expectedResult>
-  </test>
-</buttonTests>
+<flowes>
+    <flow>
+        <name>flow 1</name>
+        <tests>
+            <test>
+                <Name>try 1</Name>
+                <resourceId>com.keepers:id/start_onboarding_button</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <actionType>click</actionType>
+                <expectedResult>disabled</expectedResult>
+            </test>
+            <test>
+                <Name>try 2</Name>
+                <resourceId>Gogo (after 3.0)</resourceId>
+                <appActivity>131</appActivity>
+                <actionType>131</actionType>
+                <expectedResult>131</expectedResult>
+            </test>
+        </tests>
+    </flow>
+    <flow>
+        <name>flow 2</name>
+        <tests>
+            <test>
+                <Name>try 3</Name>
+                <resourceId>com.keepers:id/start_onboarding_button</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <actionType>click</actionType>
+                <expectedResult>disabled</expectedResult>
+            </test>
+            <test>
+                <Name>try 4</Name>
+                <resourceId>Gogo (after 3.0)</resourceId>
+                <appActivity>131</appActivity>
+                <actionType>131</actionType>
+                <expectedResult>131</expectedResult>
+            </test>
+        </tests>
+    </flow>
+</flowes>
