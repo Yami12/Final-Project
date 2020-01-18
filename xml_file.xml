@@ -1,40 +1,48 @@
 <flowes>
     <flow>
-        <name>flow 1</name>
+        <name>Install Child Side</name>
         <tests>
             <test>
-                <Name>try 1</Name>
-                <resourceId>com.keepers:id/start_onboarding_button</resourceId>
+                <name>test 1</name>
+                <resourceId>com.keepers:id/check_i_accept</resourceId>
                 <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>button</type>
                 <actionType>click</actionType>
                 <expectedResult>disabled</expectedResult>
             </test>
             <test>
-                <Name>try 2</Name>
-                <resourceId>Gogo (after 3.0)</resourceId>
-                <appActivity>131</appActivity>
-                <actionType>131</actionType>
-                <expectedResult>131</expectedResult>
-            </test>
-        </tests>
-    </flow>
-    <flow>
-        <name>flow 2</name>
-        <tests>
-            <test>
-                <Name>try 3</Name>
-                <resourceId>com.keepers:id/start_onboarding_button</resourceId>
+                <name>test 2</name>
+                <resourceId>com.keepers:id/activity_terms_child_button</resourceId>
                 <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>button</type>
                 <actionType>click</actionType>
                 <expectedResult>disabled</expectedResult>
             </test>
             <test>
-                <Name>try 4</Name>
-                <resourceId>Gogo (after 3.0)</resourceId>
-                <appActivity>131</appActivity>
-                <actionType>131</actionType>
-                <expectedResult>131</expectedResult>
+                <name>test 3</name>
+                <resourceId>com.keepers:id/input_child_name</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>input</type>
+                <content>Yami</content>
+                <expectedResult>disabled</expectedResult>
             </test>
+            <test>
+                <name>test 4</name>
+                <resourceId>com.keepers:id/input_date_of_birth</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>input</type>
+                <content>1.1.2010</content>
+                <expectedResult>disabled</expectedResult>
+            </test>
+            <test>
+                <name>test 5</name>
+                <resourceId>com.keepers:id/input_email</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>input</type>
+                <content>yechialmiller@gmail.com</content>
+                <expectedResult>disabled</expectedResult>
+            </test>
+
         </tests>
     </flow>
 </flowes>

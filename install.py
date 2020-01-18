@@ -26,7 +26,6 @@ class InstallTests(unittest.TestCase):
         self.driver.quit()
 
     def test_single_player_mode(self):
-        "Test the Chess app launches correctly and click on Play button"
         sleep(6)
         start_onboarding_button = self.driver.find_element_by_id("com.keepers:id/start_onboarding_button")
         start_onboarding_button.click()

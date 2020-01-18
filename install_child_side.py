@@ -1,10 +1,9 @@
 import unittest
 from time import sleep
-import components_operations
+import button_operations
 import driver
 
 class InstallChildSide(unittest.TestCase):
-    "Class to run tests against the Chess Free app"
 
 
     def test_a_install_child_side(self):

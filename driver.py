@@ -2,6 +2,7 @@ import os
 from appium import webdriver
 
 global_driver = None
+current_test = None
 
 def initialize(platformName, platformVersion, deviceName, appPackage, appActivity, localhost, apk_file = ""):
     global global_driver

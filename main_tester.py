@@ -2,10 +2,14 @@ import unittest
 import driver
 from install_child_side import InstallChildSide
 from download_app import DownloadApp
-
+import xml_parsing
+from button_operations import buttonOperations
+from input_operations import inpoutOperations
+from time import sleep
+tests_results=[]
 
 class MainTester(unittest.TestCase):
-    "Class to run tests against the Chess Free app"
+
 
 
     # def setUp(self):
@@ -29,10 +33,30 @@ class MainTester(unittest.TestCase):
         # suite = unittest.TestLoader().loadTestsFromTestCase(DownloadApp)
         # result = unittest.TextTestRunner(verbosity=1).run(suite)
         # driver.close_driver()
-        driver.initialize('Android', '8.0.0', 'My HUAWEI', 'com.keepers', 'com.keeper.common.splash.SplashActivity',
+
+        driver.initialize('Android', '7.0', 'Galaxy S6 edge', 'com.keepers', 'com.keeper.common.splash.SplashActivity',
                           '4723')
-        suite = unittest.TestLoader().loadTestsFromTestCase(InstallChildSide)
-        result = unittest.TextTestRunner(verbosity=1).run(suite)
+        #parse the xml file
+        flowes=xml_parsing.xml_to_dictionary("xml_file.xml")
+        for flow in flowes:
+            for test in flow['tests']:
+                driver.current_test = test
+                # if driver.global_driver.current_activity != test['appActivity']:
+                #     driver.global_driver.start_activity("com.keepers", test['appActivity'])#app package, app activity
+                if test['type'] == 'button':
+                    sleep(5)
+                    suite = unittest.TestLoader().loadTestsFromTestCase(buttonOperations)
+                    result = unittest.TextTestRunner(verbosity=1).run(suite)
+                    tests_results.append("flow: {} test: {} result: {}".format(flow['name'],test['name'],result))#save the test result
+                elif test['type']== 'input':
+                    print("----1----")
+                    suite = unittest.TestLoader().loadTestsFromTestCase(inpoutOperations)
+                    result = unittest.TextTestRunner(verbosity=1).run(suite)
+                    tests_results.append("flow: {} test: {} result: {}".format(flow['name'], test['name'], result))
+
+
+
+
 
 
 # ---START OF SCRIPT
