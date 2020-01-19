@@ -1,4 +1,6 @@
 from tkinter import *
+import tkinter
+import xml_parsing
 
 
 def raise_frame(frame):
@@ -6,7 +8,17 @@ def raise_frame(frame):
 
 
 def add_component_behavior_ok():
-    return
+    new_test = {}
+    new_test['name'] = entry_add_test.get()
+    new_test['resourceId'] = entry_add_resource.get()
+    new_test['appActivity'] = entry_add_activity.get()
+    new_test['type'] = component_type.get()
+
+    # if type == 'Button':
+    #
+    # elif type == "Label"
+    # new_test['expectedResult'] =
+    # xml_parsing.add_new_test_to_flow(entry_add_flow.get(), new_test)
 
 
 def delete_component_behavior_ok():
@@ -15,6 +27,36 @@ def delete_component_behavior_ok():
 
 def update_component_behavior_ok():
     return
+
+
+def component_type_change(event):
+    selected = component_type.get()
+    if selected == "Button":
+        Label(add_component_behavior_frame, text="What action type:", width=20, font=("bold", 10)).place(x=70, y=260)
+        action_type = tkinter.StringVar()  # there is the rule: variable name lowercase with _
+        action_type_entry = tkinter.OptionMenu(add_component_behavior_frame, action_type, "click", "over")
+        action_type_entry.place(x=240, y=260)
+        action_type.set("select your action type")
+
+        Label(add_component_behavior_frame, text="What expected result:", width=20, font=("bold", 10)).place(x=70, y=290)
+        expected_result = tkinter.StringVar()  # there is the rule: variable name lowercase with _
+        expected_result_entry = tkinter.OptionMenu(add_component_behavior_frame, expected_result, "disabled")
+        expected_result_entry.place(x=240, y=290)
+        expected_result.set("select your expected result")
+    elif selected == "Label":
+        Label(add_component_behavior_frame, text="content:", width=20, font=("bold", 10)).place(x=70, y=260)
+        entry_content = Entry(add_component_behavior_frame)
+        entry_content.place(x=240, y=260)
+
+        Label(add_component_behavior_frame, text="What expected result:", width=20, font=("bold", 10)).place(x=70, y=290)
+        expected_result = tkinter.StringVar()  # there is the rule: variable name lowercase with _
+        expected_result_entry = tkinter.OptionMenu(add_component_behavior_frame, expected_result, "disabled")
+        expected_result_entry.place(x=240, y=290)
+        expected_result.set("select your expected result")
+    # elif selected == "Check Box":
+    #     print()
+    # elif selected == "List":
+    #     print()
 
 
 main_win = Tk()
@@ -55,23 +97,29 @@ Button(main_frame, text='update', width=20, bg='brown', fg='white', command=lamb
 
 #add_component_behavior_frame
 
-Label(add_component_behavior_frame, text="add component behavior frame form", width=20, font=("bold", 20)).place(x=90, y=53)
+Label(add_component_behavior_frame, text="add component behavior frame form", width=20, font=("bold", 20)).place(x=90, y=30)
 
-Label(add_component_behavior_frame, text="resource id:", width=20, font=("bold", 10)).place(x=80, y=130)
-entry_1 = Entry(add_component_behavior_frame)
-entry_1.place(x=240, y=130)
+Label(add_component_behavior_frame, text="flow name:", width=20, font=("bold", 10)).place(x=80, y=80)
+entry_add_flow = Entry(add_component_behavior_frame)
+entry_add_flow.place(x=240, y=80)
+
+Label(add_component_behavior_frame, text="test name:", width=20, font=("bold", 10)).place(x=80, y=110)
+entry_add_test = Entry(add_component_behavior_frame)
+entry_add_test.place(x=240, y=110)
+
+Label(add_component_behavior_frame, text="resource id:", width=20, font=("bold", 10)).place(x=80, y=150)
+entry_add_resource = Entry(add_component_behavior_frame)
+entry_add_resource.place(x=240, y=150)
 
 Label(add_component_behavior_frame, text="app activity:", width=20, font=("bold", 10)).place(x=80, y=180)
-entry_2 = Entry(add_component_behavior_frame)
-entry_2.place(x=240, y=180)
+entry_add_activity = Entry(add_component_behavior_frame)
+entry_add_activity.place(x=240, y=180)
 
-Label(add_component_behavior_frame, text="What component type:", width=20, font=("bold", 10)).place(x=70, y=280)
-list1 = ['Button', 'Label', 'Check Box', 'List'];
-c = StringVar()
-droplist = OptionMenu(add_component_behavior_frame, c, *list1)
-droplist.config(width=27)
-c.set('select your component type')
-droplist.place(x=240, y=280)
+Label(add_component_behavior_frame, text="What component type:", width=20, font=("bold", 10)).place(x=70, y=220)
+component_type = tkinter.StringVar() # there is the rule: variable name lowercase with _
+type_entry = tkinter.OptionMenu(add_component_behavior_frame, component_type, "Button", "Label", "Check Box", "List", command=component_type_change)
+type_entry.place(x=240, y=220)
+component_type.set("select your component type")
 
 Button(add_component_behavior_frame, text='OK', width=20, bg='brown', fg='white', command=lambda: add_component_behavior_ok()).place(x=170, y=400)
 
