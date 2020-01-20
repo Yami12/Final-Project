@@ -68,11 +68,26 @@ def delete_test_from_flow(flow_name, test_name, file_name):
                     flow['tests'].remove(test)
                     break
             break
-    dictionary_to_xml(flowes_list, 'xml_file.xml')
+    dictionary_to_xml(flowes_list, file_name)
 
 
-def update_test_in_flow(flow_name, test, file_name):
-    return
+def update_test_in_flow(flow_name, test_name, expected_result, action_or_content, file_name):
+    flowes_list = xml_to_dictionary(file_name)
+    for flow in flowes_list:
+        if flow['name'] == flow_name:
+            for test in flow['tests']:
+                if test['name'] == test_name:
+                    selected = test['type']
+                    if selected == 'Button':
+                        test['actionType'] = action_or_content
+                    elif selected == "Label":
+                        test['content'] = action_or_content
+                    test['expectedResult'] = expected_result
+                    break
+                    print(test)
+            break
+    dictionary_to_xml(flowes_list, file_name)
+
 
 
 def return_test(flow_name, test_name, file_name):
