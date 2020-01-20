@@ -4,13 +4,16 @@ import xml_parsing
 
 
 def device_frame_OK():
-     # driver.initialize(entry_platform_name.get(), entry_platform_version.get(), entry_device_name.get(),entry_app_package.get(),
-     #                   entry_app_activity.get(), entry_localhost.get(), entry_apk_file.get())
+     driver.initialize(entry_platform_name.get(), entry_platform_version.get(), entry_device_name.get(),entry_app_package.get(), entry_app_activity.get(), entry_localhost.get(), entry_apk_file.get())
      raise_frame(first_frame)
 
 
 def raise_frame(frame):
     frame.tkraise()
+
+
+def run_test():
+    return
 
 
 def add_component_behavior_ok():
@@ -20,7 +23,12 @@ def add_component_behavior_ok():
     new_test['resourceId'] = entry_add_resource.get()
     new_test['appActivity'] = entry_add_activity.get()
     new_test['type'] = component_type.get()
-    new_test['expectedResult'] = expected_result.get()
+
+    final_expected_result = expected_result.get()
+    if (final_expected_result == "toastMessage") or (final_expected_result == 'labelMessage'):
+        final_expected_result = final_expected_result + ": " + entry_message_content_add.get()
+    new_test['expectedResult'] = final_expected_result
+
     if selected == 'Button':
         new_test['actionType'] = action_type.get()
     elif selected == "Label":
@@ -39,7 +47,12 @@ def update_component_behavior_ok():
         action_or_content = action_type_delete.get()
     elif selected == "Label":
         action_or_content = entry_delete_content.get()
-    xml_parsing.update_test_in_flow(entry_delete_flow.get(), entry_delete_test.get(), expected_result_delete.get(), action_or_content, 'xml_file.xml')  # the third parameter
+
+    final_expected_result = expected_result_delete.get()
+    if (final_expected_result == "toastMessage") or (final_expected_result == 'labelMessage'):
+        final_expected_result = final_expected_result + ": " + entry_message_content.get()
+
+    xml_parsing.update_test_in_flow(entry_delete_flow.get(), entry_delete_test.get(), final_expected_result, action_or_content, 'xml_file.xml')  # the third parameter
 
 
 def continue_component_behavior_ok():
@@ -85,6 +98,22 @@ def component_type_change(event):
     #     print()
     expected_result_label.place(x=70, y=290)
     expected_result_entry.place(x=240, y=290)
+
+
+def expected_result_add(event):
+    selected = expected_result.get()
+    expected_result_entry.configure(state="disabled")
+    if (selected == "toastMessage") or (selected == 'labelMessage'):
+        label_message_content_add.place(x=70, y=330)
+        entry_message_content_add.place(x=240, y=330)
+
+
+def expected_result_update(event):
+    selected = expected_result_delete.get()
+    expected_result_delete_entry.configure(state="disabled")
+    if (selected == "toastMessage") or (selected == 'labelMessage'):
+        label_message_content.place(x=70, y=360)
+        entry_message_content.place(x=240, y=360)
 
 
 main_win = Tk()
@@ -177,8 +206,14 @@ Button(main_frame, text='delete', width=20, bg='brown', fg='white', command=lamb
 Label(main_frame, text="update a component behavior test", width=30, font=("bold", 10)).place(x=30, y=300)
 Button(main_frame, text='update', width=20, bg='brown', fg='white', command=lambda: raise_frame(update_component_behavior_frame)).place(x=250, y=300)
 
-#add_component_behavior_frame
+#run_test_frame
+Label(run_test_frame, text="flow name:", width=20, font=("bold", 10)).place(x=80, y=80)
+entry_add_flow = Entry(run_test_frame)
+entry_add_flow.place(x=240, y=80)
 
+Button(run_test_frame, text='run', width=20, bg='brown', fg='white', command=lambda: run_test()).place(x=170, y=300)
+
+#add_component_behavior_frame
 Label(add_component_behavior_frame, text="add component behavior frame form", width=20, font=("bold", 20)).place(x=90, y=30)
 
 Label(add_component_behavior_frame, text="flow name:", width=20, font=("bold", 10)).place(x=80, y=80)
@@ -214,9 +249,14 @@ action_type.set("select your action type")
 label_content = Label(add_component_behavior_frame, text="content:", width=20, font=("bold", 10))
 entry_content = Entry(add_component_behavior_frame)
 
+#if expected result is message
+label_message_content_add = Label(add_component_behavior_frame, text="message:", width=20, font=("bold", 10))
+entry_message_content_add = Entry(add_component_behavior_frame)
+
 expected_result_label = Label(add_component_behavior_frame, text="What expected result:", width=20, font=("bold", 10))
 expected_result = StringVar()  # there is the rule: variable name lowercase with _
-expected_result_entry = OptionMenu(add_component_behavior_frame, expected_result, "disabled")
+expected_result_entry = OptionMenu(add_component_behavior_frame, expected_result, "disabled", 'toastMessage', 'labelMessage‏'
+                                   , command=expected_result_add)
 expected_result.set("select your expected result")
 
 Button(add_component_behavior_frame, text='OK', width=20, bg='brown', fg='white', command=lambda: add_component_behavior_ok()).place(x=170, y=400)
@@ -264,9 +304,14 @@ action_type_delete.set("select your action type")
 label_delete_content = Label(update_component_behavior_frame, text="content:", width=20, font=("bold", 10))
 entry_delete_content = Entry(update_component_behavior_frame)
 
+#if expected result is message
+label_message_content = Label(update_component_behavior_frame, text="message:", width=20, font=("bold", 10))
+entry_message_content = Entry(update_component_behavior_frame)
+
 expected_result_delete_label = Label(update_component_behavior_frame, text="What expected result:", width=20, font=("bold", 10))
 expected_result_delete = StringVar()  # there is the rule: variable name lowercase with _
-expected_result_delete_entry = OptionMenu(update_component_behavior_frame, expected_result_delete, "disabled")
+expected_result_delete_entry = OptionMenu(update_component_behavior_frame, expected_result_delete, "disabled",
+                                          'toastMessage', 'labelMessage‏', command=expected_result_update)
 expected_result_delete.set("select your expected result")
 
 update_button = Button(update_component_behavior_frame, text='update', width=20, bg='brown', fg='white', command=lambda: update_component_behavior_ok())
