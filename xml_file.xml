@@ -1,48 +1,251 @@
 <flowes>
     <flow>
-        <name>Install Child Side</name>
+        <name>Trying to login without V mark on terms of use</name>
         <tests>
             <test>
-                <name>test 1</name>
-                <resourceId>com.keepers:id/check_i_accept</resourceId>
-                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
-                <type>button</type>
-                <actionType>click</actionType>
-                <expectedResult>disabled</expectedResult>
-            </test>
-            <test>
-                <name>test 2</name>
+                <name>Press the Child button</name>
                 <resourceId>com.keepers:id/activity_terms_child_button</resourceId>
                 <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
-                <type>button</type>
+                <type>Button</type>
                 <actionType>click</actionType>
-                <expectedResult>disabled</expectedResult>
+                <expectedResult>toastMessage:Please accept the terms</expectedResult>
+            </test>
+        </tests>
+    </flow>
+    <flow>
+        <name>child's age - above 16</name>
+        <tests>
+            <test>
+                <name>Click on the empty check box - I accept the terms </name>
+                <resourceId>com.keepers:id/check_i_accept</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>CheckBox</type>
+                <actionType>click</actionType>
+                <expectedResult>pass</expectedResult>
             </test>
             <test>
-                <name>test 3</name>
+                <name>Press the Child button</name>
+                <resourceId>com.keepers:id/activity_terms_child_button</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>Button</type>
+                <actionType>click</actionType>
+                <expectedResult>pass</expectedResult>
+            </test>
+            <test>
+                <name>Insert hadar in the child's name box</name>
                 <resourceId>com.keepers:id/input_child_name</resourceId>
                 <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
-                <type>input</type>
-                <content>Yami</content>
-                <expectedResult>disabled</expectedResult>
+                <type>Entry</type>
+                <content>hadar</content>
+                <expectedResult>pass</expectedResult>
             </test>
             <test>
-                <name>test 4</name>
+                <name>Insert 05.11.2001 in the Birthday box</name>
                 <resourceId>com.keepers:id/input_date_of_birth</resourceId>
                 <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
-                <type>input</type>
-                <content>1.1.2010</content>
-                <expectedResult>disabled</expectedResult>
+                <type>Entry</type>
+                <content>05.11.2001</content>
+                <expectedResult>pass</expectedResult>
             </test>
             <test>
-                <name>test 5</name>
+                <name>Enter yamushkach@gmail.com in the email box</name>
                 <resourceId>com.keepers:id/input_email</resourceId>
                 <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
-                <type>input</type>
-                <content>yechialmiller@gmail.com</content>
-                <expectedResult>disabled</expectedResult>
+                <type>Entry</type>
+                <content>yamushkach@gmail.com</content>
+                <expectedResult>pass</expectedResult>
             </test>
-
+            <test>
+                <name>Enter 123456 into the password box</name>
+                <resourceId>com.keepers:id/input_password</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>Entry</type>
+                <content>123456</content>
+                <expectedResult>pass</expectedResult>
+            </test>
+            <test>
+                <name>Click the Next button </name>
+                <resourceId>com.keepers:id/button_proceed</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>Button</type>
+                <actionType>click</actionType>
+                <expectedResult>labelMessage:"Maximum age of child for parental use of keepers is 16</expectedResult>
+            </test>
+        </tests>
+    </flow>
+    <flow>
+        <name>child's name- empty field</name>
+        <tests>
+            <test>
+                <name>Click on the empty check box - I accept the terms </name>
+                <resourceId>com.keepers:id/check_i_accept</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>CheckBox</type>
+                <actionType>click</actionType>
+                <expectedResult>pass</expectedResult>
+            </test>
+            <test>
+                <name>Press the Child button</name>
+                <resourceId>com.keepers:id/activity_terms_child_button</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>Button</type>
+                <actionType>click</actionType>
+                <expectedResult>pass</expectedResult>
+            </test>
+            <test>
+                <name>Insert 05.11.2001 in the Birthday box</name>
+                <resourceId>com.keepers:id/input_date_of_birth</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>Entry</type>
+                <content>05.11.2001</content>
+                <expectedResult>pass</expectedResult>
+            </test>
+            <test>
+                <name>Enter yamushkach@gmail.com in the email box</name>
+                <resourceId>com.keepers:id/input_email</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>Entry</type>
+                <content>yamushkach@gmail.com</content>
+                <expectedResult>pass</expectedResult>
+            </test>
+            <test>
+                <name>Enter 123456 into the password box</name>
+                <resourceId>com.keepers:id/input_password</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>Entry</type>
+                <content>123456</content>
+                <expectedResult>pass</expectedResult>
+            </test>
+            <test>
+                <name>Click the Next button </name>
+                <resourceId>com.keepers:id/button_proceed</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>Button</type>
+                <actionType>click</actionType>
+                <expectedResult>labelMessage:Add your name</expectedResult>
+            </test>
+        </tests>
+    </flow>
+     <flow>
+        <name>child's age under 6 years</name>
+        <tests>
+            <test>
+                <name>Click on the empty check box - I accept the terms </name>
+                <resourceId>com.keepers:id/check_i_accept</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>CheckBox</type>
+                <actionType>click</actionType>
+                <expectedResult>pass</expectedResult>
+            </test>
+            <test>
+                <name>Press the Child button</name>
+                <resourceId>com.keepers:id/activity_terms_child_button</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>Button</type>
+                <actionType>click</actionType>
+                <expectedResult>pass</expectedResult>
+            </test>
+            <test>
+                <name>Insert hadar in the child's name box</name>
+                <resourceId>com.keepers:id/input_child_name</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>Entry</type>
+                <content>hadar</content>
+                <expectedResult>pass</expectedResult>
+            </test>
+            <test>
+                <name>Insert 05.11.2001 in the Birthday box</name>
+                <resourceId>com.keepers:id/input_date_of_birth</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>Entry</type>
+                <content>31.10.2014 </content>
+                <expectedResult>pass</expectedResult>
+            </test>
+            <test>
+                <name>Enter yamushkach@gmail.com in the email box</name>
+                <resourceId>com.keepers:id/input_email</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>Entry</type>
+                <content>yamushkach@gmail.com</content>
+                <expectedResult>pass</expectedResult>
+            </test>
+            <test>
+                <name>Enter 123456 into the password box</name>
+                <resourceId>com.keepers:id/input_password</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>Entry</type>
+                <content>123456</content>
+                <expectedResult>pass</expectedResult>
+            </test>
+            <test>
+                <name>Click the Next button </name>
+                <resourceId>com.keepers:id/button_proceed</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>Button</type>
+                <actionType>click</actionType>
+                <expectedResult>labelMessage:Minimum age is 6 years old</expectedResult>
+            </test>
+        </tests>
+    </flow>
+    <flow>
+        <name>5-character password</name>
+        <tests>
+            <test>
+                <name>Click on the empty check box - I accept the terms </name>
+                <resourceId>com.keepers:id/check_i_accept</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>CheckBox</type>
+                <actionType>click</actionType>
+                <expectedResult>pass</expectedResult>
+            </test>
+            <test>
+                <name>Press the Child button</name>
+                <resourceId>com.keepers:id/activity_terms_child_button</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>Button</type>
+                <actionType>click</actionType>
+                <expectedResult>pass</expectedResult>
+            </test>
+            <test>
+                <name>Insert hadar in the child's name box</name>
+                <resourceId>com.keepers:id/input_child_name</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>Entry</type>
+                <content>hadar</content>
+                <expectedResult>pass</expectedResult>
+            </test>
+            <test>
+                <name>Insert 05.11.2001 in the Birthday box</name>
+                <resourceId>com.keepers:id/input_date_of_birth</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>Entry</type>
+                <content>31.10.2014 </content>
+                <expectedResult>pass</expectedResult>
+            </test>
+            <test>
+                <name>Enter yamushkach@gmail.com in the email box</name>
+                <resourceId>com.keepers:id/input_email</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>Entry</type>
+                <content>yamushkach@gmail.com</content>
+                <expectedResult>pass</expectedResult>
+            </test>
+            <test>
+                <name>Enter 123456 into the password box</name>
+                <resourceId>com.keepers:id/input_password</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>Entry</type>
+                <content>12345</content>
+                <expectedResult>pass</expectedResult>
+            </test>
+            <test>
+                <name>Click the Next button </name>
+                <resourceId>com.keepers:id/button_proceed</resourceId>
+                <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
+                <type>Button</type>
+                <actionType>click</actionType>
+                <expectedResult>labelMessage:Password must be between 6 to 15 characters length</expectedResult>
+            </test>
         </tests>
     </flow>
 </flowes>
