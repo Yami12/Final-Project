@@ -49,6 +49,39 @@ def dictionary_to_xml(dict, file_name):
 
 
 
+#TODO add test_name in order to know where to locate the new test
+def add_new_test_to_flow(flow_name, test, file_name):
+    flowes_list=xml_to_dictionary(file_name)
+    for flow in flowes_list:
+        if flow['name'] == flow_name:
+            flow['tests'].append(test)
+            break
+    dictionary_to_xml(flowes_list, 'xml_file.xml')
+
+
+def delete_test_from_flow(flow_name, test_name, file_name):
+    flowes_list = xml_to_dictionary(file_name)
+    for flow in flowes_list:
+        if flow['name'] == flow_name:
+            for test in flow['tests']:
+                if test['name'] == test_name:
+                    flow['tests'].remove(test)
+                    break
+            break
+    dictionary_to_xml(flowes_list, 'xml_file.xml')
+
+
+def update_test_in_flow(flow_name, test, file_name):
+    return
+
+
+def return_test(flow_name, test_name, file_name):
+    flowes_list = xml_to_dictionary(file_name)
+    for flow in flowes_list:
+        if flow['name'] == flow_name:
+            for test in flow['tests']:
+                if test['name'] == test_name:
+                    return test
 
 
 if __name__ == '__main__':

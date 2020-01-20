@@ -8,55 +8,71 @@ def raise_frame(frame):
 
 
 def add_component_behavior_ok():
+    selected = component_type.get()
     new_test = {}
     new_test['name'] = entry_add_test.get()
     new_test['resourceId'] = entry_add_resource.get()
     new_test['appActivity'] = entry_add_activity.get()
     new_test['type'] = component_type.get()
-
-    # if type == 'Button':
-    #
-    # elif type == "Label"
-    # new_test['expectedResult'] =
-    # xml_parsing.add_new_test_to_flow(entry_add_flow.get(), new_test)
+    new_test['expectedResult'] = expected_result.get()
+    if selected == 'Button':
+        new_test['actionType'] = action_type.get()
+    elif selected == "Label":
+        new_test['content'] = entry_content.get()
+    xml_parsing.add_new_test_to_flow(entry_add_flow.get(), new_test, 'xml_file.xml')#the third parameter
 
 
 def delete_component_behavior_ok():
-    return
+    xml_parsing.delete_test_from_flow(entry_delete_flow.get(), entry_delete_test.get(), 'xml_file.xml')#the third parameter
 
 
 def update_component_behavior_ok():
     return
 
 
-def component_type_change(event):
-    selected = component_type.get()
-    if selected == "Button":
-        Label(add_component_behavior_frame, text="What action type:", width=20, font=("bold", 10)).place(x=70, y=260)
-        action_type = tkinter.StringVar()  # there is the rule: variable name lowercase with _
-        action_type_entry = tkinter.OptionMenu(add_component_behavior_frame, action_type, "click", "over")
-        action_type_entry.place(x=240, y=260)
-        action_type.set("select your action type")
-
-        Label(add_component_behavior_frame, text="What expected result:", width=20, font=("bold", 10)).place(x=70, y=290)
-        expected_result = tkinter.StringVar()  # there is the rule: variable name lowercase with _
-        expected_result_entry = tkinter.OptionMenu(add_component_behavior_frame, expected_result, "disabled")
-        expected_result_entry.place(x=240, y=290)
-        expected_result.set("select your expected result")
-    elif selected == "Label":
-        Label(add_component_behavior_frame, text="content:", width=20, font=("bold", 10)).place(x=70, y=260)
-        entry_content = Entry(add_component_behavior_frame)
-        entry_content.place(x=240, y=260)
-
-        Label(add_component_behavior_frame, text="What expected result:", width=20, font=("bold", 10)).place(x=70, y=290)
-        expected_result = tkinter.StringVar()  # there is the rule: variable name lowercase with _
-        expected_result_entry = tkinter.OptionMenu(add_component_behavior_frame, expected_result, "disabled")
-        expected_result_entry.place(x=240, y=290)
-        expected_result.set("select your expected result")
+def continue_component_behavior_ok():
+    #continue_delete_button
+    test = xml_parsing.return_test(entry_delete_flow.get(), entry_delete_test.get(), 'xml_file.xml')#the third parameter
+    type_component = test['type']
+    component_type_delete_label.place(x=70, y=260)
+    type_entry_delete.place(x=240, y=260)
+    type_entry_delete.configure(state="disabled")
+    component_type_delete.set(test['type'])
+    if type_component == "Button":
+        action_type_delete_label.place(x=70, y=290)
+        action_type_delete_entry.place(x=240, y=290)
+        action_type_delete.set(test['actionType'])
+    elif type_component == "Label":
+        label_delete_content.place(x=70, y=290)
+        entry_delete_content.place(x=240, y=290)
+        entry_delete_content.delete(0, END)
+        entry_delete_content.insert(0, test['content'])
     # elif selected == "Check Box":
     #     print()
     # elif selected == "List":
     #     print()
+    expected_result_delete_label.place(x=70, y=320)
+    expected_result_delete_entry.place(x=240, y=320)
+    expected_result_delete.set(test['expectedResult'])
+    update_button.place(x=170, y=400)
+
+
+def component_type_change(event):
+    selected = component_type.get()
+    type_entry.configure(state="disabled")
+    if selected == "Button":
+        action_type_label.place(x=70, y=260)
+        action_type_entry.place(x=240, y=260)
+    elif selected == "Label":
+        label_content.place(x=70, y=260)
+        entry_content.place(x=240, y=260)
+
+    # elif selected == "Check Box":
+    #     print()
+    # elif selected == "List":
+    #     print()
+    expected_result_label.place(x=70, y=290)
+    expected_result_entry.place(x=240, y=290)
 
 
 main_win = Tk()
@@ -121,6 +137,22 @@ type_entry = tkinter.OptionMenu(add_component_behavior_frame, component_type, "B
 type_entry.place(x=240, y=220)
 component_type.set("select your component type")
 
+#if button
+action_type_label = Label(add_component_behavior_frame, text="What action type:", width=20, font=("bold", 10))
+action_type = tkinter.StringVar()  # there is the rule: variable name lowercase with _
+action_type_entry = tkinter.OptionMenu(add_component_behavior_frame, action_type, "click", "over")
+action_type.set("select your action type")
+
+
+#if label
+label_content = Label(add_component_behavior_frame, text="content:", width=20, font=("bold", 10))
+entry_content = Entry(add_component_behavior_frame)
+
+expected_result_label = Label(add_component_behavior_frame, text="What expected result:", width=20, font=("bold", 10))
+expected_result = tkinter.StringVar()  # there is the rule: variable name lowercase with _
+expected_result_entry = tkinter.OptionMenu(add_component_behavior_frame, expected_result, "disabled")
+expected_result.set("select your expected result")
+
 Button(add_component_behavior_frame, text='OK', width=20, bg='brown', fg='white', command=lambda: add_component_behavior_ok()).place(x=170, y=400)
 
 #delete_component_behavior_frame
@@ -128,12 +160,12 @@ Button(add_component_behavior_frame, text='OK', width=20, bg='brown', fg='white'
 Label(delete_component_behavior_frame, text="delete component behavior frame form", width=30, font=("bold", 16)).place(x=90, y=53)
 
 Label(delete_component_behavior_frame, text="flow name:", width=20, font=("bold", 10)).place(x=80, y=130)
-entry_1 = Entry(delete_component_behavior_frame)
-entry_1.place(x=240, y=130)
+entry_delete_flow = Entry(delete_component_behavior_frame)
+entry_delete_flow.place(x=240, y=130)
 
 Label(delete_component_behavior_frame, text="test name:", width=20, font=("bold", 10)).place(x=80, y=180)
-entry_2 = Entry(delete_component_behavior_frame)
-entry_2.place(x=240, y=180)
+entry_delete_test = Entry(delete_component_behavior_frame)
+entry_delete_test.place(x=240, y=180)
 
 Button(delete_component_behavior_frame, text='delete', width=20, bg='brown', fg='white', command=lambda: delete_component_behavior_ok()).place(x=170, y=400)
 
@@ -141,29 +173,37 @@ Button(delete_component_behavior_frame, text='delete', width=20, bg='brown', fg=
 
 Label(update_component_behavior_frame, text="update component behavior frame form", width=30, font=("bold", 16)).place(x=90, y=53)
 
-Button(update_component_behavior_frame, text='delete', width=20, bg='brown', fg='white', command=lambda: update_component_behavior_ok()).place(x=170, y=400)
+Label(update_component_behavior_frame, text="flow name:", width=20, font=("bold", 10)).place(x=80, y=130)
+entry_delete_flow = Entry(update_component_behavior_frame)
+entry_delete_flow.place(x=240, y=130)
 
+Label(update_component_behavior_frame, text="test name:", width=20, font=("bold", 10)).place(x=80, y=170)
+entry_delete_test = Entry(update_component_behavior_frame)
+entry_delete_test.place(x=240, y=170)
 
-# label_3 = Label(add_component_behavior_frame, text="Gender", width=20, font=("bold", 10))
-# label_3.place(x=70, y=230)
-# var = IntVar()
-# Radiobutton(add_component_behavior_frame, text="Male", padx=5, variable=var, value=1).place(x=235, y=230)
-# Radiobutton(add_component_behavior_frame, text="Female", padx=20, variable=var, value=2).place(x=290, y=230)
+continue_delete_button = Button(update_component_behavior_frame, text='continue', width=20, bg='brown', fg='white', command=lambda: continue_component_behavior_ok()).place(x=170, y=210)
 
-# label_4 = Label(add_component_behavior_frame, text="Programming", width=20, font=("bold", 10))
-# label_4.place(x=85, y=330)
-# var1 = IntVar()
-# Checkbutton(add_component_behavior_frame, text="java", variable=var1).place(x=235, y=330)
-# var2 = IntVar()
-# Checkbutton(add_component_behavior_frame, text="python", variable=var2).place(x=290, y=330)
+component_type_delete_label = Label(update_component_behavior_frame, text="What component type:", width=20, font=("bold", 10))
+component_type_delete = tkinter.StringVar() # there is the rule: variable name lowercase with _
+type_entry_delete = tkinter.OptionMenu(update_component_behavior_frame, component_type_delete, "Button", "Label", "Check Box", "List", command=component_type_change)
+component_type_delete.set("select your component type")
 
-# Button(add_component_behavior_frame, text='Submit', width=20, bg='brown', fg='white', command=lambda: raise_frame(second_frame)).place(
-#     x=180, y=380)
-#
-# label_8 = Label(second_frame, text="Welcome to page 2", width=20, font=("bold", 10))
-# label_8.place(x=70, y=230)
-#
-# Button(second_frame, text="Switch back to page 1", width=20, bg='brown', fg='white',
-#        command=lambda: raise_frame(add_component_behavior_frame)).place(x=180, y=380)
+#if button
+action_type_delete_label = Label(update_component_behavior_frame, text="What action type:", width=20, font=("bold", 10))
+action_type_delete = tkinter.StringVar()  # there is the rule: variable name lowercase with _
+action_type_delete_entry = tkinter.OptionMenu(update_component_behavior_frame, action_type_delete, "click", "over")
+action_type_delete.set("select your action type")
+
+#if label
+label_delete_content = Label(update_component_behavior_frame, text="content:", width=20, font=("bold", 10))
+entry_delete_content = Entry(update_component_behavior_frame)
+
+expected_result_delete_label = Label(update_component_behavior_frame, text="What expected result:", width=20, font=("bold", 10))
+expected_result_delete = tkinter.StringVar()  # there is the rule: variable name lowercase with _
+expected_result_delete_entry = tkinter.OptionMenu(update_component_behavior_frame, expected_result_delete, "disabled")
+expected_result_delete.set("select your expected result")
+
+update_button = Button(update_component_behavior_frame, text='update', width=20, bg='brown', fg='white', command=lambda: update_component_behavior_ok())
 
 main_win.mainloop()
+
