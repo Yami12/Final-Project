@@ -12,7 +12,7 @@ class MainTester(unittest.TestCase):
     def run_specific_flow(flow_name):
         flowes = xml_parsing.xml_to_dictionary("xml_file.xml")
         for flow in flowes:
-            print(flow['name'])
+            print(flow['name'],'#',flow_name)
             if flow['name'] == flow_name:
                 for test in flow['tests']:
                     driver.current_test = test
@@ -36,8 +36,8 @@ class MainTester(unittest.TestCase):
         # result = unittest.TextTestRunner(verbosity=1).run(suite)
         # driver.close_driver()
 
-        driver.initialize('Android', '7.0', 'Galaxy S6 edge', 'com.keepers', 'com.keeper.common.splash.SplashActivity',
-                          '4723')
+        # driver.initialize('Android', '7.0', 'Galaxy S6 edge', 'com.keepers', 'com.keeper.common.splash.SplashActivity',
+        #                   '4723')
         #parse the xml file of al the tests
 
         MainTester.run_specific_flow("child's age - above 16")

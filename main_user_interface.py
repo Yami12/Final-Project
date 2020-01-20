@@ -1,6 +1,7 @@
 from tkinter import *
 import driver
 import xml_parsing
+from main_tester import MainTester
 
 
 def device_frame_OK():
@@ -8,12 +9,13 @@ def device_frame_OK():
      raise_frame(first_frame)
 
 
+
 def raise_frame(frame):
     frame.tkraise()
 
 
 def run_test():
-    return
+    MainTester.run_specific_flow("child's age - above 16")
 
 
 def add_component_behavior_ok():
@@ -157,12 +159,12 @@ entry_platform_name.insert(0, 'Android')
 Label(device_frame, text="platform version:", width=20, font=("bold", 10)).place(x=80, y=110)
 entry_platform_version = Entry(device_frame)
 entry_platform_version.place(x=240, y=110)
-entry_platform_version.insert(0, '8.0.0')
+entry_platform_version.insert(0, '7.0')
 
 Label(device_frame, text="device name:", width=20, font=("bold", 10)).place(x=80, y=140)
 entry_device_name = Entry(device_frame)
 entry_device_name.place(x=240, y=140)
-entry_device_name.insert(0, 'My HUAWEI')
+entry_device_name.insert(0, 'Galaxy S6 edge')
 
 Label(device_frame, text="app package:", width=20, font=("bold", 10)).place(x=80, y=170)
 entry_app_package = Entry(device_frame)
