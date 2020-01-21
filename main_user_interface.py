@@ -5,9 +5,8 @@ from main_tester import MainTester
 
 
 def device_frame_OK():
-     driver.initialize(entry_platform_name.get(), entry_platform_version.get(), entry_device_name.get(),entry_app_package.get(), entry_app_activity.get(), entry_localhost.get(), entry_apk_file.get())
+     #driver.initialize(entry_platform_name.get(), entry_platform_version.get(), entry_device_name.get(),entry_app_package.get(), entry_app_activity.get(), entry_localhost.get(), entry_apk_file.get())
      raise_frame(first_frame)
-
 
 
 def raise_frame(frame):
@@ -15,7 +14,7 @@ def raise_frame(frame):
 
 
 def run_test():
-    MainTester.run_specific_flow("child's age - above 16")
+    MainTester.run_specific_flow(entry_run_flow.get())
 
 
 def add_component_behavior_ok():
@@ -33,8 +32,11 @@ def add_component_behavior_ok():
 
     if selected == 'Button':
         new_test['actionType'] = action_type.get()
-    elif selected == "Label":
+    elif selected == "Entry":
         new_test['content'] = entry_content.get()
+    elif selected == 'CheckBox':
+        new_test['expectedResult'] = 'pass'
+        new_test['actionType'] = 'click'
     xml_parsing.add_new_test_to_flow(entry_add_flow.get(), new_test, 'xml_file.xml')#the third parameter
 
 
@@ -44,44 +46,42 @@ def delete_component_behavior_ok():
 
 def update_component_behavior_ok():
     action_or_content = ''
-    selected = component_type_delete.get()
-    if selected == 'Button':
-        action_or_content = action_type_delete.get()
-    elif selected == "Label":
-        action_or_content = entry_delete_content.get()
-
     final_expected_result = expected_result_delete.get()
     if (final_expected_result == "toastMessage") or (final_expected_result == 'labelMessage'):
         final_expected_result = final_expected_result + ": " + entry_message_content.get()
-
-    xml_parsing.update_test_in_flow(entry_delete_flow.get(), entry_delete_test.get(), final_expected_result, action_or_content, 'xml_file.xml')  # the third parameter
+    selected = component_type_delete.get()
+    if selected == 'Button':
+        action_or_content = action_type_delete.get()
+    elif selected == "Entry":
+        action_or_content = entry_delete_content.get()
+    elif selected == 'CheckBox':
+        action_or_content = 'click'
+        final_expected_result = 'pass'
+    xml_parsing.update_test_in_flow(entry_update_flow.get(), entry_update_test.get(), final_expected_result, action_or_content, 'xml_file.xml')  # the third parameter
 
 
 def continue_component_behavior_ok():
-    #continue_delete_button
-    test = xml_parsing.return_test(entry_delete_flow.get(), entry_delete_test.get(), 'xml_file.xml')#the third parameter
+    test = xml_parsing.return_test(entry_update_flow.get(), entry_update_test.get(), 'xml_file.xml')#the third parameter
     type_component = test['type']
     component_type_delete_label.place(x=70, y=260)
     type_entry_delete.place(x=240, y=260)
     type_entry_delete.configure(state="disabled")
     component_type_delete.set(test['type'])
+    update_button.place(x=170, y=400)
     if type_component == "Button":
         action_type_delete_label.place(x=70, y=290)
         action_type_delete_entry.place(x=240, y=290)
         action_type_delete.set(test['actionType'])
-    elif type_component == "Label":
+    elif type_component == "Entry":
         label_delete_content.place(x=70, y=290)
         entry_delete_content.place(x=240, y=290)
         entry_delete_content.delete(0, END)
         entry_delete_content.insert(0, test['content'])
-    # elif selected == "Check Box":
-    #     print()
-    # elif selected == "List":
-    #     print()
+    elif type_component == "CheckBox":
+        return
     expected_result_delete_label.place(x=70, y=320)
     expected_result_delete_entry.place(x=240, y=320)
     expected_result_delete.set(test['expectedResult'])
-    update_button.place(x=170, y=400)
 
 
 def component_type_change(event):
@@ -90,14 +90,11 @@ def component_type_change(event):
     if selected == "Button":
         action_type_label.place(x=70, y=260)
         action_type_entry.place(x=240, y=260)
-    elif selected == "Label":
+    elif selected == "Entry":
         label_content.place(x=70, y=260)
         entry_content.place(x=240, y=260)
-
-    # elif selected == "Check Box":
-    #     print()
-    # elif selected == "List":
-    #     print()
+    elif selected == "CheckBox":
+        return
     expected_result_label.place(x=70, y=290)
     expected_result_entry.place(x=240, y=290)
 
@@ -210,8 +207,8 @@ Button(main_frame, text='update', width=20, bg='brown', fg='white', command=lamb
 
 #run_test_frame
 Label(run_test_frame, text="flow name:", width=20, font=("bold", 10)).place(x=80, y=80)
-entry_add_flow = Entry(run_test_frame)
-entry_add_flow.place(x=240, y=80)
+entry_run_flow = Entry(run_test_frame)
+entry_run_flow.place(x=240, y=80)
 
 Button(run_test_frame, text='run', width=20, bg='brown', fg='white', command=lambda: run_test()).place(x=170, y=300)
 
@@ -236,7 +233,7 @@ entry_add_activity.place(x=240, y=180)
 
 Label(add_component_behavior_frame, text="What component type:", width=20, font=("bold", 10)).place(x=70, y=220)
 component_type = StringVar() # there is the rule: variable name lowercase with _
-type_entry = OptionMenu(add_component_behavior_frame, component_type, "Button", "Label", "Check Box", "List", command=component_type_change)
+type_entry = OptionMenu(add_component_behavior_frame, component_type, "Button", "Label", "CheckBox", command=component_type_change)
 type_entry.place(x=240, y=220)
 component_type.set("select your component type")
 
@@ -245,7 +242,6 @@ action_type_label = Label(add_component_behavior_frame, text="What action type:"
 action_type = StringVar()  # there is the rule: variable name lowercase with _
 action_type_entry = OptionMenu(add_component_behavior_frame, action_type, "click", "over")
 action_type.set("select your action type")
-
 
 #if label
 label_content = Label(add_component_behavior_frame, text="content:", width=20, font=("bold", 10))
@@ -264,7 +260,6 @@ expected_result.set("select your expected result")
 Button(add_component_behavior_frame, text='OK', width=20, bg='brown', fg='white', command=lambda: add_component_behavior_ok()).place(x=170, y=400)
 
 #delete_component_behavior_frame
-
 Label(delete_component_behavior_frame, text="delete component behavior frame form", width=30, font=("bold", 16)).place(x=90, y=53)
 
 Label(delete_component_behavior_frame, text="flow name:", width=20, font=("bold", 10)).place(x=80, y=130)
@@ -278,22 +273,21 @@ entry_delete_test.place(x=240, y=180)
 Button(delete_component_behavior_frame, text='delete', width=20, bg='brown', fg='white', command=lambda: delete_component_behavior_ok()).place(x=170, y=400)
 
 #update_component_behavior_frame
-
 Label(update_component_behavior_frame, text="update component behavior frame form", width=30, font=("bold", 16)).place(x=90, y=53)
 
 Label(update_component_behavior_frame, text="flow name:", width=20, font=("bold", 10)).place(x=80, y=130)
-entry_delete_flow = Entry(update_component_behavior_frame)
-entry_delete_flow.place(x=240, y=130)
+entry_update_flow = Entry(update_component_behavior_frame)
+entry_update_flow.place(x=240, y=130)
 
 Label(update_component_behavior_frame, text="test name:", width=20, font=("bold", 10)).place(x=80, y=170)
-entry_delete_test = Entry(update_component_behavior_frame)
-entry_delete_test.place(x=240, y=170)
+entry_update_test = Entry(update_component_behavior_frame)
+entry_update_test.place(x=240, y=170)
 
 continue_delete_button = Button(update_component_behavior_frame, text='continue', width=20, bg='brown', fg='white', command=lambda: continue_component_behavior_ok()).place(x=170, y=210)
 
 component_type_delete_label = Label(update_component_behavior_frame, text="What component type:", width=20, font=("bold", 10))
 component_type_delete = StringVar() # there is the rule: variable name lowercase with _
-type_entry_delete = OptionMenu(update_component_behavior_frame, component_type_delete, "Button", "Label", "Check Box", "List", command=component_type_change)
+type_entry_delete = OptionMenu(update_component_behavior_frame, component_type_delete, "Button", "Entry", "CheckBox", command=component_type_change)
 component_type_delete.set("select your component type")
 
 #if button
@@ -302,7 +296,7 @@ action_type_delete = StringVar()  # there is the rule: variable name lowercase w
 action_type_delete_entry = OptionMenu(update_component_behavior_frame, action_type_delete, "click", "over")
 action_type_delete.set("select your action type")
 
-#if label
+#if entry
 label_delete_content = Label(update_component_behavior_frame, text="content:", width=20, font=("bold", 10))
 entry_delete_content = Entry(update_component_behavior_frame)
 
@@ -319,4 +313,3 @@ expected_result_delete.set("select your expected result")
 update_button = Button(update_component_behavior_frame, text='update', width=20, bg='brown', fg='white', command=lambda: update_component_behavior_ok())
 
 main_win.mainloop()
-
