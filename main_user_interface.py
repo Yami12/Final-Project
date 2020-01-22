@@ -4,8 +4,8 @@ import xml_parsing
 from main_tester import MainTester
 
 
-def device_frame_OK():
-     #driver.initialize(entry_platform_name.get(), entry_platform_version.get(), entry_device_name.get(),entry_app_package.get(), entry_app_activity.get(), entry_localhost.get(), entry_apk_file.get())
+def device_frame_ok():
+     driver.initialize(entry_platform_name.get(), entry_platform_version.get(), entry_device_name.get(),entry_app_package.get(), entry_app_activity.get(), entry_localhost.get(), entry_apk_file.get())
      raise_frame(first_frame)
 
 
@@ -27,7 +27,7 @@ def add_component_behavior_ok():
 
     final_expected_result = expected_result.get()
     if (final_expected_result == "toastMessage") or (final_expected_result == 'labelMessage'):
-        final_expected_result = final_expected_result + ": " + entry_message_content_add.get()
+        final_expected_result = final_expected_result + ":" + entry_message_content_add.get()
     new_test['expectedResult'] = final_expected_result
 
     if selected == 'Button':
@@ -48,7 +48,7 @@ def update_component_behavior_ok():
     action_or_content = ''
     final_expected_result = expected_result_delete.get()
     if (final_expected_result == "toastMessage") or (final_expected_result == 'labelMessage'):
-        final_expected_result = final_expected_result + ": " + entry_message_content.get()
+        final_expected_result = final_expected_result + ":" + entry_message_content.get()
     selected = component_type_delete.get()
     if selected == 'Button':
         action_or_content = action_type_delete.get()
@@ -183,7 +183,7 @@ entry_apk_file = Entry(device_frame)
 entry_apk_file.place(x=240, y=260)
 entry_apk_file.insert(0, 'Keepers Child Safety.apk')
 
-Button(device_frame, text='OK', width=20, bg='brown', fg='white', command=lambda: device_frame_OK()).place(x=170, y=320)
+Button(device_frame, text='OK', width=20, bg='brown', fg='white', command=lambda: device_frame_ok()).place(x=170, y=320)
 
 #first_frame
 Button(first_frame, text='to component behavior tests', width=40, bg='brown', fg='white', command=lambda: raise_frame(main_frame)).place(x=110, y=150)
