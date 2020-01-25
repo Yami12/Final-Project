@@ -219,7 +219,7 @@
                 <resourceId>com.keepers:id/input_date_of_birth</resourceId>
                 <appActivity>com.keeper.common.splash.SplashActivity</appActivity>
                 <type>Entry</type>
-                <content>31.10.2014 </content>
+                <content>31.10.2013 </content>
                 <expectedResult>pass</expectedResult>
             </test>
             <test>

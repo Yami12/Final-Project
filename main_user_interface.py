@@ -209,7 +209,7 @@ entry_localhost.insert(0, '4723')
 Label(device_frame, text="apk file:", width=20, font=("bold", 10)).place(x=80, y=260)
 entry_apk_file = Entry(device_frame)
 entry_apk_file.place(x=240, y=260)
-entry_apk_file.insert(0, 'Keepers Child Safety.apk')
+entry_apk_file.insert(0, '')
 
 Button(device_frame, text='OK', width=20, bg='brown', fg='white', command=lambda: device_frame_ok()).place(x=170, y=320)
 

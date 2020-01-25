@@ -1,19 +1,28 @@
+'''
+this file handles the tests xml file and all the tests operations
+'''
+
 import xml.etree.cElementTree as et
 
-#
-# parse xml file to list of dictionaries
-#
+
+'''
+function:xml_to_dictionary
+description: converts the xml file of tests to list of dictionaries
+parameters:
+file_name - the name of the xml file
+'''
 def xml_to_dictionary(file_name):
     file = open(file_name)
     file_content = file.read()
     tree = et.fromstring(file_content)
-    flowes = tree.findall('flow')#first node in the xnl file
+    flowes = tree.findall('flow')#first node in the xml file
 
     flowes_arr = []
-
+    #go over the all flowes
     for flow in flowes:
         flow_dict = {}
         tests_arr = []
+        #go over all the flow's tests
         for tests in flow:
             if tests.tag == 'name':#flow name
                 flow_dict['name'] = tests.text
@@ -27,9 +36,14 @@ def xml_to_dictionary(file_name):
         flowes_arr.append(flow_dict)
     return flowes_arr
 
-#
-#parse list of dictionaries to xml file
-#
+
+'''
+function:dictionary_to_xml
+description: converts list of dictionaries to xml file
+parameters:
+dict - the list of the dictionaries
+file_name - the name of the xml file
+'''
 def dictionary_to_xml(dict, file_name):
     root = et.Element("flowes")
     for flow in dict:
@@ -48,35 +62,65 @@ def dictionary_to_xml(dict, file_name):
     tree.write(file_name)
 
 
-
+'''
+function: add_new_test_to_flow
+description: adds new test to the given flow and writes it to the xml file
+parameters:
+flow_name - the flow to add the test to
+test - the test to add
+file_name - the name of the xml file
+'''
 #TODO add test_name in order to know where to locate the new test
 def add_new_test_to_flow(flow_name, test, file_name):
-    flowes_list=xml_to_dictionary(file_name)
+    flowes_list=xml_to_dictionary(file_name)#parse the file to list of dictionaries
+    #go over all the flowes
     for flow in flowes_list:
+        #go over all the flow's tests
         if flow['name'] == flow_name:
-            flow['tests'].append(test)
+            flow['tests'].append(test)#adds the new test
             break
-    dictionary_to_xml(flowes_list, 'xml_file.xml')
+    dictionary_to_xml(flowes_list, 'xml_file.xml')#write to the file
 
 
+'''
+function: delete_test_from_flow
+description: deletes the given test from the given flow and uptate it in the xml file
+parameters:
+flow_name - the flow to delete the test from
+test_name - the test's name to delete
+file_name - the name of the xml file
+'''
 def delete_test_from_flow(flow_name, test_name, file_name):
-    flowes_list = xml_to_dictionary(file_name)
+    flowes_list = xml_to_dictionary(file_name)#parse the file to list of dictionaries
     for flow in flowes_list:
+        #go over all the flowes
         if flow['name'] == flow_name:
+            # go over all the flow's tests
             for test in flow['tests']:
                 if test['name'] == test_name:
-                    flow['tests'].remove(test)
+                    flow['tests'].remove(test)#deletes the new test
                     break
             break
-    dictionary_to_xml(flowes_list, file_name)
+    dictionary_to_xml(flowes_list, file_name)#write to the file
 
-
+'''
+function: update_test_in_flow
+description: update the given test from the given flow and uptate it in the xml file
+parameters:
+flow_name - the flow to update the test from
+test_name - the test's name to update
+expected_result - field to update
+action_or_content - field to update
+file_name - the name of the xml file
+'''
 def update_test_in_flow(flow_name, test_name, expected_result, action_or_content, file_name):
     flowes_list = xml_to_dictionary(file_name)
     for flow in flowes_list:
+        # go over all the flowes
         if flow['name'] == flow_name:
+            # go over all the flow's tests
             for test in flow['tests']:
-                if test['name'] == test_name:
+                if test['name'] == test_name:#update test's fields
                     selected = test['type']
                     if selected == 'Button':
                         test['actionType'] = action_or_content
@@ -86,20 +130,24 @@ def update_test_in_flow(flow_name, test_name, expected_result, action_or_content
                     break
                     print(test)
             break
-    dictionary_to_xml(flowes_list, file_name)
+    dictionary_to_xml(flowes_list, file_name)#write to the file
 
 
-
+'''
+function: return_test
+description: return fields of the given test
+parameters:
+flow_name - the flow's test
+test_name - the test's name to return
+file_name - the name of the xml file
+'''
 def return_test(flow_name, test_name, file_name):
     flowes_list = xml_to_dictionary(file_name)
     for flow in flowes_list:
+        # go over all the flowes
         if flow['name'] == flow_name:
+            # go over all the flow's tests
             for test in flow['tests']:
                 if test['name'] == test_name:
                     return test
 
-
-if __name__ == '__main__':
-    flowes=xml_to_dictionary("xml_file.xml")
-    print("xml_file:\n",flowes)
-    dictionary_to_xml(flowes,"output_1.xml")
