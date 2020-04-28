@@ -1,29 +1,16 @@
-'''
-This file handles the appium's driver
-there is 2 attributes:
-global_driver: the appium driver
-current_test: the current test that run on the android phone
-'''
-
 import os
 from appium import webdriver
 
-global_driver = None
+global_driver_child = None
+global_driver_father = None
 current_test = None
-'''
-function:initialize
-description: initializes the appium's driver
-parameters:
-platformName - the phone's OS - in our case only Android
-platformVersion - the OS version
-deviceName - the android phone 
-appPackage - the application name
-appActivity - the application's activity name
-localhost - the appium's driver host
-apk_file - the application's apk file
-'''
-def initialize(platformName, platformVersion, deviceName, appPackage, appActivity, localhost, apk_file = ""):
-    global global_driver
+
+def initialize(owner_flag ,platformName, platformVersion, deviceName, appPackage, appActivity, apk_file = ""):
+    #father in port 5556, child in port 5554
+    localhost = '5554'
+    if owner_flag == "father":
+        localhost = '5556'
+    global global_driver_child
     desired_caps = {}
     desired_caps['platformName'] = platformName
     desired_caps['platformVersion'] = platformVersion
@@ -35,14 +22,13 @@ def initialize(platformName, platformVersion, deviceName, appPackage, appActivit
         desired_caps['noReset'] = 'true'
     desired_caps['appPackage'] = appPackage
     desired_caps['appActivity'] = appActivity
-    global_driver = webdriver.Remote('http://localhost:' + localhost +'/wd/hub', desired_caps)
+    global_driver_child = webdriver.Remote('http://localhost:' + localhost +'/wd/hub', desired_caps)
 
-'''
-function:close_driver
-description: close the appium's driver
-'''
+
 def close_driver():
-    global global_driver
-    global_driver.quit()
+    global global_driver_child
+    global_driver_child.quit()
 
+#     driver.current_activity
 
+#     start_activity("com.example", "ActivityName"); 
