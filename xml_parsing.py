@@ -11,7 +11,7 @@ description: converts the xml file of tests to list of dictionaries
 parameters:
 file_name - the name of the xml file
 '''
-def xml_to_dictionary(file_name):
+def component_xml_to_dictionary(file_name):
     file = open(file_name)
     file_content = file.read()
     tree = et.fromstring(file_content)
@@ -36,6 +36,24 @@ def xml_to_dictionary(file_name):
         flowes_arr.append(flow_dict)
     return flowes_arr
 
+def feature_xml_to_dictionary(file_name):
+    file = open(file_name,encoding='UTF-8')
+    file_content = file.read()
+    tree = et.fromstring(file_content)
+
+    tests = tree.findall('test')  # first node in the xml file
+
+    tests_arr = []
+    # go over the all flowes
+    for test in tests:
+        test_dict = {}
+        test_dict['name'] = test.text
+        for i in test:
+            test_dict[i.tag] = i.text
+        tests_arr.append(test_dict)
+        print(test_dict)
+    print(tests_arr)
+    return tests_arr
 
 '''
 function:dictionary_to_xml
@@ -72,7 +90,7 @@ file_name - the name of the xml file
 '''
 #TODO add test_name in order to know where to locate the new test
 def add_new_test_to_flow(flow_name, test, file_name):
-    flowes_list=xml_to_dictionary(file_name)#parse the file to list of dictionaries
+    flowes_list=component_xml_to_dictionary(file_name)#parse the file to list of dictionaries
     #go over all the flowes
     for flow in flowes_list:
         #go over all the flow's tests
@@ -91,7 +109,7 @@ test_name - the test's name to delete
 file_name - the name of the xml file
 '''
 def delete_test_from_flow(flow_name, test_name, file_name):
-    flowes_list = xml_to_dictionary(file_name)#parse the file to list of dictionaries
+    flowes_list = component_xml_to_dictionary(file_name)#parse the file to list of dictionaries
     for flow in flowes_list:
         #go over all the flowes
         if flow['name'] == flow_name:
@@ -114,7 +132,7 @@ action_or_content - field to update
 file_name - the name of the xml file
 '''
 def update_test_in_flow(flow_name, test_name, expected_result, action_or_content, file_name):
-    flowes_list = xml_to_dictionary(file_name)
+    flowes_list = component_xml_to_dictionary(file_name)
     for flow in flowes_list:
         # go over all the flowes
         if flow['name'] == flow_name:
@@ -142,7 +160,7 @@ test_name - the test's name to return
 file_name - the name of the xml file
 '''
 def return_test(flow_name, test_name, file_name):
-    flowes_list = xml_to_dictionary(file_name)
+    flowes_list = component_xml_to_dictionary(file_name)
     for flow in flowes_list:
         # go over all the flowes
         if flow['name'] == flow_name:

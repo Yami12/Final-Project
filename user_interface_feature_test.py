@@ -1,11 +1,12 @@
-
 from tkinter import *
 from main_tester import MainTester
-
+from threading import Thread
 
 def send_message():
-    #run_messaging_feature_test‏()
+    MainTester.run_messaging_feature_test()
     return
+
+run_test_thread = Thread(target = send_message)
 
 def choose_sender_name(event):
     selected = sender_name.get()

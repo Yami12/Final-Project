@@ -2,6 +2,7 @@ from tkinter import *
 from main_tester import MainTester
 import xml_parsing
 from main_tester import MainTester
+from threading import Thread
 
 '''Accepts screen name making a move to it'''
 def raise_frame(frame):
@@ -11,7 +12,9 @@ def raise_frame(frame):
 '''When: The user press the button on the "run_test_frame" screen
 What: send name of flow to run function to run it'''
 def run_test():
-    MainTester.run_specific_flow(entry_run_flow.get())
+    MainTester.run_specific_behvior_flow(entry_run_flow.get())
+
+run_test_thread = Thread(target = run_test)
 
 
 '''When: The user press the button on the "add_component_behavior_frame" screen
