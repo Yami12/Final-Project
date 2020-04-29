@@ -1,11 +1,10 @@
 
 from tkinter import *
-import driver
-import xml_parsing
 from main_tester import MainTester
 
 
 def send_message():
+    #run_messaging_feature_test‏()
     return
 
 def choose_sender_name(event):
@@ -20,12 +19,12 @@ def choose_sender_name(event):
 
 
 #Visual display of screens
-main_win = Tk()
-main_win.geometry('500x500')
-main_win.title("Registration Form")
+main_window = Tk()
+main_window.geometry('500x500')
+main_window.title("Registration Form")
 
 #define frames, each represents a screen
-main_feature_test_frame = Frame(main_win)
+main_feature_test_frame = Frame(main_window)
 main_feature_test_frame.place(x=0, y=0, width=500, height=500)
 
 'main_feature_test_frame'
@@ -54,4 +53,5 @@ entry_content_message.place(x=240, y=290)
 Button(main_feature_test_frame, text='send message', width=20, bg='brown', fg='white', command=lambda: send_message()).place(x=170, y=400)
 
 #Starts the program by displaying the first screen
-main_win.mainloop()
+def run_messaging_feature_test():
+    main_window.mainloop()
