@@ -27,7 +27,7 @@ class FatherSentWhatsappMessage(unittest.TestCase):
         print("yay 2")
         driver.initialize_father()
         print("yay 3")
-        time.sleep(10)
+        time.sleep(5)
         search_button = driver.global_driver_father.find_element_by_id("com.whatsapp:id/menuitem_search")
         search_button.click()
 
@@ -43,6 +43,7 @@ class FatherSentWhatsappMessage(unittest.TestCase):
         send_button = driver.global_driver_father.find_element_by_id("com.whatsapp:id/send")
         send_button.click()
 
+
         time.sleep(20)
         # WhatsappMessage.child_read_message(self)
 
@@ -56,10 +57,10 @@ class ChildReadWhatsappMessage(unittest.TestCase):
 
     def test_child_read_message(self):
         driver.initialize_child()
-        time.sleep(10)
+        time.sleep(15)
         search_button = driver.global_driver_child.find_element_by_id("com.whatsapp:id/menuitem_search")
         search_button.click()
-
+        time.sleep(10)
 
         name_search_box = driver.global_driver_child.find_element_by_id("com.whatsapp:id/search_src_text")
         name_search_box.send_keys("fa")
@@ -67,7 +68,48 @@ class ChildReadWhatsappMessage(unittest.TestCase):
         msg = driver.global_driver_child.find_element_by_android_uiautomator('new UiSelector().textContains("father")')
         msg.click()
 
-        time.sleep(5)
+        time.sleep(10)
+
+
+
+
+class CheckChildLogs(unittest.TestCase):
+    def tearDown(self):
+        "Tear down the test"
+        driver.global_driver_child.quit()
+
+    def test_capture_logcat(self):
+        time.sleep(30)
+        driver.initialize_child()
+        # inspect available log types
+        logtypes = driver.global_driver_child.log_types
+        print(' ,'.join(logtypes))  #
+
+        # print first and last 10 lines of logs
+        logs = driver.global_driver_child.get_log('logcat')
+        print("log structure:",logs[0])
+        log_messages = list(map(lambda log: log['message'], logs))
+        for log in log_messages:
+            if 'HttpKeepersLogger'in log:
+                print(log)
+                print("----------------------------------------")
+        # print('First and last ten lines of log: ')
+        # print('\n'.join(log_messages[:10]))
+        # print('...')
+        # print('\n'.join(log_messages[-9:]))
+
+        # wait for more logs
+        time.sleep(10)
+
+        # demonstrate that each time get logs, we only get new logs
+        # which were generated since the last time we got logs
+        logs = driver.global_driver_child.get_log('logcat')
+        second_set_of_log_messages = list(map(lambda log: log['message'], logs))
+        for log in log_messages:
+            if 'HttpKeepersLogger' in log:
+                print(log)
+                print("----------------------------------------")
+
 
 
 

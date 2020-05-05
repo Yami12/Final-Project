@@ -42,7 +42,7 @@ def initialize(owner_flag ,platformName, platformVersion, deviceName, appPackage
         desired_caps['noReset'] = 'true'
     desired_caps['appPackage'] = appPackage
     desired_caps['appActivity'] = appActivity
-    desired_caps['adbExecTimeout'] = '100000'
+    desired_caps['adbExecTimeout'] = '200000'
     if owner_flag == "father":
         global father_desired_caps
         father_desired_caps = desired_caps
