@@ -4,7 +4,7 @@ there is 2 attributes:
 tests_results: list of all the tests results
 flowes: list of all the flowes
 '''
-
+from multiprocessing.dummy import Pool as ThreadPool
 import unittest
 import driver
 import xml_parsing
@@ -12,6 +12,8 @@ from button_operations import buttonOperations
 from input_operations import inpoutOperations
 import messaging
 from time import sleep
+from threading import Thread
+
 
 tests_results=[]
 flowes = []
@@ -22,22 +24,23 @@ class MainTester(unittest.TestCase):
     def recive_offensive_whatsapp_message(test):
         print("yay 1")
 
-        # suite = unittest.TestLoader().loadTestsFromTestCase(messaging.FatherSentWhatsappMessage)
-        # result = unittest.TextTestRunner(verbosity=1).run(suite)
-        # tests_results.append("test: {} result: {}".format(test['name'],
-        #                                                            result))  # save the test result
+        suite = unittest.TestLoader().loadTestsFromTestCase(messaging.FatherSentWhatsappMessage)
+        result = unittest.TextTestRunner(verbosity=1).run(suite)
+        tests_results.append("test: {} result: {}".format(test['name'], result))  # save the test result
+
+        suite = unittest.TestLoader().loadTestsFromTestCase(messaging.ChildReadWhatsappMessage)
+        result = unittest.TextTestRunner(verbosity=1).run(suite)
+        tests_results.append("test: {} result: {}".format(test['name'], result))  # save the test result
         #
-        # suite = unittest.TestLoader().loadTestsFromTestCase(messaging.ChildReadWhatsappMessage)
+        # suite = unittest.TestLoader().loadTestsFromTestCase(messaging.checkAlertMessageFatherSide)
         # result = unittest.TextTestRunner(verbosity=1).run(suite)
-        # tests_results.append("test: {} result: {}".format(test['name'],
-        #                                                   result))  # save the test result
+        # tests_results.append("test: {} result: {}".format(test['name'], result))  # save the test result
 
         suite = unittest.TestLoader().loadTestsFromTestCase(messaging.CheckChildLogs)
         result = unittest.TextTestRunner(verbosity=1).run(suite)
 
-
-    def run_behvior_test(flow,test):
-        driver.initialize_father()
+    def run_behvior_test(flow, test):
+        driver.initialize_father('com.keepers', 'com.keeper.common.splash.SplashActivity')
         # button or checkbox
         if test['type'] == 'Button' or test['type'] == 'CheckBox':
             sleep(3)
@@ -86,5 +89,7 @@ class MainTester(unittest.TestCase):
         tests = xml_parsing.feature_xml_to_dictionary("messaging_feature_tests.xml")# converts the xml file to list of diction
         for test in tests:
             if test['name'] == test_name:
+                print("yay")
                 driver.current_test = test
                 MainTester.recive_offensive_whatsapp_message(test)
+

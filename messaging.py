@@ -1,9 +1,8 @@
-
 import unittest
 import driver
 import time
 
-
+#Whatsapp
 class FatherSentWhatsappMessage(unittest.TestCase):
     "Class to run tests against the Chess Free app"
 
@@ -24,29 +23,20 @@ class FatherSentWhatsappMessage(unittest.TestCase):
         driver.global_driver_father.quit()
 
     def test_father_send_message(self):
-        print("yay 2")
-        driver.initialize_father()
-        print("yay 3")
-        time.sleep(5)
+        driver.initialize_father('com.whatsapp', 'com.whatsapp.HomeActivity t475')
+        time.sleep(10)
         search_button = driver.global_driver_father.find_element_by_id("com.whatsapp:id/menuitem_search")
         search_button.click()
-
         name_search_box = driver.global_driver_father.find_element_by_id("com.whatsapp:id/search_src_text")
-        name_search_box.send_keys("ch")
-
-        msg= driver.global_driver_father.find_element_by_android_uiautomator('new UiSelector().textContains("child")')
+        name_search_box.send_keys("יח")
+        msg = driver.global_driver_father.find_element_by_android_uiautomator('new UiSelector().textContains("יחיאל כשר")')
         msg.click()
-
         text_box = driver.global_driver_father.find_element_by_id("com.whatsapp:id/entry")
         text_box.send_keys(driver.current_test['text'])
-
         send_button = driver.global_driver_father.find_element_by_id("com.whatsapp:id/send")
         send_button.click()
-
-
         time.sleep(20)
         # WhatsappMessage.child_read_message(self)
-
 
 
 class ChildReadWhatsappMessage(unittest.TestCase):
@@ -56,21 +46,39 @@ class ChildReadWhatsappMessage(unittest.TestCase):
         driver.global_driver_child.quit()
 
     def test_child_read_message(self):
-        driver.initialize_child()
+        driver.initialize_child('com.whatsapp', 'com.whatsapp.HomeActivity t475')
         time.sleep(15)
         search_button = driver.global_driver_child.find_element_by_id("com.whatsapp:id/menuitem_search")
         search_button.click()
         time.sleep(10)
-
         name_search_box = driver.global_driver_child.find_element_by_id("com.whatsapp:id/search_src_text")
         name_search_box.send_keys("fa")
-
         msg = driver.global_driver_child.find_element_by_android_uiautomator('new UiSelector().textContains("father")')
         msg.click()
+        # time.sleep(10)
 
+
+#Telegram
+class FatherSentTelegramMessage(unittest.TestCase):
+    "Class to run tests against the Chess Free app"
+    def tearDown(self):
+        "Tear down the test"
+        driver.global_driver_father.quit()
+
+    def test_father_send_message(self):
+        driver.initialize_father()
         time.sleep(10)
 
 
+class ChildReadTelegramMessage(unittest.TestCase):
+
+    def tearDown(self):
+        "Tear down the test"
+        driver.global_driver_child.quit()
+
+    def test_child_read_message(self):
+        driver.initialize_child()
+        time.sleep(15)
 
 
 class CheckChildLogs(unittest.TestCase):
@@ -79,8 +87,7 @@ class CheckChildLogs(unittest.TestCase):
         driver.global_driver_child.quit()
 
     def test_capture_logcat(self):
-        time.sleep(30)
-        driver.initialize_child()
+        driver.initialize_child("", "")
         # inspect available log types
         logtypes = driver.global_driver_child.log_types
         print(' ,'.join(logtypes))  #
@@ -89,6 +96,7 @@ class CheckChildLogs(unittest.TestCase):
         logs = driver.global_driver_child.get_log('logcat')
         print("log structure:",logs[0])
         log_messages = list(map(lambda log: log['message'], logs))
+        print("set 1**********")
         for log in log_messages:
             if 'HttpKeepersLogger'in log:
                 print(log)
@@ -103,13 +111,21 @@ class CheckChildLogs(unittest.TestCase):
 
         # demonstrate that each time get logs, we only get new logs
         # which were generated since the last time we got logs
-        logs = driver.global_driver_child.get_log('logcat')
-        second_set_of_log_messages = list(map(lambda log: log['message'], logs))
+        logs = driver.global_driver_child.get_log('logcat').getAll()
+        log_messages = list(map(lambda log: log['message'], logs))
+        print("set 2*********")
         for log in log_messages:
             if 'HttpKeepersLogger' in log:
                 print(log)
                 print("----------------------------------------")
 
 
+class checkAlertMessageFatherSide(unittest.TestCase):
 
+    def tearDown(self):
+        "Tear down the test"
+        driver.global_driver_father.quit()
 
+    def test_check_alert_message(self):
+        driver.initialize_father("", "")
+        time.sleep(10)
