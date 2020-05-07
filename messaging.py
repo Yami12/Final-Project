@@ -58,6 +58,59 @@ class ChildReadWhatsappMessage(unittest.TestCase):
         # time.sleep(10)
 
 
+#Facebook
+class FatherSentFacebookMessage(unittest.TestCase):
+    "Class to run tests against the Chess Free app"
+    def tearDown(self):
+        "Tear down the test"
+        driver.global_driver_father.quit()
+
+    def test_father_send_message(self):
+        driver.initialize_father('com.facebook.katana', 'com.facebook.katana.activity.FbMainTabActivity')
+        time.sleep(10)
+
+
+class ChildReadFacebookMessage(unittest.TestCase):
+
+    def tearDown(self):
+        "Tear down the test"
+        driver.global_driver_child.quit()
+
+    def test_child_read_message(self):
+        driver.initialize_child('com.facebook.katana', 'com.facebook.katana.activity.FbMainTabActivity')
+        time.sleep(15)
+
+
+#Instagram
+class FatherSentInstagramMessage(unittest.TestCase):
+    "Class to run tests against the Chess Free app"
+    def tearDown(self):
+        "Tear down the test"
+        driver.global_driver_father.quit()
+
+    def test_father_send_message(self):
+        driver.initialize_father('com.instagram.android', 'com.instagram.mainactivity.MainActivity')
+        time.sleep(10)
+        search_button = driver.global_driver_father.find_element_by_id('com.instagram.android:id/tab_icon')
+        search_button.click()
+        time.sleep(10)
+        name_search_box = driver.global_driver_father.find_element_by_id("com.instagram.android:id/action_bar_search_edit_text")
+        name_search_box.send_keys("hprshhbv")
+        msg = driver.global_driver_father.find_element_by_android_uiautomator('new UiSelector().textContains("hprshhbvdd")')
+        msg.click()
+
+
+class ChildReadInstagramMessage(unittest.TestCase):
+
+    def tearDown(self):
+        "Tear down the test"
+        driver.global_driver_child.quit()
+
+    def test_child_read_message(self):
+        driver.initialize_child('com.instagram.android', 'com.instagram.mainactivity.MainActivity')
+        time.sleep(15)
+
+
 #Telegram
 class FatherSentTelegramMessage(unittest.TestCase):
     "Class to run tests against the Chess Free app"
@@ -66,9 +119,13 @@ class FatherSentTelegramMessage(unittest.TestCase):
         driver.global_driver_father.quit()
 
     def test_father_send_message(self):
-        driver.initialize_father()
+        driver.initialize_father('org.telegram.messenger', 'org.telegram.ui.LaunchActivity')
         time.sleep(10)
-
+        search_button = driver.global_driver_father.find_element_by_android_uiautomator('new UiSelector().descriptionContains("חיפוש")')
+        search_button.click()
+        time.sleep(10)
+        name_search_box = driver.global_driver_father.find_element_by_xpath("//div[contains(text(),'חיפוש')]")
+        name_search_box.send_keys("יחי")
 
 class ChildReadTelegramMessage(unittest.TestCase):
 
@@ -77,7 +134,7 @@ class ChildReadTelegramMessage(unittest.TestCase):
         driver.global_driver_child.quit()
 
     def test_child_read_message(self):
-        driver.initialize_child()
+        driver.initialize_child('org.telegram.messenger', 'org.telegram.ui.LaunchActivity')
         time.sleep(15)
 
 
