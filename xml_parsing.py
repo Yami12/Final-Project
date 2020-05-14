@@ -4,13 +4,38 @@ this file handles the tests xml file and all the tests operations
 
 import xml.etree.cElementTree as et
 
-
 '''
 function:xml_to_dictionary
 description: converts the xml file of tests to list of dictionaries
 parameters:
 file_name - the name of the xml file
 '''
+
+def devices_xml_to_dictionary(file_name):
+    file = open(file_name)
+    file_content = file.read()
+    print(file_content)
+    tree = et.fromstring(file_content)
+    devices = tree.findall('device')  # first node in the xml file
+
+    devices_arr = []
+    # go over the all tests
+    for device in devices:
+        device_dict = {}
+        device_dict['name'] = device.text
+        for i in device:
+            device_dict[i.tag] = i.text
+        devices_arr.append(device_dict)
+        print(device_dict)
+    print(devices_arr)
+    return devices_arr
+
+def add_new_device(device, file_name):
+    devices_list = devices_xml_to_dictionary(file_name)#parse the file to list of dictionaries
+    devices_list.append(device)
+    dictionary_to_xml(devices_list, 'xml_file.xml')#write to the file
+
+
 def component_xml_to_dictionary(file_name):
     file = open(file_name)
     file_content = file.read()
@@ -44,7 +69,7 @@ def feature_xml_to_dictionary(file_name):
     tests = tree.findall('test')  # first node in the xml file
 
     tests_arr = []
-    # go over the all flowes
+    # go over the all tests
     for test in tests:
         test_dict = {}
         test_dict['name'] = test.text
@@ -168,4 +193,3 @@ def return_test(flow_name, test_name, file_name):
             for test in flow['tests']:
                 if test['name'] == test_name:
                     return test
-
