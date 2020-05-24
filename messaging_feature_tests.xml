@@ -1,10 +1,10 @@
 <tests>
 	<test>
-		<name>recive an offensive message via Whatsapp</name>
+		<name>Recive an offensive message via Whatsapp</name>
 		<application>whatsapp</application>
 		<action>message</action>
-		<text>אני יחרים אותך!!</text>
-		<groupName>Yami</groupName>
+		<text>ימניאק</text>
+		<groupName>Father</groupName>
 		<side>recive</side>
 	</test>
 	<test>

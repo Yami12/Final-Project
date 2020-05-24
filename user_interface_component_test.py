@@ -1,8 +1,11 @@
 from tkinter import *
-from main_tester import MainTester
 import xml_parsing
 from main_tester import MainTester
 from threading import Thread
+
+#Starts the program by displaying the first screen
+def run_component_test():
+    main_win.mainloop()
 
 '''Accepts screen name making a move to it'''
 def raise_frame(frame):
@@ -13,9 +16,6 @@ def raise_frame(frame):
 What: send name of flow to run function to run it'''
 def run_test():
     MainTester.run_specific_behvior_flow(entry_run_flow.get())
-
-run_test_thread = Thread(target = run_test)
-
 
 '''When: The user press the button on the "add_component_behavior_frame" screen
 What: Builds a new test with all fields as the user filled out and call to function that add the test to the requested flow'''
@@ -130,6 +130,7 @@ def expected_result_update(event):
         label_message_content.place(x=70, y=360)
         entry_message_content.place(x=240, y=360)
 
+run_test_thread = Thread(target = run_test)
 
 #Visual display of screens
 main_win = Tk()
@@ -175,7 +176,7 @@ Label(run_test_frame, text="flow name:", width=20, font=("bold", 10)).place(x=80
 entry_run_flow = Entry(run_test_frame)
 entry_run_flow.place(x=240, y=80)
 
-Button(run_test_frame, text='run', width=20, bg='brown', fg='white', command=lambda: run_test()).place(x=170, y=300)
+Button(run_test_frame, text='run', width=20, bg='brown', fg='white', command=lambda: run_test_thread.start()).place(x=170, y=300)
 
 '''add_component_behavior_frame
 Screen where user can add new test to existing tests'''
@@ -281,6 +282,3 @@ entry_delete_content = Entry(update_component_behavior_frame)
 label_message_content = Label(update_component_behavior_frame, text="message:", width=20, font=("bold", 10))
 entry_message_content = Entry(update_component_behavior_frame)
 
-#Starts the program by displaying the first screen
-def run_component_test():
-    main_win.mainloop()

@@ -1,9 +1,13 @@
 from tkinter import *
-from main_tester import MainTester
 from threading import Thread
 
+#Starts the program by displaying the first screen
+def run_messaging_feature_test():
+    main_window.mainloop()
+
 def send_message():
-    MainTester.run_messaging_feature_test()
+    from main_tester import MainTester
+    MainTester.run_messaging_feature_test("Recive an offensive message via Whatsapp")
     return
 
 run_test_thread = Thread(target = send_message)
@@ -51,8 +55,5 @@ Label(main_feature_test_frame, text="content of the message:", width=20, font=("
 entry_content_message = Entry(main_feature_test_frame)
 entry_content_message.place(x=240, y=290)
 
-Button(main_feature_test_frame, text='send message', width=20, bg='brown', fg='white', command=lambda: send_message()).place(x=170, y=400)
+Button(main_feature_test_frame, text='send message', width=20, bg='brown', fg='white', command=lambda: run_test_thread.start()).place(x=170, y=400)
 
-#Starts the program by displaying the first screen
-def run_messaging_feature_test():
-    main_window.mainloop()

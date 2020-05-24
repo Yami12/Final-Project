@@ -6,7 +6,10 @@ current_test: the current test that run on the android phone
 '''
 
 import os
+
+
 from appium import webdriver
+
 
 global_driver_child = None
 global_driver_father = None
@@ -32,14 +35,16 @@ def initialize(owner_flag ,platformName, platformVersion, deviceName, apk_file =
     global global_driver_father
 
     desired_caps = {}
+    desired_caps['automationName'] = 'UiAutomator2'
     desired_caps['platformName'] = platformName
     desired_caps['platformVersion'] = platformVersion
     desired_caps['deviceName'] = deviceName
+    desired_caps['disableSuppressAccessibilityService'] = True
     # Returns abs path relative to this file and not cwd
     if apk_file != "":
         desired_caps['app'] = os.path.abspath(os.path.join(os.path.dirname(__file__), apk_file))
     else:
-        desired_caps['noReset'] = 'true'
+        desired_caps['noReset'] = True
     # desired_caps['appPackage'] = appPackage
     # desired_caps['appActivity'] = appActivity
     desired_caps['adbExecTimeout'] = '100000'
@@ -70,7 +75,7 @@ def initialize_child(appPackage, appActivity, clear_logs_flag = False):
     global global_driver_child
     if clear_logs_flag:
         child_desired_caps['clearDeviceLogsOnStart']=True
-    global_driver_child = webdriver.Remote('http://localhost:5556/wd/hub', child_desired_caps)
+    global_driver_child = webdriver.Remote('http://localhost:4723/wd/hub', child_desired_caps)
 
 
 
