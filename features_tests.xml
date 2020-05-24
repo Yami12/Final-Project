@@ -1,22 +1,24 @@
 <test>
     <name>Recive an offensive message via Whatsapp</name>
-    <application>whatsapp</application>
+    <application>Whatsapp</application>
 	<action>message</action>
     <text>אני יעשה עלייך חרם</text>
-    <groupName>Yami</groupName>
+    <isGroup>False</isGroup>
+    <contact>Yami</contact>
 	<side>recive</side>
 </test>
 <test>
     <name>Send an offensive message through whatsapp</name>
-    <application>whatsapp</application>
+    <application>Whatsapp</application>
 	<action>message</action>
     <text>חרם</text>
-    <groupName>Chani</groupName>
+    <isGroup>False</isGroup>
+    <contact>Chani</contact>
 	<side>send</side>
 </test>
 <test>
     <name>Removal from whatsapp group</name>
-    <application>whatsapp</application>
+    <application>Whatsapp</application>
 	<action>removal</action>
     <groupName>check-group</groupName>
 </test>
