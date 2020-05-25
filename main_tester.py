@@ -19,56 +19,10 @@ from queue import Queue
 import re
 from read_messaging_logs import AsynchronousFileReader
 
-logs = []
-tests_results=[]
+tests_results = []
 flowes = []
 messaging_functions = {'whatsapp':'whatsapp_message'}
 class MainTester(unittest.TestCase):
-
-    def enter_contact_conversation(self):
-        subprocess.run(['adb', 'shell', 'uiautomator', 'dump']) # dump the uiautomator file
-        process = subprocess.Popen(['adb', 'shell', 'cat', '/sdcard/window_dump.xml'],
-                                   stdout=subprocess.PIPE) # write the content file to the pipe
-
-        content = str(process.stdout.read())
-        splitted_content = re.split("bounds", content)
-        for item in splitted_content:
-            if "conversations_row_contact_name" in item:
-                coordinates = re.search("(\[[0-9].*\[)",item)[1][:-1]
-                splitted_coordinates = re.split('[\[,\]]',coordinates)
-                subprocess.run(['adb', 'shell', 'input', 'tap', splitted_coordinates[1], splitted_coordinates[2]])
-                process.kill()
-
-    def child_read_messages(app_package):
-
-        #get keepers logcats to a PIPE
-        process = subprocess.Popen(['adb', '-s', 'emulator-5554', 'logcat', '-s', 'HttpKeepersLogger'],
-                                   stdout=subprocess.PIPE)
-        stdout_queue = Queue()
-        stdout_reader = AsynchronousFileReader(process.stdout, stdout_queue)
-        stdout_reader.start()
-
-        #launch the application
-        subprocess.run(['adb', 'shell', 'am', 'start', '-n', app_package])
-        #click the 'search' button
-        subprocess.run(['adb', 'shell', 'input', 'keyevent', '84'])
-        #write the contact name
-        subprocess.run(['adb', 'shell', 'input', 'text', 'Father'])
-        #enter the contact conversation
-        MainTester.enter_contact_conversation(MainTester)
-        time.sleep(15)
-
-        #uplaod the keepers logs
-        subprocess.run(['adb', 'shell', 'am', 'broadcast', '-a', 'com.keepers.childmodule.ACTION_UPLOAD_CONVERSATIONS'])
-        time.sleep(15)
-        #TODO check how to kill thread, how to check thatthe queu is empty and remove the break and replace the while condition
-        while(True):
-            line = stdout_queue.get()
-            if "taggedText" in str(line):
-                logs.append(str(line))
-                print(logs)
-                break
-
 
     def recive_offensive_whatsapp_message(test):
 
