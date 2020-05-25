@@ -37,24 +37,23 @@ class ChildLaunchApplication():
                 subprocess.run(['adb', 'shell', 'input', 'tap', splitted_coordinates[1], splitted_coordinates[2]])
                 process.kill()
 
-
+    #A function that checks whether the message sent in a test exists in the list of received logs
     def check_logs(self):
-        logs = '{"applicationName":"WhatsApp","lastUpdated":1590313131649,"identifier":"com.whatsapp_Father","isGroup":false,"languages":["de","ar","ru","ja","en","es","iw"],"messages":[{"senderName":"","isOutgoing":true,"taggedText":"hiii","timeReceived":1590312660000,"type":"TEXT"},{"senderName":"","isOutgoing":true,"taggedText":"hi123","timeReceived":1590312780000,"type":"TEXT"},{"senderName":"Father","isOutgoing":false,"taggedText":"Fhh","timeReceived":1590312780001,"type":"TEXT"},{"senderName":"","isOutgoing":true,"taggedText":"hi12345","timeReceived":1590312900000,"type":"TEXT"},{"senderName":"Father","isOutgoing":false,"taggedText":"Fjhg","timeReceived":1590312960000,"type":"TEXT"},{"senderName":"","isOutgoing":true,"taggedText":"jj","timeReceived":1590312960001,"type":"TEXT"}],"title":"Father"}'
+        global logs
         current_test = driver.current_test
-        logs = logs.replace("false", "False").replace("true", "True")
-        logs_dict = ast.literal_eval(logs)
-        if logs_dict['applicationName'] != current_test['application']:
-            print(False)
-        if logs_dict['isGroup'] != strtobool(current_test['isGroup']):
-            print(False)
-        if logs_dict['title'] != current_test['contact']:
-            print(False)
-        messages = logs_dict['messages']
-        for message in messages:
-            if (message['isOutgoing'] == True and current_test['side'] == 'recive') or (
-                    message['isOutgoing'] == False and current_test['side'] == 'send'):
-                if message['taggedText'] == current_test['text']:
-                    print(True)
+        for log in logs:
+            specific_log = log.replace("false", "False").replace("true", "True")
+            logs_dict = ast.literal_eval(specific_log)
+            if logs_dict['applicationName'] == current_test['application']:
+                if logs_dict['isGroup'] == strtobool(current_test['isGroup']):
+                    if logs_dict['title'] == current_test['contact']:
+                        messages = logs_dict['messages']
+                        for message in messages:
+                            if (message['isOutgoing'] == True and current_test['side'] == 'recive') or (
+                                    message['isOutgoing'] == False and current_test['side'] == 'send'):
+                                if message['taggedText'] == current_test['text']:
+                                    return True
+        return False
 
 
     def launch_application_screen(self, app_package):
@@ -251,3 +250,5 @@ class checkAlertMessageFatherSide(unittest.TestCase):
     def test_check_alert_message(self):
         driver.initialize_father("", "")
         time.sleep(10)
+
+print(ChildLaunchApplication.check_logs(ChildLaunchApplication))
