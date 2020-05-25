@@ -1,10 +1,11 @@
 import unittest
 import driver
 import time
+import ast
+from distutils.util import strtobool
 import subprocess
 import datetime
 from read_messaging_logs import AsynchronousFileReader
-
 from queue import Queue
 
 class OpenChildSideApplication(unittest.TestCase):
@@ -17,199 +18,119 @@ class OpenChildSideApplication(unittest.TestCase):
         driver.initialize_child('com.keepers', 'com.keeper.common.splash.SplashActivity')
         time.sleep(10)
 
-#Whatsapp
-class FatherSendWhatsappMessage(unittest.TestCase):
-    "Class to run tests against the Chess Free app"
 
-    # def setUp(self):
-    #     "Setup for the test"
-    #     desired_caps = {}
-    #     desired_caps['platformName'] = 'Android'
-    #     desired_caps['platformVersion'] = '8.0.0'
-    #     desired_caps['deviceName'] = 'My HUAWEI'
-    #     desired_caps['noReset'] = 'true'
-    #     # Returns abs path relative to this file and not cwd
-    #     desired_caps['appPackage'] = 'com.whatsapp'
-    #     desired_caps['appActivity'] = 'com.whatsapp.HomeActivity t475'
-    #     self.driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
+#Whatsapp
+class WhatsappMessaging(unittest.TestCase):
 
     def tearDown(self):
         "Tear down the test"
         driver.global_driver_father.quit()
 
-    def test_father_send_message(self):
-        driver.initialize_father('com.whatsapp', 'com.whatsapp.HomeActivity t475')
-        time.sleep(10)
-        search_button = driver.global_driver_father.find_element_by_id("com.whatsapp:id/menuitem_search")
-        search_button.click()
-        name_search_box = driver.global_driver_father.find_element_by_id("com.whatsapp:id/search_src_text")
-        name_search_box.send_keys("יח")
-        msg = driver.global_driver_father.find_element_by_android_uiautomator('new UiSelector().textContains("יחיאל כשר")')
-        msg.click()
-        text_box = driver.global_driver_father.find_element_by_id("com.whatsapp:id/entry")
-        text_box.send_keys(driver.current_test['text'])
-        send_button = driver.global_driver_father.find_element_by_id("com.whatsapp:id/send")
-        send_button.click()
-        time.sleep(20)
-        # WhatsappMessage.child_read_message(self)
-
-
-class ChildReadWhatsappMessage(unittest.TestCase):
-    #
-    # def tearDown(self):
-    #     "Tear down the test"
-    #     driver.global_driver_child.quit()
-
-    def test_child_read_message(self):
-        # # start read the logcats
-        # process = subprocess.Popen(['adb', '-s', 'emulator-5554', 'logcat', '-s', 'HttpKeepersLogger'],
-        #                            stdout=subprocess.PIPE)
-        #
-        # # Launch the asynchronous readers of the process' stdout.
-        # stdout_queue = Queue()
-        # stdout_reader = AsynchronousFileReader(process.stdout, stdout_queue)
-        # stdout_reader.start()
-
-
-        print(datetime.datetime.now().time())
-
+    def father_read_message(self):
         driver.initialize_child('com.whatsapp', 'com.whatsapp.HomeActivity t475')
-        time.sleep(10)
-        search_button = driver.global_driver_child.find_element_by_id("com.whatsapp:id/menuitem_search")
-        search_button.click()
-        time.sleep(10)
-        name_search_box = driver.global_driver_child.find_element_by_id("com.whatsapp:id/search_src_text")
-        name_search_box.send_keys("fa")
-        time.sleep(5)
-        print("hiii")
-        # msg = driver.global_driver_child.find_element_by_android_uiautomator('new UiSelector().textContains("father")')
-        # msg.click()
-        # time.sleep(5)
-        # text_box = driver.global_driver_child.find_element_by_id("com.whatsapp:id/entry")
-        # text_box.send_keys('I read')
-        # send_button = driver.global_driver_child.find_element_by_id("com.whatsapp:id/send")
-        # send_button.click()
-        # time.sleep(10)
-        # driver.global_driver_child.close_app()
-        # time.sleep(20)
-        # driver.global_driver_child.launch_app()
-        # time.sleep(5)
-        # driver.global_driver_child.launch_app()
-        # time.sleep(5)
-        # search_button = driver.global_driver_child.find_element_by_id("com.whatsapp:id/menuitem_search")
-        # search_button.click()
-        # time.sleep(10)
-        # name_search_box = driver.global_driver_child.find_element_by_id("com.whatsapp:id/search_src_text")
-        # name_search_box.send_keys("fa")
-        # msg = driver.global_driver_child.find_element_by_android_uiautomator('new UiSelector().textContains("father")')
-        # msg.click()
-        # driver.global_driver_child.hide_keyboard()
-        # # subprocess.run(['adb', 'shell', 'am', 'broadcast', '-a', 'com.keepers.childmodule.ACTION_UPLOAD_CONVERSATIONS'])
-        # # time.sleep(60)
+        time.sleep(4)
+        driver.global_driver_child.find_element_by_id("com.whatsapp:id/menuitem_search").click()
+        driver.global_driver_child.find_element_by_id("com.whatsapp:id/search_src_text").send_keys("fa")
+        driver.global_driver_child.find_element_by_android_uiautomator('new UiSelector().textContains("father")').click()
 
-        print(datetime.datetime.now().time())
-        # send broadcast
-        # subprocess.run(['adb', 'shell', 'am', 'broadcast', '-a', 'com.keepers.childmodule.ACTION_UPLOAD_CONVERSATIONS'])
-        #
-        # # print the logcats
-        # # while not stdout_reader.eof():
-        #     # while not stdout_queue.empty():
-        # while (1):
-        #     while(1):
-        #         line = stdout_queue.get()
-        #         # if "taggedText" in str(line):
-        #         print(line)
-
-        # time.sleep(10)
+    def test_send_message(self):
+        driver.initialize_father('com.whatsapp', 'com.whatsapp.HomeActivity t475')
+        time.sleep(4)
+        driver.global_driver_father.find_element_by_id("com.whatsapp:id/menuitem_search").click()
+        driver.global_driver_father.find_element_by_id("com.whatsapp:id/search_src_text").send_keys("יח")
+        driver.global_driver_father.find_element_by_android_uiautomator('new UiSelector().textContains("יחיאל כשר")').click()
+        driver.global_driver_father.find_element_by_id("com.whatsapp:id/entry").send_keys(driver.current_test['text'])
+        driver.global_driver_father.find_element_by_id("com.whatsapp:id/send").click()
 
 
 #Facebook
-class FatherSendFacebookMessage(unittest.TestCase):
+class FacebookMessaging(unittest.TestCase):
     "Class to run tests against the Chess Free app"
     def tearDown(self):
         "Tear down the test"
         driver.global_driver_father.quit()
 
-    def test_father_send_message(self):
-        driver.initialize_father('com.facebook.katana', 'com.facebook.katana.activity.FbMainTabActivity')
-        time.sleep(10)
-
-
-class ChildReadFacebookMessage(unittest.TestCase):
-
-    def tearDown(self):
-        "Tear down the test"
-        driver.global_driver_child.quit()
-
-    def test_child_read_message(self):
+    def father_read_message(self):
         driver.initialize_child('com.facebook.katana', 'com.facebook.katana.activity.FbMainTabActivity')
         time.sleep(15)
 
+    def test_send_message(self):
+        driver.initialize_father('com.facebook.katana', 'com.facebook.katana.activity.FbMainTabActivity')
+        time.sleep(4)
+        driver.global_driver_father.find_element_by_android_uiautomator('new UiSelector().descriptionContains("חיפוש בפייסבוק")').click()
+        driver.global_driver_father.find_element_by_class_name("android.widget.EditText").send_keys("הפרש הבודד")
+        driver.global_driver_father.find_element_by_class_name("android.view.ViewGroup").click()
+        driver.global_driver_father.find_element_by_class_name("android.view.ViewGroup").click()
+
 
 #Instagram
-class FatherSendInstagramMessage(unittest.TestCase):
+class InstagramMessaging(unittest.TestCase):
     "Class to run tests against the Chess Free app"
     def tearDown(self):
         "Tear down the test"
         driver.global_driver_father.quit()
 
-    def test_father_send_message(self):
-        driver.initialize_father('com.instagram.android', 'com.instagram.mainactivity.MainActivity')
-        time.sleep(10)
-        search_button = driver.global_driver_father.find_element_by_id('com.instagram.android:id/tab_icon')
-        search_button.click()
-        time.sleep(10)
-        name_search_box = driver.global_driver_father.find_element_by_id("com.instagram.android:id/action_bar_search_edit_text")
-        name_search_box.send_keys("hprshhbv")
-        msg = driver.global_driver_father.find_element_by_android_uiautomator('new UiSelector().textContains("hprshhbvdd")')
-        msg.click()
-
-
-class ChildReadInstagramMessage(unittest.TestCase):
-
-    def tearDown(self):
-        "Tear down the test"
-        driver.global_driver_child.quit()
-
-    def test_child_read_message(self):
+    def father_read_message(self):
         driver.initialize_child('com.instagram.android', 'com.instagram.mainactivity.MainActivity')
-        time.sleep(15)
+        time.sleep(4)
+        driver.global_driver_child.find_element_by_id("com.instagram.android:id/action_bar_inbox_button").click()
+        driver.global_driver_child.find_element_by_id("com.instagram.android:id/search_row").click()
+        driver.global_driver_child.find_element_by_id("com.instagram.android:id/search_bar_real_field").send_keys("hprshhbv")
+        driver.global_driver_child.find_element_by_android_uiautomator('new UiSelector().textContains("hprshhbvdd")').click()
+
+    def test_send_message(self):
+        driver.initialize_father('com.instagram.android', 'com.instagram.mainactivity.MainActivity')
+        time.sleep(4)
+        driver.global_driver_father.find_element_by_android_uiautomator('new UiSelector().descriptionContains("חיפוש וגילוי")').click()
+        name_search_box = driver.global_driver_father.find_element_by_id("com.instagram.android:id/action_bar_search_edit_text")
+        name_search_box.click()
+        name_search_box.send_keys("hprshhbv")
+        driver.global_driver_father.find_element_by_android_uiautomator('new UiSelector().textContains("hprshhbvdd")').click()
+        messagge_button_list = driver.global_driver_father.find_elements_by_class_name("android.widget.TextView")
+        for element in messagge_button_list:
+            if 'הודעה' in str(element.get_attribute("text")):
+                element.click()
+                break
+        driver.global_driver_father.find_element_by_id("com.instagram.android:id/row_thread_composer_edittext").send_keys(driver.current_test['text'])
+        driver.global_driver_father.find_element_by_id("com.instagram.android:id/row_thread_composer_button_send").click()
 
 
 #Telegram
-class FatherSendTelegramMessage(unittest.TestCase):
+class TelegramMessaging(unittest.TestCase):
     "Class to run tests against the Chess Free app"
     def tearDown(self):
         "Tear down the test"
         driver.global_driver_father.quit()
 
-    def test_father_send_message(self):
-        driver.initialize_father('org.telegram.messenger', 'org.telegram.ui.LaunchActivity')
-        time.sleep(10)
-        search_button = driver.global_driver_father.find_element_by_android_uiautomator('new UiSelector().descriptionContains("חיפוש")')
-        search_button.click()
-        time.sleep(10)
-        name_search_box = driver.global_driver_father.find_element_by_xpath("//div[contains(text(),'חיפוש')]")
-        name_search_box.send_keys("יחי")
-
-class ChildReadTelegramMessage(unittest.TestCase):
-
-    def tearDown(self):
-        "Tear down the test"
-        driver.global_driver_child.quit()
-
-    def test_child_read_message(self):
+    def father_read_message(self):
         driver.initialize_child('org.telegram.messenger', 'org.telegram.ui.LaunchActivity')
-        time.sleep(15)
+        time.sleep(4)
+        driver.global_driver_child.find_element_by_android_uiautomator('new UiSelector().descriptionContains("חיפוש")').click()
+        driver.global_driver_child.find_element_by_class_name("android.widget.EditText").send_keys("יחי")
+        driver.global_driver_child.find_element_by_android_uiautomator('new UiSelector().textContains("יחיאל")').click()
+
+
+    def test_send_message(self):
+        driver.initialize_father('org.telegram.messenger', 'org.telegram.ui.LaunchActivity')
+        time.sleep(4)
+        driver.global_driver_father.find_element_by_android_uiautomator('new UiSelector().descriptionContains("חיפוש")').click()
+        driver.global_driver_father.find_element_by_class_name("android.widget.EditText").send_keys("יחי")
+        driver.global_driver_father.find_element_by_android_uiautomator('new UiSelector().textContains("יחיאל")').click()
+        driver.global_driver_father.find_element_by_class_name("android.widget.EditText").send_keys(driver.current_test['text'])
+        driver.global_driver_father.find_element_by_android_uiautomator('new UiSelector().descriptionContains("שלח")').click()
 
 
 #Snapchat
-class FatherSendSnapchatMessage(unittest.TestCase):
+class SnapchatMessage(unittest.TestCase):
     def tearDown(self):
         "Tear down the test"
         driver.global_driver_father.quit()
 
-    def test_father_send_message(self):
+    def father_read_message(self):
+        driver.initialize_child('com.snapchat.android', 'com.snapchat.android.LandingPageActivity')
+        time.sleep(15)
+
+    def test_send_message(self):
         driver.initialize_father('com.snapchat.android', 'com.snapchat.android.LandingPageActivity')
         time.sleep(10)
         search_button = driver.global_driver_father.find_element_by_id('com.snapchat.android:id/neon_header_title')
@@ -230,11 +151,6 @@ class ChildReadSnapchatMessage(unittest.TestCase):
         "Tear down the test"
         driver.global_driver_child.quit()
 
-    def test_child_read_message(self):
-        driver.initialize_child('com.snapchat.android', 'com.snapchat.android.LandingPageActivity')
-        time.sleep(15)
-
-
 
 class CheckChildLogs(unittest.TestCase):
     def tearDown(self):
@@ -242,8 +158,22 @@ class CheckChildLogs(unittest.TestCase):
         driver.global_driver_child.quit()
 
     def test_capture_logcat(self):
-       " you should use here main_tester.logs"
-
+        logs = '{"applicationName":"WhatsApp","lastUpdated":1590313131649,"identifier":"com.whatsapp_Father","isGroup":false,"languages":["de","ar","ru","ja","en","es","iw"],"messages":[{"senderName":"","isOutgoing":true,"taggedText":"hiii","timeReceived":1590312660000,"type":"TEXT"},{"senderName":"","isOutgoing":true,"taggedText":"hi123","timeReceived":1590312780000,"type":"TEXT"},{"senderName":"Father","isOutgoing":false,"taggedText":"Fhh","timeReceived":1590312780001,"type":"TEXT"},{"senderName":"","isOutgoing":true,"taggedText":"hi12345","timeReceived":1590312900000,"type":"TEXT"},{"senderName":"Father","isOutgoing":false,"taggedText":"Fjhg","timeReceived":1590312960000,"type":"TEXT"},{"senderName":"","isOutgoing":true,"taggedText":"jj","timeReceived":1590312960001,"type":"TEXT"}],"title":"Father"}'
+        current_test = driver.current_test
+        logs = logs.replace("false", "False").replace("true", "True")
+        logs_dict = ast.literal_eval(logs)
+        if logs_dict['applicationName'] != current_test['application']:
+            print(False)
+        if logs_dict['isGroup'] != strtobool(current_test['isGroup']):
+            print(False)
+        if logs_dict['title'] != current_test['contact']:
+            print(False)
+        messages = logs_dict['messages']
+        for message in messages:
+            if (message['isOutgoing'] == True and current_test['side'] == 'recive') or (
+                    message['isOutgoing'] == False and current_test['side'] == 'send'):
+                if message['taggedText'] == current_test['text']:
+                    print(True)
 
 class checkAlertMessageFatherSide(unittest.TestCase):
 
