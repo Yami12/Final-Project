@@ -6,8 +6,9 @@ tests = xml_parsing.feature_xml_to_dictionary('messaging_feature_tests.xml')
 tests_names = [x['name'] for x in tests]
 
 def send_message():
-    from main_tester import MainTester
-    MainTester.run_messaging_feature_test(feature_tests.get())
+    if feature_tests.get() != 'Not Selected':
+        from main_tester import MainTester
+        MainTester.run_messaging_feature_test(feature_tests.get())
 
 
 #Starts the program by displaying the first screen
