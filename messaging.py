@@ -10,6 +10,7 @@ from queue import Queue
 import re
 from read_messaging_logs import AsynchronousFileReader
 
+current_sender_driver = None
 logs = []
 app_information = {'WhatsApp': ['com.whatsapp', 'com.whatsapp.HomeActivity t475'],
                    'Facebook': ['com.facebook.katana', 'com.facebook.katana.activity.FbMainTabActivity'],
@@ -18,10 +19,6 @@ app_information = {'WhatsApp': ['com.whatsapp', 'com.whatsapp.HomeActivity t475'
                    'Snapchat': ['com.snapchat.android', 'com.snapchat.android.LandingPageActivity']}
 
 class ChildLaunchApplication():
-
-    def tearDown(self):
-        "Tear down the test"
-        driver.global_driver_child.quit()
 
     def enter_contact_conversation(self):
         subprocess.run(['adb', 'shell', 'uiautomator', 'dump']) # dump the uiautomator file
@@ -98,26 +95,29 @@ class WhatsappMessaging(unittest.TestCase):
 
     def tearDown(self):
         "Tear down the test"
-        driver.global_driver_father.quit()
+        current_sender_driver.quit()
 
-    def father_read_message(self):
-        driver.initialize_child()
-        time.sleep(4)
-        driver.global_driver_child.find_element_by_id("com.whatsapp:id/menuitem_search").click()
-        driver.global_driver_child.find_element_by_id("com.whatsapp:id/search_src_text").send_keys("fa")
-        driver.global_driver_child.find_element_by_android_uiautomator('new UiSelector().textContains("father")').click()
+    # def father_read_message(self):
+    #     driver.initialize_child()
+    #     time.sleep(4)
+    #     driver.global_driver_child.find_element_by_id("com.whatsapp:id/menuitem_search").click()
+    #     driver.global_driver_child.find_element_by_id("com.whatsapp:id/search_src_text").send_keys("fa")
+    #     driver.global_driver_child.find_element_by_android_uiautomator('new UiSelector().textContains("father")').click()
 
     def test_send_message(self):
+        global current_sender_driver
         if driver.current_test['side'] == 'send':
+            current_sender_driver = driver.global_driver_child
             driver.initialize_child(app_information['WhatsApp'][0], app_information['WhatsApp'][1])
         else:
+            current_sender_driver = driver.global_driver_father
             driver.initialize_father(app_information['WhatsApp'][0], app_information['WhatsApp'][1])
         time.sleep(4)
-        driver.global_driver_father.find_element_by_id("com.whatsapp:id/menuitem_search").click()
-        driver.global_driver_father.find_element_by_id("com.whatsapp:id/search_src_text").send_keys(driver.current_test['contact'])
-        driver.global_driver_father.find_element_by_android_uiautomator('new UiSelector().textContains(driver.current_test["contact"])').click()
-        driver.global_driver_father.find_element_by_id("com.whatsapp:id/entry").send_keys(driver.current_test['text'])
-        driver.global_driver_father.find_element_by_id("com.whatsapp:id/send").click()
+        current_sender_driver.find_element_by_id("com.whatsapp:id/menuitem_search").click()
+        current_sender_driver.find_element_by_id("com.whatsapp:id/search_src_text").send_keys(driver.current_test['contact'])
+        current_sender_driver.find_element_by_android_uiautomator('new UiSelector().textContains(driver.current_test["contact"])').click()
+        current_sender_driver.find_element_by_id("com.whatsapp:id/entry").send_keys(driver.current_test['text'])
+        current_sender_driver.find_element_by_id("com.whatsapp:id/send").click()
         ChildLaunchApplication.get_keepers_logs(app_information['WhatsApp'][0] + '/' + app_information['WhatsApp'][1])
 
 
@@ -126,22 +126,25 @@ class FacebookMessaging(unittest.TestCase):
     "Class to run tests against the Chess Free app"
     def tearDown(self):
         "Tear down the test"
-        driver.global_driver_father.quit()
+        current_sender_driver.quit()
 
-    def father_read_message(self):
-        driver.initialize_child('com.facebook.katana', 'com.facebook.katana.activity.FbMainTabActivity')
-        time.sleep(15)
+    # def father_read_message(self):
+    #     driver.initialize_child('com.facebook.katana', 'com.facebook.katana.activity.FbMainTabActivity')
+    #     time.sleep(15)
 
     def test_send_message(self):
+        global current_sender_driver
         if driver.current_test['side'] == 'send':
+            current_sender_driver = driver.global_driver_child
             driver.initialize_child(app_information['Facebook'][0], app_information['Facebook'][1])
         else:
+            current_sender_driver = driver.global_driver_father
             driver.initialize_father(app_information['Facebook'][0], app_information['Facebook'][1])
         time.sleep(4)
-        driver.global_driver_father.find_element_by_android_uiautomator('new UiSelector().descriptionContains("חיפוש בפייסבוק")').click()
-        driver.global_driver_father.find_element_by_class_name("android.widget.EditText").send_keys("הפרש הבודד")
-        driver.global_driver_father.find_element_by_class_name("android.view.ViewGroup").click()
-        driver.global_driver_father.find_element_by_class_name("android.view.ViewGroup").click()
+        current_sender_driver.find_element_by_android_uiautomator('new UiSelector().descriptionContains("חיפוש בפייסבוק")').click()
+        current_sender_driver.find_element_by_class_name("android.widget.EditText").send_keys("הפרש הבודד")
+        current_sender_driver.find_element_by_class_name("android.view.ViewGroup").click()
+        current_sender_driver.find_element_by_class_name("android.view.ViewGroup").click()
 
         ChildLaunchApplication.get_keepers_logs(app_information['Facebook'][0] + '/' + app_information['Facebook'][1])
 
@@ -150,34 +153,37 @@ class InstagramMessaging(unittest.TestCase):
     "Class to run tests against the Chess Free app"
     def tearDown(self):
         "Tear down the test"
-        driver.global_driver_father.quit()
+        current_sender_driver.quit()
 
-    def father_read_message(self):
-        driver.initialize_child('com.instagram.android', 'com.instagram.mainactivity.MainActivity')
-        time.sleep(4)
-        driver.global_driver_child.find_element_by_id("com.instagram.android:id/action_bar_inbox_button").click()
-        driver.global_driver_child.find_element_by_id("com.instagram.android:id/search_row").click()
-        driver.global_driver_child.find_element_by_id("com.instagram.android:id/search_bar_real_field").send_keys("hprshhbv")
-        driver.global_driver_child.find_element_by_android_uiautomator('new UiSelector().textContains("hprshhbvdd")').click()
+    # def father_read_message(self):
+    #     driver.initialize_child('com.instagram.android', 'com.instagram.mainactivity.MainActivity')
+    #     time.sleep(4)
+    #     driver.global_driver_child.find_element_by_id("com.instagram.android:id/action_bar_inbox_button").click()
+    #     driver.global_driver_child.find_element_by_id("com.instagram.android:id/search_row").click()
+    #     driver.global_driver_child.find_element_by_id("com.instagram.android:id/search_bar_real_field").send_keys("hprshhbv")
+    #     driver.global_driver_child.find_element_by_android_uiautomator('new UiSelector().textContains("hprshhbvdd")').click()
 
     def test_send_message(self):
+        global current_sender_driver
         if driver.current_test['side'] == 'send':
+            current_sender_driver = driver.global_driver_child
             driver.initialize_child(app_information['Instagram'][0], app_information['Instagram'][1])
         else:
+            current_sender_driver = driver.global_driver_father
             driver.initialize_father(app_information['Instagram'][0], app_information['Instagram'][1])
         time.sleep(4)
-        driver.global_driver_father.find_element_by_android_uiautomator('new UiSelector().descriptionContains("חיפוש וגילוי")').click()
-        name_search_box = driver.global_driver_father.find_element_by_id("com.instagram.android:id/action_bar_search_edit_text")
+        current_sender_driver.find_element_by_android_uiautomator('new UiSelector().descriptionContains("חיפוש וגילוי")').click()
+        name_search_box = current_sender_driver.find_element_by_id("com.instagram.android:id/action_bar_search_edit_text")
         name_search_box.click()
         name_search_box.send_keys(driver.current_test["contact"])
-        driver.global_driver_father.find_element_by_android_uiautomator('new UiSelector().textContains(driver.current_test["contact"])').click()
-        messagge_button_list = driver.global_driver_father.find_elements_by_class_name("android.widget.TextView")
+        current_sender_driver.find_element_by_android_uiautomator('new UiSelector().textContains(driver.current_test["contact"])').click()
+        messagge_button_list = current_sender_driver.find_elements_by_class_name("android.widget.TextView")
         for element in messagge_button_list:
             if 'הודעה' in str(element.get_attribute("text")):
                 element.click()
                 break
-        driver.global_driver_father.find_element_by_id("com.instagram.android:id/row_thread_composer_edittext").send_keys(driver.current_test['text'])
-        driver.global_driver_father.find_element_by_id("com.instagram.android:id/row_thread_composer_button_send").click()
+        current_sender_driver.find_element_by_id("com.instagram.android:id/row_thread_composer_edittext").send_keys(driver.current_test['text'])
+        current_sender_driver.find_element_by_id("com.instagram.android:id/row_thread_composer_button_send").click()
 
         ChildLaunchApplication.get_keepers_logs(app_information['Instagram'][0] + '/' + app_information['Instagram'][1])
 
@@ -186,27 +192,29 @@ class TelegramMessaging(unittest.TestCase):
     "Class to run tests against the Chess Free app"
     def tearDown(self):
         "Tear down the test"
-        driver.global_driver_father.quit()
+        current_sender_driver.quit()
 
-    def father_read_message(self):
-        driver.initialize_child('org.telegram.messenger', 'org.telegram.ui.LaunchActivity')
-        time.sleep(4)
-        driver.global_driver_child.find_element_by_android_uiautomator('new UiSelector().descriptionContains("חיפוש")').click()
-        driver.global_driver_child.find_element_by_class_name("android.widget.EditText").send_keys("יחי")
-        driver.global_driver_child.find_element_by_android_uiautomator('new UiSelector().textContains("יחיאל")').click()
-
+    # def father_read_message(self):
+    #     driver.initialize_child('org.telegram.messenger', 'org.telegram.ui.LaunchActivity')
+    #     time.sleep(4)
+    #     driver.global_driver_child.find_element_by_android_uiautomator('new UiSelector().descriptionContains("חיפוש")').click()
+    #     driver.global_driver_child.find_element_by_class_name("android.widget.EditText").send_keys("יחי")
+    #     driver.global_driver_child.find_element_by_android_uiautomator('new UiSelector().textContains("יחיאל")').click()
 
     def test_send_message(self):
+        global current_sender_driver
         if driver.current_test['side'] == 'send':
+            current_sender_driver = driver.global_driver_child
             driver.initialize_child(app_information['Telegram'][0], app_information['Telegram'][1])
         else:
+            current_sender_driver = driver.global_driver_father
             driver.initialize_father(app_information['Telegram'][0], app_information['Telegram'][1])
         time.sleep(4)
-        driver.global_driver_father.find_element_by_android_uiautomator('new UiSelector().descriptionContains("חיפוש")').click()
-        driver.global_driver_father.find_element_by_class_name("android.widget.EditText").send_keys(driver.current_test["contact"])
-        driver.global_driver_father.find_element_by_android_uiautomator('new UiSelector().textContains(driver.current_test["contact"])').click()
-        driver.global_driver_father.find_element_by_class_name("android.widget.EditText").send_keys(driver.current_test['text'])
-        driver.global_driver_father.find_element_by_android_uiautomator('new UiSelector().descriptionContains("שלח")').click()
+        current_sender_driver.find_element_by_android_uiautomator('new UiSelector().descriptionContains("חיפוש")').click()
+        current_sender_driver.find_element_by_class_name("android.widget.EditText").send_keys(driver.current_test["contact"])
+        current_sender_driver.find_element_by_android_uiautomator('new UiSelector().textContains(driver.current_test["contact"])').click()
+        current_sender_driver.find_element_by_class_name("android.widget.EditText").send_keys(driver.current_test['text'])
+        current_sender_driver.find_element_by_android_uiautomator('new UiSelector().descriptionContains("שלח")').click()
 
         ChildLaunchApplication.get_keepers_logs(app_information['Telegram'][0] + '/' + app_information['Telegram'][1])
 
@@ -214,28 +222,28 @@ class TelegramMessaging(unittest.TestCase):
 class SnapchatMessage(unittest.TestCase):
     def tearDown(self):
         "Tear down the test"
-        driver.global_driver_father.quit()
+        current_sender_driver.quit()
 
-    def father_read_message(self):
-        driver.initialize_child('com.snapchat.android', 'com.snapchat.android.LandingPageActivity')
-        time.sleep(15)
+    # def father_read_message(self):
+    #     driver.initialize_child('com.snapchat.android', 'com.snapchat.android.LandingPageActivity')
+    #     time.sleep(15)
 
     def test_send_message(self):
+        global current_sender_driver
         if driver.current_test['side'] == 'send':
+            current_sender_driver = driver.global_driver_child
             driver.initialize_child(app_information['Snapchat'][0], app_information['Snapchat'][1])
         else:
+            current_sender_driver = driver.global_driver_father
             driver.initialize_father(app_information['Snapchat'][0], app_information['Snapchat'][1])
         time.sleep(4)
-        search_button = driver.global_driver_father.find_element_by_id('com.snapchat.android:id/neon_header_title')
-        search_button.click()
+        current_sender_driver.find_element_by_id('com.snapchat.android:id/neon_header_title').click()
         # time.sleep(10)
        # name_search_box = driver.global_driver_father.find_element_by_id("com.snapchat.android:id/neon_header_layout")
 
         #search_button.send_keys("ch")
         print("----1")
-        msg = driver.global_driver_father.find_element_by_class_name('android.widget.EditText')
-        print("----3")
-        msg.send_keys("ch")
+        current_sender_driver.find_element_by_class_name('android.widget.EditText').send_keys("ch")
         print("----2")
 
         ChildLaunchApplication.get_keepers_logs(app_information['Snapchat'][0] + '/' + app_information['Snapchat'][1])
