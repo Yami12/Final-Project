@@ -1,25 +1,26 @@
 <tests>
-	<test>
-		<name>Recive an offensive message via Whatsapp</name>
-		<application>whatsapp</application>
-		<action>message</action>
-		<text>ימניאק</text>
-		<groupName>Father</groupName>
-		<side>recive</side>
-	</test>
-	<test>
-		<name>Send an offensive message through whatsapp</name>
-		<application>whatsapp</application>
-		<action>message</action>
-		<text>hi</text>
-		<groupName>Chani</groupName>
-		<side>send</side>
-	</test>
-	<test>
-		<name>Removal from whatsapp group</name>
-		<application>whatsapp</application>
-		<action>removal</action>
-		<groupName>check-group</groupName>
-		<side>send</side>
-	</test>
+    <test>
+        <name>Recive an offensive message via Whatsapp</name>
+        <application>WhatsApp</application>
+        <action>message</action>
+        <text>אני יעשה עלייך חרם</text>
+        <isGroup>False</isGroup>
+        <contact>Yami</contact>
+        <side>recive</side>
+    </test>
+    <test>
+        <name>Send an offensive message through whatsapp</name>
+        <application>WhatsApp</application>
+        <action>message</action>
+        <text>חרם</text>
+        <isGroup>False</isGroup>
+        <contact>Chani</contact>
+        <side>send</side>
+    </test>
+    <test>
+        <name>Removal from whatsapp group</name>
+        <application>WhatsApp</application>
+        <action>removal</action>
+        <groupName>check-group</groupName>
+    </test>
 </tests>

@@ -2,12 +2,13 @@
 This file interacts with the user
 The user is given options for various actions, he chooses the one he wants, fills in the required details and the program executes it
 '''
-
 from tkinter import *
 import xml_parsing
 import driver
 
 flag_component_feature = 0#component=0, feature=1
+devices = xml_parsing.devices_xml_to_dictionary('devices.xml')
+devices_names = [x['device_name'] for x in devices]
 
 '''Accepts screen name making a move to it'''
 def raise_frame(frame):
@@ -16,9 +17,12 @@ def raise_frame(frame):
 '''When: The user has finished entering the phone information and press the button on the "device_frame" screen
 What: Connects to the appium driver and moves to the next screen'''
 def device_frame_ok():
-     driver.initialize("father", entry_platform_name.get(), entry_platform_version.get(), entry_device_name.get())
-     driver.initialize("child", entry_platform_name.get(), entry_platform_version.get(), entry_device_name.get())
-     next_window()
+     if father_devices.get() != 'Not Selected' and child_devices.get() != 'Not Selected':
+         father_device = next(i for i in devices if i["device_name"] == father_devices.get())
+         child_device = next(i for i in devices if i["device_name"] == child_devices.get())
+         driver.initialize("father", father_device['platform_name'], father_device['platform_version'], father_devices.get())
+         driver.initialize("child", child_device['platform_name'], child_device['platform_version'], child_devices.get())
+         next_window()
 
 def add_device():
     raise_frame(add_device_frame)
@@ -30,14 +34,29 @@ def add_device_button():
     new_device['platform_name'] = entry_platform_name.get()
     new_device['platform_version'] = entry_platform_version.get()
     xml_parsing.add_new_device(new_device, 'devices.xml')
-
+    global devices
+    global devices_names
+    devices = xml_parsing.devices_xml_to_dictionary('devices.xml')
+    devices_names = [x['device_name'] for x in devices]
+    global flag_component_feature
     if flag_component_feature == 1:
+        father_devices_entry.children["menu"].delete(0, 'end')
+        child_devices_entry.children["menu"].delete(0, 'end')
+        for name in devices_names:
+            father_devices_entry.children["menu"].add_command(label=name, command=lambda value=name: father_devices.set(value))
+            child_devices_entry.children["menu"].add_command(label=name, command=lambda value=name: child_devices.set(value))
         raise_frame(feature_device_frame)
     else:  # flag_component_feature == 0
+        tester_devices_entry.children["menu"].delete(0, 'end')
+        for name in devices_names:
+            tester_devices_entry.children["menu"].add_command(label=name, command=lambda value=name: tester_devices.set(value))
         raise_frame(component_device_frame)
 
 def tester_device_frame_ok():
-    return
+    if tester_devices.get() != 'Not Selected':
+        tester_device = next(i for i in devices if i["device_name"] == tester_devices.get())
+        driver.initialize("tester", tester_device['platform_name'], tester_device['platform_version'], tester_devices.get())
+        next_window()
 
 def open_features_window():
     raise_frame(feature_device_frame)
@@ -101,10 +120,6 @@ entry_device_name.insert(0, 'My HUAWEI')#)'Child_Device'
 
 Button(add_device_frame, text='add', width=20, bg='brown', fg='white', command=lambda: add_device_button()).place(x=170, y=300)
 
-# devices_names = xml_parsing.devices_xml_to_dictionary('devices.xml')
-devices_names = [1, 2, 3]
-print(devices_names)
-
 '''component_device_frame
 A screen where the user enters various details of the mobile device to which he wants to add.
 This allows you to connect to the device via the driver'''
@@ -113,7 +128,7 @@ Label(component_device_frame, text="tester device:", width=20, font=("bold", 10)
 tester_devices = StringVar()
 tester_devices_entry = OptionMenu(component_device_frame, tester_devices, *devices_names)
 tester_devices_entry.place(x=240, y=170)
-tester_devices.set("select tester device")
+tester_devices.set("Not Selected")
 
 Button(component_device_frame, text='add device', width=20, bg='brown', fg='white', command=lambda: add_device()).place(x=170, y=400)
 
@@ -129,20 +144,17 @@ Label(feature_device_frame, text="father device:", width=20, font=("bold", 10)).
 father_devices = StringVar()
 father_devices_entry = OptionMenu(feature_device_frame, father_devices, *devices_names)
 father_devices_entry.place(x=240, y=170)
-father_devices.set("select father device")
+father_devices.set("Not Selected")
 
 Label(feature_device_frame, text="child device:", width=20, font=("bold", 10)).place(x=80, y=300)
 child_devices = StringVar()
 child_devices_entry = OptionMenu(feature_device_frame, child_devices, *devices_names)
 child_devices_entry.place(x=240, y=300)
-child_devices.set("select child device")
+child_devices.set("Not Selected")
 
 Button(feature_device_frame, text='add device', width=20, bg='brown', fg='white', command=lambda: add_device()).place(x=170, y=400)
 
 Button(feature_device_frame, text='next', width=20, bg='brown', fg='white', command=lambda: device_frame_ok()).place(x=170, y=450)
-
-
-
 
 '''first_frame
 A screen where the user can choose what type of testing he wants to use'''
