@@ -36,6 +36,7 @@
                 <resourceId>com.keepers:id/input_child_name</resourceId>
                 <appActivity>com.keeper.common.enter.child.bezeq.EnterChildActivity</appActivity>
                 <type>Entry</type>
+                <actionType>send_keys</actionType>
                 <content>hadar</content>
                 <expectedResult>pass</expectedResult>
             </test>
@@ -44,6 +45,7 @@
                 <resourceId>com.keepers:id/input_date_of_birth</resourceId>
                 <appActivity>com.keeper.common.enter.child.bezeq.EnterChildActivity</appActivity>
                 <type>Entry</type>
+                <actionType>send_keys</actionType>
                 <content>05.11.2010</content>
                 <expectedResult>pass</expectedResult>
             </test>
@@ -52,6 +54,7 @@
                 <resourceId>com.keepers:id/input_email</resourceId>
                 <appActivity>com.keeper.common.enter.child.bezeq.EnterChildActivity</appActivity>
                 <type>Entry</type>
+                <actionType>send_keys</actionType>
                 <content>yamushkach@gmail.com</content>
                 <expectedResult>pass</expectedResult>
             </test>
@@ -60,6 +63,7 @@
                 <resourceId>com.keepers:id/input_password</resourceId>
                 <appActivity>com.keeper.common.enter.child.bezeq.EnterChildActivity</appActivity>
                 <type>Entry</type>
+                <actionType>send_keys</actionType>
                 <content>123456</content>
                 <expectedResult>pass</expectedResult>
             </test>
@@ -97,6 +101,7 @@
                 <resourceId>com.keepers:id/input_date_of_birth</resourceId>
                 <appActivity>com.keeper.common.enter.child.bezeq.EnterChildActivity</appActivity>
                 <type>Entry</type>
+                <actionType>send_keys</actionType>
                 <content>05.11.2001</content>
                 <expectedResult>pass</expectedResult>
             </test>
@@ -105,6 +110,7 @@
                 <resourceId>com.keepers:id/input_email</resourceId>
                 <appActivity>com.keeper.common.enter.child.bezeq.EnterChildActivity</appActivity>
                 <type>Entry</type>
+                <actionType>send_keys</actionType>
                 <content>yamushkach@gmail.com</content>
                 <expectedResult>pass</expectedResult>
             </test>
@@ -113,6 +119,7 @@
                 <resourceId>com.keepers:id/input_password</resourceId>
                 <appActivity>com.keeper.common.enter.child.bezeq.EnterChildActivity</appActivity>
                 <type>Entry</type>
+                <actionType>send_keys</actionType>
                 <content>123456</content>
                 <expectedResult>pass</expectedResult>
             </test>
@@ -150,6 +157,7 @@
                 <resourceId>com.keepers:id/input_child_name</resourceId>
                 <appActivity>com.keeper.common.enter.child.bezeq.EnterChildActivity</appActivity>
                 <type>Entry</type>
+                <actionType>send_keys</actionType>
                 <content>hadar</content>
                 <expectedResult>pass</expectedResult>
             </test>
@@ -158,6 +166,7 @@
                 <resourceId>com.keepers:id/input_date_of_birth</resourceId>
                 <appActivity>com.keeper.common.enter.child.bezeq.EnterChildActivity</appActivity>
                 <type>Entry</type>
+                <actionType>send_keys</actionType>
                 <content>05.11.2012 </content>
                 <expectedResult>pass</expectedResult>
             </test>
@@ -166,6 +175,7 @@
                 <resourceId>com.keepers:id/input_email</resourceId>
                 <appActivity>com.keeper.common.enter.child.bezeq.EnterChildActivity</appActivity>
                 <type>Entry</type>
+                <actionType>send_keys</actionType>
                 <content>yamushkach@gmail.com</content>
                 <expectedResult>pass</expectedResult>
             </test>
@@ -174,6 +184,7 @@
                 <resourceId>com.keepers:id/input_password</resourceId>
                 <appActivity>com.keeper.common.enter.child.bezeq.EnterChildActivity</appActivity>
                 <type>Entry</type>
+                <actionType>send_keys</actionType>
                 <content>123456</content>
                 <expectedResult>pass</expectedResult>
             </test>
@@ -211,6 +222,7 @@
                 <resourceId>com.keepers:id/input_child_name</resourceId>
                 <appActivity>com.keeper.common.enter.child.bezeq.EnterChildActivity</appActivity>
                 <type>Entry</type>
+                <actionType>send_keys</actionType>
                 <content>hadar</content>
                 <expectedResult>pass</expectedResult>
             </test>
@@ -219,6 +231,7 @@
                 <resourceId>com.keepers:id/input_date_of_birth</resourceId>
                 <appActivity>com.keeper.common.enter.child.bezeq.EnterChildActivity</appActivity>
                 <type>Entry</type>
+                <actionType>send_keys</actionType>
                 <content>31.10.2013 </content>
                 <expectedResult>pass</expectedResult>
             </test>
@@ -227,6 +240,7 @@
                 <resourceId>com.keepers:id/input_email</resourceId>
                 <appActivity>com.keeper.common.enter.child.bezeq.EnterChildActivity</appActivity>
                 <type>Entry</type>
+                <actionType>send_keys</actionType>
                 <content>yamushkach@gmail.com</content>
                 <expectedResult>pass</expectedResult>
             </test>
@@ -235,6 +249,7 @@
                 <resourceId>com.keepers:id/input_password</resourceId>
                 <appActivity>com.keeper.common.enter.child.bezeq.EnterChildActivity</appActivity>
                 <type>Entry</type>
+                <actionType>send_keys</actionType>
                 <content>12345</content>
                 <expectedResult>pass</expectedResult>
             </test>

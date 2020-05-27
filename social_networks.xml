@@ -1,0 +1,39 @@
+<social_networks>
+	<social_network>
+		<name>WhatsApp</name>
+		<app_package>com.whatsapp</app_package>
+		<app_activity>com.whatsapp.HomeActivity t475</app_activity>
+		<steps>
+			<step>
+				<type>id</type>
+				<id>com.whatsapp:id/menuitem_search</id>
+				<action>click</action>
+				<content></content>
+			</step>
+			<step>
+				<type>id</type>
+				<id>com.whatsapp:id/search_src_text</id>
+				<action>send keys</action>
+				<content>content</content>
+			</step>
+			<step>
+				<type>uiautomator</type>
+				<id>chat name</id>
+				<action>click</action>
+				<content></content>
+			</step>
+			<step>
+				<type>id</type>
+				<id>com.whatsapp:id/entry</id>
+				<action>send keys</action>
+				<content>text</content>
+			</step>
+			<step>
+				<type>id</type>
+				<id>com.whatsapp:id/send</id>
+				<action>click</action>
+				<content></content>
+			</step>
+		</steps>
+	</social_network>
+</social_networks>
