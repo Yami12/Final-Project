@@ -3,44 +3,95 @@ this file handles the tests xml file and all the tests operations
 '''
 
 import xml.etree.cElementTree as et
+import string_list as sl
 
-'''
-function:xml_to_dictionary
-description: converts the xml file of tests to list of dictionaries
-parameters:
-file_name - the name of the xml file
-'''
+
+# -------------------------------------devices------------------------------------
 
 def devices_xml_to_dictionary(file_name):
     file = open(file_name)
     file_content = file.read()
-    print(file_content)
     tree = et.fromstring(file_content)
-    devices = tree.findall('device')  # first node in the xml file
+    devices = tree.findall(sl.DEVICE)  # first node in the xml file
 
     devices_arr = []
     # go over the all tests
     for device in devices:
         device_dict = {}
-        device_dict['name'] = device.text
+        device_dict[sl.DEVICE_NAME] = device.text
         for i in device:
             device_dict[i.tag] = i.text
         devices_arr.append(device_dict)
-        print(device_dict)
-    print(devices_arr)
     return devices_arr
+
+def device_dictionary_to_xml(dict, file_name):
+    root = et.Element(sl.DEVICES)
+    for device in dict:
+        device_node = et.SubElement(root, sl.DEVICE)
+        for key in device.keys():
+            et.SubElement(device_node, key).text = device[key]
+
+    tree = et.ElementTree(root)
+    tree.write(file_name)
+
 
 def add_new_device(device, file_name):
     devices_list = devices_xml_to_dictionary(file_name)#parse the file to list of dictionaries
     devices_list.append(device)
-    dictionary_to_xml(devices_list, 'xml_file.xml')#write to the file
+    device_dictionary_to_xml(devices_list, file_name)#write to the file
 
+
+# -------------------------------------features------------------------------------
+
+def feature_xml_to_dictionary(file_name):
+    file = open(file_name,encoding='UTF-8')
+    file_content = file.read()
+    tree = et.fromstring(file_content)
+
+    tests = tree.findall(sl.TEST)  # first node in the xml file
+
+    tests_arr = []
+    # go over the all tests
+    for test in tests:
+        test_dict = {}
+        test_dict[sl.TEST_NAME] = test.text
+        for i in test:
+            test_dict[i.tag] = i.text
+        tests_arr.append(test_dict)
+    return tests_arr
+
+def social_network_xml_to_dictionary(file_name):
+    file = open(file_name)
+    file_content = file.read()
+    tree = et.fromstring(file_content)
+    s_network = tree.findall(sl.SOCIAL_NETWORK)  # first node in the xml file
+
+    networks_arr = []
+    # go over the all the networks
+    for network in s_network:
+        network_dict = {}
+        steps_arr = []
+        for i in network:
+            if not i.tag == sl.STEPS:
+                network_dict[i.tag] = i.text
+            else:
+                for step in i:  # network's steps
+                    step_dict = {}
+                    for j in step:
+                        step_dict[j.tag] = j.text
+                    steps_arr.append(step_dict)
+            network_dict['steps'] = steps_arr
+        networks_arr.append(network_dict)
+    return networks_arr
+
+
+# -------------------------------------components------------------------------------
 
 def component_xml_to_dictionary(file_name):
     file = open(file_name)
     file_content = file.read()
     tree = et.fromstring(file_content)
-    flowes = tree.findall('flow')#first node in the xml file
+    flowes = tree.findall(sl.FLOW)#first node in the xml file
 
     flowes_arr = []
     #go over the all flowes
@@ -49,36 +100,17 @@ def component_xml_to_dictionary(file_name):
         tests_arr = []
         #go over all the flow's tests
         for tests in flow:
-            if tests.tag == 'name':#flow name
-                flow_dict['name'] = tests.text
+            if tests.tag == sl.FLOW_NAME:#flow name
+                flow_dict[sl.FLOW_NAME] = tests.text
             else:
                 for test in tests:# flow's tests
                     test_dict = {}
                     for i in test:
                         test_dict[i.tag] = i.text
                     tests_arr.append(test_dict)
-            flow_dict['tests'] = tests_arr
+            flow_dict[sl.TESTS] = tests_arr
         flowes_arr.append(flow_dict)
     return flowes_arr
-
-def feature_xml_to_dictionary(file_name):
-    file = open(file_name,encoding='UTF-8')
-    file_content = file.read()
-    tree = et.fromstring(file_content)
-
-    tests = tree.findall('test')  # first node in the xml file
-
-    tests_arr = []
-    # go over the all tests
-    for test in tests:
-        test_dict = {}
-        test_dict['name'] = test.text
-        for i in test:
-            test_dict[i.tag] = i.text
-        tests_arr.append(test_dict)
-        print(test_dict)
-    print(tests_arr)
-    return tests_arr
 
 '''
 function:dictionary_to_xml
@@ -88,16 +120,16 @@ dict - the list of the dictionaries
 file_name - the name of the xml file
 '''
 def dictionary_to_xml(dict, file_name):
-    root = et.Element("flowes")
+    root = et.Element(sl.FLOWES)
     for flow in dict:
-        flow_node = et.SubElement(root, "flow")
+        flow_node = et.SubElement(root, sl.FLOW)
         for key in flow.keys():
-            if key == 'name':
+            if key == sl.FLOW_NAME:
                 et.SubElement(flow_node, key).text = flow[key]
             else:
-                tests = et.SubElement(flow_node, "tests")
+                tests = et.SubElement(flow_node, sl.TESTS)
                 for i in flow[key]:
-                    test = et.SubElement(tests, "test")
+                    test = et.SubElement(tests, sl.TEST)
                     for j in i.keys():
                         et.SubElement(test, j).text = i[j]
 
@@ -119,10 +151,10 @@ def add_new_test_to_flow(flow_name, test, file_name):
     #go over all the flowes
     for flow in flowes_list:
         #go over all the flow's tests
-        if flow['name'] == flow_name:
-            flow['tests'].append(test)#adds the new test
+        if flow[sl.FLOW_NAME] == flow_name:
+            flow[sl.TESTS].append(test)#adds the new test
             break
-    dictionary_to_xml(flowes_list, 'xml_file.xml')#write to the file
+    dictionary_to_xml(flowes_list, file_name)#write to the file
 
 
 '''
@@ -137,11 +169,11 @@ def delete_test_from_flow(flow_name, test_name, file_name):
     flowes_list = component_xml_to_dictionary(file_name)#parse the file to list of dictionaries
     for flow in flowes_list:
         #go over all the flowes
-        if flow['name'] == flow_name:
+        if flow[sl.FLOW_NAME] == flow_name:
             # go over all the flow's tests
-            for test in flow['tests']:
-                if test['name'] == test_name:
-                    flow['tests'].remove(test)#deletes the new test
+            for test in flow[sl.TESTS]:
+                if test[sl.TEST_NAME] == test_name:
+                    flow[sl.TESTS].remove(test)#deletes the new test
                     break
             break
     dictionary_to_xml(flowes_list, file_name)#write to the file
@@ -160,18 +192,17 @@ def update_test_in_flow(flow_name, test_name, expected_result, action_or_content
     flowes_list = component_xml_to_dictionary(file_name)
     for flow in flowes_list:
         # go over all the flowes
-        if flow['name'] == flow_name:
+        if flow[sl.FLOW_NAME] == flow_name:
             # go over all the flow's tests
-            for test in flow['tests']:
-                if test['name'] == test_name:#update test's fields
-                    selected = test['type']
-                    if selected == 'Button':
-                        test['actionType'] = action_or_content
-                    elif selected == "Label":
-                        test['content'] = action_or_content
-                    test['expectedResult'] = expected_result
+            for test in flow[sl.TESTS]:
+                if test[sl.TEST_NAME] == test_name:#update test's fields
+                    selected = test[sl.TEST_TYPE]
+                    if selected == sl.BUTTON:
+                        test[sl.TEST_ACTION_TYPE] = action_or_content
+                    elif selected == sl.LABEL:
+                        test[sl.TEST_CONTENT] = action_or_content
+                    test[sl.TEST_EXPECTED_RES] = expected_result
                     break
-                    print(test)
             break
     dictionary_to_xml(flowes_list, file_name)#write to the file
 
@@ -188,8 +219,8 @@ def return_test(flow_name, test_name, file_name):
     flowes_list = component_xml_to_dictionary(file_name)
     for flow in flowes_list:
         # go over all the flowes
-        if flow['name'] == flow_name:
+        if flow[sl.FLOW_NAME] == flow_name:
             # go over all the flow's tests
-            for test in flow['tests']:
-                if test['name'] == test_name:
+            for test in flow[sl.TESTS]:
+                if test[sl.TEST_NAME] == test_name:
                     return test

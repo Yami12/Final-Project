@@ -20,8 +20,8 @@ def device_frame_ok():
      if father_devices.get() != 'Not Selected' and child_devices.get() != 'Not Selected':
          father_device = next(i for i in devices if i["device_name"] == father_devices.get())
          child_device = next(i for i in devices if i["device_name"] == child_devices.get())
-         driver.initialize("father", father_device['platform_name'], father_device['platform_version'], father_devices.get())
-         driver.initialize("child", child_device['platform_name'], child_device['platform_version'], child_devices.get())
+         driver.initialize(father_device['platform_name'], father_device['platform_version'], father_devices.get())
+         # driver.initialize("child", child_device['platform_name'], child_device['platform_version'], child_devices.get())
          next_window()
 
 def add_device():

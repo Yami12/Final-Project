@@ -3,6 +3,7 @@
 		<name>WhatsApp</name>
 		<app_package>com.whatsapp</app_package>
 		<app_activity>com.whatsapp.HomeActivity t475</app_activity>
+		<parent_name>Father</parent_name>
 		<steps>
 			<step>
 				<type>id</type>
@@ -14,7 +15,7 @@
 				<type>id</type>
 				<id>com.whatsapp:id/search_src_text</id>
 				<action>send keys</action>
-				<content>content</content>
+				<content>contact</content>
 			</step>
 			<step>
 				<type>uiautomator</type>

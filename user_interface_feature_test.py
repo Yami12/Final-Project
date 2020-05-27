@@ -8,7 +8,7 @@ tests_names = [x['name'] for x in tests]
 def send_message():
     if feature_tests.get() != 'Not Selected':
         from main_tester import MainTester
-        MainTester.run_messaging_feature_test(feature_tests.get())
+        MainTester.run_messaging_feature_test(MainTester,feature_tests.get())
 
 
 #Starts the program by displaying the first screen

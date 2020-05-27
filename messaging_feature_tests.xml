@@ -3,9 +3,9 @@
         <name>Recive an offensive message via Whatsapp</name>
         <application>WhatsApp</application>
         <action>message</action>
-        <text>אני יעשה עלייך חרם</text>
+        <text>test3</text>
         <isGroup>False</isGroup>
-        <contact>Yami</contact>
+        <contact>Child</contact>
         <side>recive</side>
     </test>
     <test>
