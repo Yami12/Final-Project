@@ -37,4 +37,89 @@
 			</step>
 		</steps>
 	</social_network>
+    <social_network>
+        <name>Instagram</name>
+		<app_package>com.instagram.android</app_package>
+		<app_activity>com.instagram.mainactivity.MainActivity</app_activity>
+		<parent_name>Father</parent_name>
+        <steps>
+            <step>
+				<type>id</type>
+				<id>com.instagram.android:id/action_bar_inbox_button</id>
+				<action>click</action>
+				<content></content>
+			</step>
+            <step>
+				<type>id</type>
+				<id>com.instagram.android:id/search_edit_text</id>
+				<action>send keys</action>
+				<content>contact</content>
+			</step>
+            <step>
+				<type>uiautomator</type>
+				<id>chat name</id>
+				<action>click</action>
+				<content></content>
+			</step>
+            <step>
+				<type>id</type>
+				<id>com.instagram.android:id/row_thread_composer_edittext</id>
+				<action>send keys</action>
+				<content>text</content>
+			</step>
+            <step>
+				<type>id</type>
+				<id>com.instagram.android:id/row_thread_composer_button_send</id>
+				<action>click</action>
+				<content></content>
+			</step>
+        </steps>
+    </social_network>
+    <social_network>
+        <name>Telegram</name>
+		<app_package>org.telegram.messenger</app_package>
+		<app_activity>org.telegram.ui.LaunchActivity</app_activity>
+		<parent_name>Father</parent_name>
+        <steps>
+            <step>
+				<type>uiautomator</type>
+				<id>Search</id>
+				<action>click</action>
+				<content></content>
+			</step>
+            <step>
+				<type>class</type>
+				<id>android.widget.EditText</id>
+				<action>send keys</action>
+				<content>contact</content>
+			</step>
+            <step>
+				<type>uiautomator</type>
+				<id>chat name</id>
+				<action>click</action>
+				<content></content>
+			</step>
+            <step>
+				<type>class</type>
+				<id>android.widget.EditText</id>
+				<action>send keys</action>
+				<content>text</content>
+			</step>
+            <step>
+				<type>uiautomator</type>
+				<id>Send</id>
+				<action>click</action>
+				<content></content>
+			</step>
+        </steps>
+    </social_network>
+    <social_network>
+        <name>Snapchat</name>
+		<app_package>com.snapchat.android</app_package>
+		<app_activity>com.snapchat.android.LandingPageActivity</app_activity>
+		<parent_name>Father</parent_name>
+        <steps>
+
+        </steps>
+    </social_network>
 </social_networks>
