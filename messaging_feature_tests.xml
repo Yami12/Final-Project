@@ -1,11 +1,11 @@
 <tests>
     <test>
         <name>Recive an offensive message via Whatsapp</name>
-        <application>WhatsApp</application>
+        <application>Instagram</application>
         <action>message</action>
         <text>test3</text>
         <isGroup>False</isGroup>
-        <contact>Child</contact>
+        <contact>mychilddevice</contact>
         <side>recive</side>
     </test>
     <test>

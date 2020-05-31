@@ -39,6 +39,8 @@ TYPE_CLASS = "class"
 TYPE_UIAUTOMATOR = "uiautomator"
 TYPE_XPATH = "xpath"
 
+UIAUTOMATOR_CHAT_NAME = "chat name"
+
 
 BUTTON = "button"
 LABEL = "label"

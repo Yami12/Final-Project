@@ -20,23 +20,23 @@ logs = []
 
 class Messaging (unittest.TestCase):
     # A function that checks whether the message sent in a test exists in the list of received logs
-    def check_logs(self):
+    def check_logs(self,parent_name):
         global logs
-        print("-------",logs[0], '_______________________')
         current_test = driver.current_test
         for log in logs:
             specific_log = log.replace("false", "False").replace("true", "True")
-            print("7777&", specific_log.split("HttpKeepersLogger: ")[1], "************************")
-            logs_dict = ast.literal_eval(specific_log.split("HttpKeepersLogger: ")[1])
-            print("*************", logs_dict,"************************")
+            specific_log = specific_log.split("HttpKeepersLogger: ")[1]
+            specific_log =specific_log.split("\\r\\n")[0]
+            logs_dict = ast.literal_eval(specific_log)
 
             if logs_dict['applicationName'] == current_test['application']:
                 if logs_dict['isGroup'] == strtobool(current_test['isGroup']):
-                    if logs_dict['title'] == current_test['contact']:
+                    if logs_dict['title'] == parent_name:
                         messages = logs_dict['messages']
                         for message in messages:
-                            if (message['isOutgoing'] == True and current_test['side'] == 'recive') or (
-                                    message['isOutgoing'] == False and current_test['side'] == 'send'):
+                            print(message)
+                            if (message['isOutgoing'] == True and current_test['side'] == 'send') or (
+                                    message['isOutgoing'] == False and current_test['side'] == 'recive'):
                                 if message['taggedText'] == current_test['text']:
                                     return True
         return False
@@ -46,14 +46,18 @@ class Messaging (unittest.TestCase):
         content = str(process.stdout.read())
         splitted_content = re.split("<node", content)
         for node in splitted_content:
-            if step[sl.TYPE_STEP] == sl.TYPE_ID:
-                if step[sl.ID_STEP] in node:
-                    process.kill()
-                    return re.search('bounds="\[([0-9]+),([0-9]+)\]',node)
-            if step[sl.TYPE_STEP] == sl.TYPE_UIAUTOMATOR:
-                if parent_name in node and 'class="android.widget.TextView"' in node:
-                    process.kill()
-                    return re.search('bounds="\[([0-9]+),([0-9]+)\]', node)
+            if step[sl.TYPE_STEP] == sl.TYPE_ID and step[sl.ID_STEP] in node: # id
+                process.kill()
+                return re.search('bounds="\[([0-9]+),([0-9]+)\]',node)
+            elif step[sl.TYPE_STEP] == sl.TYPE_UIAUTOMATOR and (
+                (parent_name in node) or (
+                            'content-desc="' + step[sl.CONTENT_STEP] in node)): # uiautomator
+                process.kill()
+                return re.search('bounds="\[([0-9]+),([0-9]+)\]', node)
+            elif step[sl.TYPE_STEP] == sl.TYPE_CLASS and 'class="' + step[sl.ID_STEP] in node: # class
+                process.kill()
+                return re.search('bounds="\[([0-9]+),([0-9]+)\]', node)
+
 
 
     def child_open_chat_screen(self,s_network):
@@ -61,14 +65,16 @@ class Messaging (unittest.TestCase):
         subprocess.run(['adb', '-s', 'emulator-5554', 'shell', 'am', 'start', '-n', s_network[sl.APP_PACKAGE]+"/" + s_network[sl.APP_ACTIVITY]])
         time.sleep(3)
         for step in s_network[sl.STEPS]:
+            print(step)
             if step[sl.ACTION_STEP] == sl.ACTION_SEND_KEYS:
                 if step[sl.CONTENT_STEP] == sl.MESSAGING_CONTENT:
                     return
-                subprocess.run(['adb','-s', 'emulator-5554' ,'shell', 'input', 'text', s_network[sl.PARENT_NAME]])
+                subprocess.run(['adb','-s', 'emulator-5554' ,'shell', 'input', 'text', s_network[sl.PARENT_NAME][:-1]])
             elif step[sl.ACTION_STEP] == sl.ACTION_CLICK:
                 coordinates = self.return_coordinates_by_resource_id(step,s_network[sl.PARENT_NAME])
-                print("----",coordinates[1], coordinates[2])
+                print("----", coordinates[1], coordinates[2])
                 subprocess.run(['adb', '-s', 'emulator-5554','shell', 'input', 'tap', coordinates[1] , coordinates[2]])
+                print("tap")
             time.sleep(3)
 
     def get_keepers_logs(self, s_network):
@@ -90,17 +96,18 @@ class Messaging (unittest.TestCase):
             line = stdout_queue.get()
             if "taggedText"in str(line):
                 logs.append(str(line))
-        print(self.check_logs())
+        print(self.check_logs(s_network[sl.PARENT_NAME]))
 
     def send_message_to_child(self):
         networks = xml_parsing.social_network_xml_to_dictionary(sl.NETWORKS_FILE)
         for network in networks:
-            # if network[sl.S_NETWORK_NAME] == driver.current_test[sl.TEST_APP_NAME]:
-            #     driver.connect_driver(network[sl.APP_PACKAGE],network[sl.APP_ACTIVITY])# connect the driver
-            #     for step in network[sl.STEPS]:
-            #         driver.global_tests_result.append(components_operations.component_operation(step))
+            if network[sl.S_NETWORK_NAME] == driver.current_test[sl.TEST_APP_NAME]:
+                # driver.connect_driver(network[sl.APP_PACKAGE],network[sl.APP_ACTIVITY])# connect the driver
+                # for step in network[sl.STEPS]:
+                #     print(step)
+                #     driver.global_tests_result.append(components_operations.component_operation(step))
 
-            self.get_keepers_logs(network)
+                self.get_keepers_logs(network)
 
     def test_manage_message(self):
         self.send_message_to_child()

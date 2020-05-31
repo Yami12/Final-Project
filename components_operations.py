@@ -5,12 +5,13 @@ import string_list as sl
 def do_action(component, action , content):
     try:
         if action == sl.ACTION_CLICK:
+            print("click")
             component.click()
         elif action == sl.ACTION_SEND_KEYS:
             if content == sl.MESSAGING_CONTENT:
                 component.send_keys(driver.current_test[sl.MESSAGING_CONTENT])
             elif content == sl.TEST_CONTACT:
-                component.send_keys(driver.current_test[sl.TEST_CONTACT])
+                component.send_keys(driver.current_test[sl.TEST_CONTACT][:-1])
             return ['Passed', "SUCCESS"]
 
     except Exception as e:
@@ -19,16 +20,15 @@ def do_action(component, action , content):
 def id_operation(resource_id, action, content):
     try:
         component = driver.global_driver.find_element_by_id(resource_id)
+        print(resource_id)
         return do_action(component, action, content)
     except Exception as e:
         return ['Failed', e]
 
 def class_operation(resource_id, action, content):
     try:
-        components = driver.global_driver.find_elements_by_class_name(resource_id)
-        for component in components:
-            if content in str(component.get_attribute("text")):
-                return do_action(component, action, content)
+        component = driver.global_driver.find_elements_by_class_name(resource_id)
+        return do_action(component[0], action, content)
 
     except Exception as e:
         return ['Failed', e]
@@ -54,8 +54,11 @@ def component_operation(step):
 
     #uiautomator type
     elif step[sl.TYPE_STEP] == sl.TYPE_UIAUTOMATOR:
-        resource_id = 'new UiSelector().textContains("' + driver.current_test[sl.TEST_CONTACT] + '")'
-        return uiautomator_operation(resource_id, step[sl.ACTION_STEP], step[sl.CONTENT_STEP])
+        if step[sl.CONTENT_STEP] == sl.UIAUTOMATOR_CHAT_NAME:
+            resource_id = 'new UiSelector().textContains("' + driver.current_test[sl.TEST_CONTACT] + '")'
+        else:
+            resource_id = 'new UiSelector().descriptionContains("' + step[sl.CONTENT_STEP] + '")'
+        return uiautomator_operation(resource_id, step[sl.ACTION_STEP], "")
 
 
 

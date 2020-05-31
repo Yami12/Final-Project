@@ -19,9 +19,8 @@
 			</step>
 			<step>
 				<type>uiautomator</type>
-				<id>chat name</id>
 				<action>click</action>
-				<content></content>
+				<content>chat name</content>
 			</step>
 			<step>
 				<type>id</type>
@@ -41,11 +40,17 @@
         <name>Instagram</name>
 		<app_package>com.instagram.android</app_package>
 		<app_activity>com.instagram.mainactivity.MainActivity</app_activity>
-		<parent_name>Father</parent_name>
+		<parent_name>myfatherdevice</parent_name>
         <steps>
             <step>
 				<type>id</type>
 				<id>com.instagram.android:id/action_bar_inbox_button</id>
+				<action>click</action>
+				<content></content>
+			</step>
+			 <step>
+				<type>id</type>
+				<id>com.instagram.android:id/search_edit_text</id>
 				<action>click</action>
 				<content></content>
 			</step>
@@ -57,9 +62,8 @@
 			</step>
             <step>
 				<type>uiautomator</type>
-				<id>chat name</id>
 				<action>click</action>
-				<content></content>
+				<content>chat name</content>
 			</step>
             <step>
 				<type>id</type>
@@ -79,13 +83,12 @@
         <name>Telegram</name>
 		<app_package>org.telegram.messenger</app_package>
 		<app_activity>org.telegram.ui.LaunchActivity</app_activity>
-		<parent_name>Father</parent_name>
+		<parent_name>father</parent_name>
         <steps>
             <step>
 				<type>uiautomator</type>
-				<id>Search</id>
 				<action>click</action>
-				<content></content>
+				<content>Search</content>
 			</step>
             <step>
 				<type>class</type>
@@ -95,9 +98,8 @@
 			</step>
             <step>
 				<type>uiautomator</type>
-				<id>chat name</id>
 				<action>click</action>
-				<content></content>
+				<content>chat name</content>
 			</step>
             <step>
 				<type>class</type>
@@ -107,9 +109,8 @@
 			</step>
             <step>
 				<type>uiautomator</type>
-				<id>Send</id>
 				<action>click</action>
-				<content></content>
+				<content>Send</content>
 			</step>
         </steps>
     </social_network>

@@ -24,8 +24,11 @@ class AsynchronousFileReader(threading.Thread):
         for line in iter(self._fd.readline, ''):
             self._queue.put(line)
 
-    def eof(self):
-        '''Check whether there is no more content to expect.'''
-        return not self.is_alive() and self._queue.empty()
+    def stopped(self):
+        '''Checkwhetherthereisnomorecontenttoexpect.'''
+        if self._queue.empty():
+            self._running = False
+            return True
+        return False
 
 

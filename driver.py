@@ -38,6 +38,7 @@ def initialize(platformName, platformVersion, deviceName, apk_file = ""):
     desired_caps['platformName'] = 'Android'
     desired_caps['platformVersion'] = platformVersion
     desired_caps['deviceName'] = deviceName
+    desired_caps['adbExecTimeout'] = '500000'
     # Returns abs path relative to this file and not cwd
     if apk_file != "":
         desired_caps['app'] = os.path.abspath(os.path.join(os.path.dirname(__file__), apk_file))
