@@ -1,11 +1,10 @@
 <tests>
     <test>
         <name>Recive an offensive message via Whatsapp</name>
-        <application>Instagram</application>
+        <application>WhatsApp</application>
         <action>message</action>
-        <text>test3</text>
+        <text>אני יעשה עלייך חרם</text>
         <isGroup>False</isGroup>
-        <contact>mychilddevice</contact>
         <side>recive</side>
     </test>
     <test>
@@ -14,7 +13,6 @@
         <action>message</action>
         <text>חרם</text>
         <isGroup>False</isGroup>
-        <contact>Chani</contact>
         <side>send</side>
     </test>
     <test>

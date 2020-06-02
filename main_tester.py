@@ -9,8 +9,6 @@ from multiprocessing.dummy import Pool as ThreadPool
 import unittest
 import driver
 import xml_parsing
-from button_operations import buttonOperations
-from input_operations import inpoutOperations
 import messaging
 import components_tests
 from time import sleep
@@ -51,12 +49,13 @@ class MainTester(unittest.TestCase):
         result = unittest.TextTestRunner(verbosity=1).run(suite)
 
 
-    def run_messaging_feature_test(self, test_name):
+    def run_messaging_feature_test(self, test_name, s_network_name):
         tests = xml_parsing.feature_xml_to_dictionary("messaging_feature_tests.xml")# converts the xml file to list of diction
         for test in tests:
             if test['name'] == test_name:
                 print("yay")
                 driver.current_test = test
+                driver.current_s_network = s_network_name
                 suite = unittest.TestLoader().loadTestsFromTestCase(messaging.Messaging)
                 result = unittest.TextTestRunner(verbosity=1).run(suite)
                 tests_results.append("test: {} result: {}".format(test['name'], result))  # save the test result

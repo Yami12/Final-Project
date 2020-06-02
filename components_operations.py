@@ -11,7 +11,7 @@ def do_action(component, action , content):
             if content == sl.MESSAGING_CONTENT:
                 component.send_keys(driver.current_test[sl.MESSAGING_CONTENT])
             elif content == sl.TEST_CONTACT:
-                component.send_keys(driver.current_test[sl.TEST_CONTACT][:-1])
+                component.send_keys(driver.current_s_network[:-1])
             return ['Passed', "SUCCESS"]
 
     except Exception as e:
@@ -55,7 +55,7 @@ def component_operation(step):
     #uiautomator type
     elif step[sl.TYPE_STEP] == sl.TYPE_UIAUTOMATOR:
         if step[sl.CONTENT_STEP] == sl.UIAUTOMATOR_CHAT_NAME:
-            resource_id = 'new UiSelector().textContains("' + driver.current_test[sl.TEST_CONTACT] + '")'
+            resource_id = 'new UiSelector().textContains("' + driver.current_s_network + '")'
         else:
             resource_id = 'new UiSelector().descriptionContains("' + step[sl.CONTENT_STEP] + '")'
         return uiautomator_operation(resource_id, step[sl.ACTION_STEP], "")
@@ -105,5 +105,3 @@ def component_operation(step):
 #         return ['Passed', error_message_text]
 #     except Exception as e:
 #         return ['Failed', e]
-
-

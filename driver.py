@@ -16,6 +16,7 @@ global_tests_result = []
 
 requested_flow = None
 current_test = None
+current_s_network = None
 desired_caps = {}
 
 '''
@@ -53,4 +54,3 @@ def connect_driver(appPackage, appActivity):
     desired_caps['appActivity'] = appActivity
 
     global_driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
-

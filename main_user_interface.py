@@ -5,9 +5,10 @@ The user is given options for various actions, he chooses the one he wants, fill
 from tkinter import *
 import xml_parsing
 import driver
+import string_list as sl
 
 flag_component_feature = 0#component=0, feature=1
-devices = xml_parsing.devices_xml_to_dictionary('devices.xml')
+devices = xml_parsing.devices_xml_to_dictionary(sl.DEVICES_FILE)
 devices_names = [x['device_name'] for x in devices]
 
 '''Accepts screen name making a move to it'''
@@ -20,8 +21,8 @@ def device_frame_ok():
      if father_devices.get() != 'Not Selected' and child_devices.get() != 'Not Selected':
          father_device = next(i for i in devices if i["device_name"] == father_devices.get())
          child_device = next(i for i in devices if i["device_name"] == child_devices.get())
-         driver.initialize(father_device['platform_name'], father_device['platform_version'], father_devices.get())
-         # driver.initialize("child", child_device['platform_name'], child_device['platform_version'], child_devices.get())
+         driver.initialize("father", father_device['platform_name'], father_device['platform_version'], father_devices.get())
+         driver.initialize("child", child_device['platform_name'], child_device['platform_version'], child_devices.get())
          next_window()
 
 def add_device():
@@ -33,10 +34,10 @@ def add_device_button():
     new_device['device_name'] = entry_device_name.get()
     new_device['platform_name'] = entry_platform_name.get()
     new_device['platform_version'] = entry_platform_version.get()
-    xml_parsing.add_new_device(new_device, 'devices.xml')
+    xml_parsing.add_new_device(new_device, sl.DEVICES_FILE)
     global devices
     global devices_names
-    devices = xml_parsing.devices_xml_to_dictionary('devices.xml')
+    devices = xml_parsing.devices_xml_to_dictionary(sl.DEVICES_FILE)
     devices_names = [x['device_name'] for x in devices]
     global flag_component_feature
     if flag_component_feature == 1:
