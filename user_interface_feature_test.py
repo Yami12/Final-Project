@@ -5,7 +5,7 @@ import string_list as sl
 
 tests = xml_parsing.feature_xml_to_dictionary('messaging_feature_tests.xml')
 tests_names = [x[sl.TEST_NAME] for x in tests]
-social_networks = xml_parsing.social_network_xml_to_dictionary("social_networks.xml")
+social_networks = xml_parsing.tests_xml_to_dictionary("social_networks.xml")
 social_networks_name = [x[sl.S_NETWORK_NAME] for x in social_networks]
 
 def send_message():
@@ -44,4 +44,3 @@ social_network_entry.place(x=240, y=350)
 social_network.set("Not Selected")
 
 Button(main_feature_test_frame, text='start test', width=20, bg='brown', fg='white', command=lambda: run_test_thread.start()).place(x=170, y=400)
-

@@ -3,15 +3,15 @@
         <name>Recive an offensive message via Whatsapp</name>
         <application>WhatsApp</application>
         <action>message</action>
-        <text>אני יעשה עלייך חרם</text>
+        <text>test1</text>
         <isGroup>False</isGroup>
         <side>recive</side>
     </test>
     <test>
         <name>Send an offensive message through whatsapp</name>
-        <application>WhatsApp</application>
+        <application>Telegram</application>
         <action>message</action>
-        <text>חרם</text>
+        <text>test2</text>
         <isGroup>False</isGroup>
         <side>send</side>
     </test>

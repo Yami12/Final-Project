@@ -1,17 +1,16 @@
-<flowes>
-    <flow>
+<tests>
+    <test>
         <name>Trying to login without V mark on terms of use</name>
-        <tests>
-            <test>
-                <name>Press the Child button</name>
-                <resourceId>com.keepers:id/activity_terms_child_button</resourceId>
-                <appActivity>com.keeper.common.TermsActivity</appActivity>
-                <type>Button</type>
-                <actionType>click</actionType>
-                <expectedResult>toastMessage:Please accept the terms</expectedResult>
-            </test>
-        </tests>
-    </flow>
+        <expectedResult>toastMessage:Please accept the terms</expectedResult>
+        <steps>
+            <step>
+                <type>id</type>
+				<id>com.keepers:id/activity_terms_child_button</id>
+				<action>click</action>
+				<content></content>
+            </step>
+        </steps>
+    </test>
     <flow>
         <name>child's age - above 16</name>
         <tests>
@@ -263,4 +262,4 @@
             </test>
         </tests>
     </flow>
-</flowes>
+</tests>

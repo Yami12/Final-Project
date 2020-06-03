@@ -49,27 +49,33 @@ class Messaging (unittest.TestCase):
             if step[sl.TYPE_STEP] == sl.TYPE_ID and step[sl.ID_STEP] in node: # id
                 process.kill()
                 return re.search('bounds="\[([0-9]+),([0-9]+)\]',node)
-            elif step[sl.TYPE_STEP] == sl.TYPE_UIAUTOMATOR and (
-                (parent_name in node) or (
-                            'content-desc="' + step[sl.CONTENT_STEP] in node)): # uiautomator
+            elif step[sl.TYPE_STEP] == sl.TYPE_UIAUTOMATOR and 'class="android.widget.ImageView"' not in node:
+                if step[sl.CONTENT_STEP] == sl.CHAT_NAME:
+                    if parent_name in node:
+                        return re.search('bounds="\[([0-9]+),([0-9]+)\]', node)
+                elif 'content-desc="' + step[sl.CONTENT_STEP] in node:
+                    return re.search('bounds="\[([0-9]+),([0-9]+)\]', node)
                 process.kill()
-                return re.search('bounds="\[([0-9]+),([0-9]+)\]', node)
+
             elif step[sl.TYPE_STEP] == sl.TYPE_CLASS and 'class="' + step[sl.ID_STEP] in node: # class
                 process.kill()
                 return re.search('bounds="\[([0-9]+),([0-9]+)\]', node)
 
 
 
-    def child_open_chat_screen(self,s_network):
+    def child_open_chat_screen(self, s_network, from_child):
         # launch the application
         subprocess.run(['adb', '-s', 'emulator-5554', 'shell', 'am', 'start', '-n', s_network[sl.APP_PACKAGE]+"/" + s_network[sl.APP_ACTIVITY]])
         time.sleep(3)
         for step in s_network[sl.STEPS]:
             print(step)
-            if step[sl.ACTION_STEP] == sl.ACTION_SEND_KEYS:
-                if step[sl.CONTENT_STEP] == sl.MESSAGING_CONTENT:
-                    return
-                subprocess.run(['adb','-s', 'emulator-5554' ,'shell', 'input', 'text', s_network[sl.PARENT_NAME][:-1]])
+            if step[sl.ACTION_STEP] == sl.ACTION_SEND_KEYS :
+                if step[sl.CONTENT_STEP] == sl.MESSAGING_CONTENT and from_child == True:
+                    subprocess.run(['adb', '-s', 'emulator-5554', 'shell', 'input', 'text',
+                                    driver.current_test[sl.MESSAGING_CONTENT]])
+                else:
+                    subprocess.run(['adb','-s', 'emulator-5554' ,'shell', 'input', 'text', s_network[sl.PARENT_NAME][:-1]])
+
             elif step[sl.ACTION_STEP] == sl.ACTION_CLICK:
                 coordinates = self.return_coordinates_by_resource_id(step,s_network[sl.PARENT_NAME])
                 print("----", coordinates[1], coordinates[2])
@@ -77,7 +83,7 @@ class Messaging (unittest.TestCase):
                 print("tap")
             time.sleep(3)
 
-    def get_keepers_logs(self, s_network):
+    def get_keepers_logs(self, s_network, from_child):
         global logs
         # get keepers logcats to a PIPE
         #TODO change emulator-5554 to be the child device
@@ -87,7 +93,7 @@ class Messaging (unittest.TestCase):
         stdout_reader = AsynchronousFileReader(process.stdout, stdout_queue)
         stdout_reader.start()
 
-        self.child_open_chat_screen(s_network)#child reed the message
+        self.child_open_chat_screen(s_network, from_child)#child reed the message
 
         # uplaod the keepers logs
         subprocess.run(['adb', '-s', 'emulator-5554','shell', 'am', 'broadcast', '-a', 'com.keepers.childmodule.ACTION_UPLOAD_CONVERSATIONS'])
@@ -98,19 +104,24 @@ class Messaging (unittest.TestCase):
                 logs.append(str(line))
         print(self.check_logs(s_network[sl.PARENT_NAME]))
 
-    def send_message_to_child(self):
-        networks = xml_parsing.social_network_xml_to_dictionary(sl.NETWORKS_FILE)
+    def send_message(self,from_child = False):
+        networks = xml_parsing.tests_xml_to_dictionary(sl.NETWORKS_FILE)
         for network in networks:
             if network[sl.S_NETWORK_NAME] == driver.current_test[sl.TEST_APP_NAME]:
-                # driver.connect_driver(network[sl.APP_PACKAGE],network[sl.APP_ACTIVITY])# connect the driver
-                # for step in network[sl.STEPS]:
-                #     print(step)
-                #     driver.global_tests_result.append(components_operations.component_operation(step))
+                if from_child == False: # send a message to the child
+                    driver.connect_driver(network[sl.APP_PACKAGE],network[sl.APP_ACTIVITY])# connect the driver
+                    for step in network[sl.STEPS]:
+                        print(step)
+                        driver.global_tests_result.append(components_operations.component_operation(step))
 
-                self.get_keepers_logs(network)
+                self.get_keepers_logs(network, from_child)
+
 
     def test_manage_message(self):
-        self.send_message_to_child()
+        if driver.current_test[sl.TEST_SIDE] == sl.TEST_RECIVE_SIDE:
+            self.send_message()
+        elif driver.current_test[sl.TEST_SIDE] == sl.TEST_SEND_SIDE:
+            self.send_message(True)
 
 
 

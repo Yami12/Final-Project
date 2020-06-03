@@ -7,12 +7,18 @@ def do_action(component, action , content):
         if action == sl.ACTION_CLICK:
             print("click")
             component.click()
+
         elif action == sl.ACTION_SEND_KEYS:
             if content == sl.MESSAGING_CONTENT:
                 component.send_keys(driver.current_test[sl.MESSAGING_CONTENT])
             elif content == sl.TEST_CONTACT:
                 component.send_keys(driver.current_s_network[:-1])
-            return ['Passed', "SUCCESS"]
+
+        elif action == sl.ACTION_GET:
+            component_text = component.get_attribute("text")
+            return ['Passed', component_text]
+
+        return ['Passed', "SUCCESS"]
 
     except Exception as e:
         return ['Failed', e]
@@ -42,6 +48,14 @@ def uiautomator_operation(resource_id, action, content):
 
 # def xpath_operation(resource_id,action,content = ""):
 #    return
+
+def xpath_operation(resource_id, action):
+    try:
+        component = driver.global_driver.find_element_by_xpath(resource_id)
+        return do_action(component,action, "")
+    except Exception as e:
+        return ['Failed', e]
+
 
 def component_operation(step):
     #id type
