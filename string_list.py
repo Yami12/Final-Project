@@ -50,6 +50,8 @@ LABEL = "label"
 ACTION_CLICK = "click"
 ACTION_SEND_KEYS = "send keys"
 ACTION_GET = "get"
+TOASTMESSAGE = "toastMessage"
+LABELMESSAGE = "labelMessage"
 
 #xml files names
 NETWORKS_FILE = "social_networks.xml"
