@@ -1,5 +1,5 @@
-import driver
-import string_list as sl
+from utils import driver
+from utils import string_list as sl
 import datetime
 
 def do_action(component, action , content):

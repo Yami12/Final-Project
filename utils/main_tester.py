@@ -6,6 +6,7 @@ flowes: list of all the flowes
 '''
 
 import unittest
+import os
 
 from utils import driver
 from utils import xml_parsing
@@ -48,7 +49,7 @@ class MainTester(unittest.TestCase):
 
 
     def run_messaging_feature_test(self, test_name, s_network_name):
-        tests = xml_parsing.feature_xml_to_dictionary("messaging_feature_tests.xml")# converts the xml file to list of diction
+        tests = xml_parsing.feature_xml_to_dictionary(sl.MESSAGING_FEATURE_FILE)# converts the xml file to list of diction
         for test in tests:
             if test['name'] == test_name:
                 print("yay")

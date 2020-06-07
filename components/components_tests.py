@@ -3,12 +3,12 @@ This file handles the button resource operations
 '''
 
 from selenium.webdriver import ActionChains
-import driver
+from utils import driver
 import unittest
 import re
-import xml_parsing
-import components_operations
-import string_list as sl
+from utils import xml_parsing
+from components import components_operations
+from utils import string_list as sl
 
 class ComponentsTest(unittest.TestCase):
     '''

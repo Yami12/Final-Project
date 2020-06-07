@@ -8,8 +8,9 @@ from utils import driver
 from utils import string_list as sl
 
 flag_component_feature = 0#component=0, feature=1
-devices = xml_parsing.devices_xml_to_dictionary(sl.DEVICES_FILE)
-devices_names = [x['device_name'] for x in devices]
+devices = driver.identify_connected_device()
+# if devices == True:
+devices_names = [x['udid'] for x in devices]
 
 '''Accepts screen name making a move to it'''
 def raise_frame(frame):
@@ -19,10 +20,11 @@ def raise_frame(frame):
 What: Connects to the appium driver and moves to the next screen'''
 def device_frame_ok():
      if father_devices.get() != 'Not Selected' and child_devices.get() != 'Not Selected':
-         father_device = next(i for i in devices if i["device_name"] == father_devices.get())
-         child_device = next(i for i in devices if i["device_name"] == child_devices.get())
-         driver.initialize("father", father_device['platform_name'], father_device['platform_version'], father_devices.get())
-         driver.initialize("child", child_device['platform_name'], child_device['platform_version'], child_devices.get())
+         father_device = next(i for i in devices if i["udid"] == father_devices.get())
+         child_device = next(i for i in devices if i["udid"] == child_devices.get())
+         driver.initialize("father", father_device['platform'], father_device['version'], father_devices.get())
+         driver.child_device = child_devices.get()
+         print(driver.child_device)
          next_window()
 
 def add_device():
@@ -73,12 +75,12 @@ def next_window():
     global flag_component_feature
     if flag_component_feature == 1:
         main_win.destroy()
-        from user_interface_feature_test import run_messaging_feature_test
-        run_messaging_feature_test()
+        from GUI import user_interface_feature_test
+        user_interface_feature_test.run_messaging_feature_test()
     else:   #flag_component_feature == 0
         main_win.destroy()
-        from user_interface_component_test import run_component_test
-        run_component_test()
+        from GUI import user_interface_component_test
+        user_interface_component_test.run_component_test()
 
 
 #Visual display of screens

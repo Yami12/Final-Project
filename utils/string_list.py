@@ -52,7 +52,12 @@ ACTION_SEND_KEYS = "send keys"
 ACTION_GET = "get"
 
 #xml files names
-NETWORKS_FILE = "social_networks.xml"
-DEVICES_FILE = "devices.xml"
+NETWORKS_FILE ="social_networks.xml"
 MESSAGING_FEATURE_FILE = "messaging_feature_tests.xml"
 COMPONENTS_FILE = "components_behavior_tests.xml"
+
+XML_FOLDER = "xml_files"
+DEVICE_UDID = "udid"
+DEVICE_VERSION = "version"
+DEVICE_OS = "Android"
+DEVICE_PLATFORM = "platform"

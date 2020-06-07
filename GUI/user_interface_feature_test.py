@@ -3,7 +3,7 @@ from threading import Thread
 from utils import xml_parsing
 from utils import string_list as sl
 
-tests = xml_parsing.feature_xml_to_dictionary('messaging_feature_tests.xml')
+tests = xml_parsing.feature_xml_to_dictionary(sl.MESSAGING_FEATURE_FILE)
 tests_names = [x[sl.TEST_NAME] for x in tests]
 social_networks = xml_parsing.tests_xml_to_dictionary("social_networks.xml")
 social_networks_name = [x[sl.S_NETWORK_NAME] for x in social_networks]
