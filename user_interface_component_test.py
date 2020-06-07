@@ -47,17 +47,17 @@ def add_component_behavior_test_ok():
     if (final_expected_result == sl.TOASTMESSAGE) or (final_expected_result == sl.LABELMESSAGE):
         #These types of expected results should also include text
         final_expected_result = final_expected_result + ":" + entry_message_content_add.get()
-    new_test['expectedResult'] = final_expected_result
-    new_test['steps'] = steps
-    xml_parsing.add_new_component_behavior_test(new_test, sl.COMPONENTS_FILE)
+    new_test[sl.TEST_EXPECTED_RES] = final_expected_result
+    new_test[sl.STEPS] = steps
+    xml_parsing.add_new_item_to_xml(new_test, sl.COMPONENTS_FILE)
 
 def add_step_to_test_ok():
     global steps
     new_step = {}
-    new_step['type_step'] = entry_type_step.get()
-    new_step['id_step'] = entry_id_step.get()
-    new_step['action_step'] = entry_action_step.get()
-    new_step['content'] = entry_content_step.get()
+    new_step[sl.TYPE_STEP] = entry_type_step.get()
+    new_step[sl.ID_STEP] = entry_id_step.get()
+    new_step[sl.ACTION_STEP] = entry_action_step.get()
+    new_step[sl.CONTENT_STEP] = entry_content_step.get()
     steps.append(new_step)
 
     entry_type_step.delete(0, END)
@@ -253,4 +253,3 @@ step_content_label = Label(delete_component_behavior_frame, text="content of ste
 step_content_entry = Entry(delete_component_behavior_frame)
 
 update_test_button = Button(delete_component_behavior_frame, text='update test', width=20, bg='brown', fg='white', command=lambda: update_component_behavior_ok())
-
