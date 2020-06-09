@@ -8,6 +8,7 @@ tests_names = [x[sl.TEST_NAME] for x in tests]
 social_networks = xml_parsing.tests_xml_to_dictionary("social_networks.xml")
 social_networks_name = [x[sl.S_NETWORK_NAME] for x in social_networks]
 steps = []
+steps_group = []
 
 #Starts the program by displaying the first screen
 def run_messaging_feature_test():
@@ -15,7 +16,7 @@ def run_messaging_feature_test():
 
 def send_message():
     if feature_tests.get() != 'Not Selected':
-        from utils import  main_tester
+        from utils import main_tester
         main_tester.MainTester().run_messaging_feature_test(feature_tests.get(), social_network.get())
 
 '''Accepts screen name making a move to it'''
@@ -32,6 +33,12 @@ def add_social_network():
     new_social_network[sl.CHILD_NAME] = entry_child_name_social_network.get()
     new_social_network[sl.STEPS] = steps
     xml_parsing.add_new_item_to_xml(new_social_network, sl.NETWORKS_FILE)
+
+    new_social_network_remove_group = {}
+    new_social_network_remove_group[sl.S_NETWORK_NAME] = entry_name_social_network.get()
+    new_social_network_remove_group[sl.GROUP_NAME] = entry_group_name_remove.get()
+    new_social_network_remove_group[sl.STEPS] = steps_group
+    xml_parsing.add_new_item_to_xml(new_social_network_remove_group, sl.REMOVE_GROUP_FILE)
 
 def add_step_to_social_network():
     global steps
@@ -51,9 +58,27 @@ def add_step_to_social_network():
     entry_content_step.delete(0, END)
     entry_content_step.insert(0, "")
 
+def add_step_to_removal_from_group():
+    global steps_group
+    new_step = {}
+    new_step[sl.TYPE_STEP] = entry_type_step_remove.get()
+    new_step[sl.ID_STEP] = entry_id_step_remove.get()
+    new_step[sl.ACTION_STEP] = entry_action_step_remove.get()
+    new_step[sl.CONTENT_STEP] = entry_content_step_remove.get()
+    steps.append(new_step)
+
+    entry_type_step_remove.delete(0, END)
+    entry_type_step_remove.insert(0, "")
+    entry_id_step_remove.delete(0, END)
+    entry_id_step_remove.insert(0, "")
+    entry_action_step_remove.delete(0, END)
+    entry_action_step_remove.insert(0, "")
+    entry_content_step_remove.delete(0, END)
+    entry_content_step_remove.insert(0, "")
+
 def run_all_messaging_tests():
-    from main_tester import MainTester
-    MainTester().run_messaging_feature_test("all", "all")
+    from utils import main_tester
+    main_tester.MainTester().run_messaging_feature_test(sl.ALL, sl.ALL)
 
 def removal_from_group():
     return
@@ -64,7 +89,7 @@ run_test_thread = Thread(target=send_message)
 #Visual display of screens
 main_window = Tk()
 main_window.geometry('500x500')
-main_window.title("Registration Form")
+main_window.title("Keepers")
 
 #define frames, each represents a screen
 run_messaging_test_frame = Frame(main_window)
@@ -100,38 +125,56 @@ Button(main_messaging_test_frame, text='run all send messaging tests', width=20,
 Button(main_messaging_test_frame, text='run specific messaging test', width=20, bg='brown', fg='white', command=lambda: raise_frame(run_messaging_test_frame)).place(x=180, y=290)
 
 '''add_social_network_frame'''
-Label(add_social_network_frame, text="social network name:", width=20, font=("bold", 10)).place(x=80, y=60)
+Label(add_social_network_frame, text="social network name:", width=20, font=("bold", 10)).place(x=80, y=20)
 entry_name_social_network = Entry(add_social_network_frame)
-entry_name_social_network.place(x=240, y=60)
-Label(add_social_network_frame, text="social network app package:", width=20, font=("bold", 10)).place(x=80, y=100)
+entry_name_social_network.place(x=250, y=20)
+Label(add_social_network_frame, text="social network app package:", width=20, font=("bold", 10)).place(x=80, y=40)
 entry_app_package_social_network = Entry(add_social_network_frame)
-entry_app_package_social_network.place(x=240, y=100)
-Label(add_social_network_frame, text="social network app activity:", width=20, font=("bold", 10)).place(x=80, y=140)
+entry_app_package_social_network.place(x=250, y=40)
+Label(add_social_network_frame, text="social network app activity:", width=20, font=("bold", 10)).place(x=80, y=60)
 entry_app_activity_social_network = Entry(add_social_network_frame)
-entry_app_activity_social_network.place(x=240, y=140)
-Label(add_social_network_frame, text="social network parent name:", width=20, font=("bold", 10)).place(x=80, y=180)
+entry_app_activity_social_network.place(x=250, y=60)
+Label(add_social_network_frame, text="social network parent name:", width=20, font=("bold", 10)).place(x=80, y=80)
 entry_parent_name_social_network = Entry(add_social_network_frame)
-entry_parent_name_social_network.place(x=240, y=180)
-Label(add_social_network_frame, text="social network child name:", width=20, font=("bold", 10)).place(x=80, y=220)
+entry_parent_name_social_network.place(x=250, y=80)
+Label(add_social_network_frame, text="social network child name:", width=20, font=("bold", 10)).place(x=80, y=100)
 entry_child_name_social_network = Entry(add_social_network_frame)
-entry_child_name_social_network.place(x=240, y=220)
+entry_child_name_social_network.place(x=250, y=100)
 
 #add steps to social network
-Label(add_social_network_frame, text="type step:", width=20, font=("bold", 10)).place(x=80, y=280)
+Label(add_social_network_frame, text="type step:", width=20, font=("bold", 10)).place(x=80, y=150)
 entry_type_step = Entry(add_social_network_frame)
-entry_type_step.place(x=240, y=280)
-Label(add_social_network_frame, text="id step:", width=20, font=("bold", 10)).place(x=80, y=300)
+entry_type_step.place(x=250, y=150)
+Label(add_social_network_frame, text="id step:", width=20, font=("bold", 10)).place(x=80, y=170)
 entry_id_step = Entry(add_social_network_frame)
-entry_id_step.place(x=240, y=300)
-Label(add_social_network_frame, text="action step:", width=20, font=("bold", 10)).place(x=80, y=320)
+entry_id_step.place(x=250, y=170)
+Label(add_social_network_frame, text="action step:", width=20, font=("bold", 10)).place(x=80, y=190)
 entry_action_step = Entry(add_social_network_frame)
-entry_action_step.place(x=240, y=320)
-Label(add_social_network_frame, text="content step:", width=20, font=("bold", 10)).place(x=80, y=340)
+entry_action_step.place(x=250, y=190)
+Label(add_social_network_frame, text="content step:", width=20, font=("bold", 10)).place(x=80, y=210)
 entry_content_step = Entry(add_social_network_frame)
-entry_content_step.place(x=240, y=340)
-Button(add_social_network_frame, text='Add Step To social network', width=20, bg='brown', fg='white', command=lambda: add_step_to_social_network()).place(x=170, y=360)
+entry_content_step.place(x=250, y=210)
+Button(add_social_network_frame, text='add step to social network', width=20, bg='brown', fg='white', command=lambda: add_step_to_social_network()).place(x=170, y=230)
 
-Button(add_social_network_frame, text='Add social network', width=20, bg='brown', fg='white', command=lambda: add_social_network()).place(x=170, y=420)
+#add steps to removal from group
+Label(add_social_network_frame, text="group name:", width=20, font=("bold", 10)).place(x=80, y=280)
+entry_group_name_remove = Entry(add_social_network_frame)
+entry_group_name_remove.place(x=250, y=280)
+Label(add_social_network_frame, text="type step:", width=20, font=("bold", 10)).place(x=80, y=320)
+entry_type_step_remove = Entry(add_social_network_frame)
+entry_type_step_remove.place(x=250, y=320)
+Label(add_social_network_frame, text="id step:", width=20, font=("bold", 10)).place(x=80, y=340)
+entry_id_step_remove = Entry(add_social_network_frame)
+entry_id_step_remove.place(x=250, y=340)
+Label(add_social_network_frame, text="action step:", width=20, font=("bold", 10)).place(x=80, y=360)
+entry_action_step_remove = Entry(add_social_network_frame)
+entry_action_step_remove.place(x=250, y=360)
+Label(add_social_network_frame, text="content step:", width=20, font=("bold", 10)).place(x=80, y=380)
+entry_content_step_remove = Entry(add_social_network_frame)
+entry_content_step_remove.place(x=250, y=380)
+Button(add_social_network_frame, text='add step to removal from group', width=20, bg='brown', fg='white', command=lambda: add_step_to_removal_from_group()).place(x=170, y=400)
+
+Button(add_social_network_frame, text='Add social network', width=20, bg='brown', fg='white', command=lambda: add_social_network()).place(x=170, y=460)
 
 '''main_feature_test_frame'''
 Button(main_feature_test_frame, text='messaging tests', width=20, bg='brown', fg='white', command=lambda: raise_frame(main_messaging_test_frame)).place(x=180, y=100)

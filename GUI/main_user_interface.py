@@ -10,7 +10,7 @@ from utils import string_list as sl
 flag_component_feature = 0#component=0, feature=1
 devices = driver.identify_connected_device()
 # if not devices == False:
-devices_names = [x['udid'] for x in devices]
+devices_names = [x[sl.DEVICE_UDID] for x in devices]
 
 
 '''Accepts screen name making a move to it'''
@@ -58,8 +58,8 @@ def add_device_button():
 
 def tester_device_frame_ok():
     if tester_devices.get() != 'Not Selected':
-        tester_device = next(i for i in devices if i["device_name"] == tester_devices.get())
-        driver.initialize("tester", tester_device['platform_name'], tester_device['platform_version'], tester_devices.get())
+        tester_device = next(i for i in devices if i[sl.DEVICE_UDID] == tester_devices.get())
+        driver.initialize("tester", tester_device[sl.DEVICE_PLATFORM], tester_device[sl.DEVICE_VERSION], tester_devices.get())
         next_window()
 
 def open_features_window():
