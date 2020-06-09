@@ -119,7 +119,6 @@ class Messaging (unittest.TestCase):
         print(self.check_logs(s_network[sl.PARENT_NAME]))
 
     def send_message(self,from_child = False):
-        os.chdir("..")
         networks = xml_parsing.tests_xml_to_dictionary(sl.NETWORKS_FILE)
         for network in networks:
             if network[sl.S_NETWORK_NAME] == driver.current_test[sl.TEST_APP_NAME]:

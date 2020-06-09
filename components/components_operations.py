@@ -10,9 +10,11 @@ def do_action(component, action , content):
 
         elif action == sl.ACTION_SEND_KEYS:
             if content == sl.MESSAGING_CONTENT:
+                print("hi")
                 component.send_keys(driver.current_test[sl.MESSAGING_CONTENT])
                 driver.sending_time = datetime.datetime.now()  # save the sending time
             elif content == sl.TEST_CONTACT:
+                print("1")
                 component.send_keys(driver.current_s_network[:-1])
 
         elif action == sl.ACTION_GET:
@@ -69,8 +71,13 @@ def component_operation(step):
 
     #uiautomator type
     elif step[sl.TYPE_STEP] == sl.TYPE_UIAUTOMATOR:
+        print("-----",step)
         if step[sl.CONTENT_STEP] == sl.UIAUTOMATOR_CHAT_NAME:
             resource_id = 'new UiSelector().textContains("' + driver.current_s_network + '")'
+        elif step[sl.CONTENT_STEP] == 'Group info':
+            resource_id = 'new UiSelector().textContains("Group info")'
+        elif step[sl.CONTENT_STEP] == 'More options':
+            resource_id = 'new UiSelector().descriptionContains("More options")'
         else:
             resource_id = 'new UiSelector().descriptionContains("' + step[sl.CONTENT_STEP] + '")'
         return uiautomator_operation(resource_id, step[sl.ACTION_STEP], "")

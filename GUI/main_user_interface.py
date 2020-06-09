@@ -9,8 +9,9 @@ from utils import string_list as sl
 
 flag_component_feature = 0#component=0, feature=1
 devices = driver.identify_connected_device()
-# if devices == True:
+# if not devices == False:
 devices_names = [x['udid'] for x in devices]
+
 
 '''Accepts screen name making a move to it'''
 def raise_frame(frame):
@@ -22,7 +23,7 @@ def device_frame_ok():
      if father_devices.get() != 'Not Selected' and child_devices.get() != 'Not Selected':
          father_device = next(i for i in devices if i["udid"] == father_devices.get())
          child_device = next(i for i in devices if i["udid"] == child_devices.get())
-         driver.initialize("father", father_device['platform'], father_device['version'], father_devices.get())
+         driver.initialize(father_device['version'], father_devices.get())
          driver.child_device = child_devices.get()
          print(driver.child_device)
          next_window()
@@ -65,6 +66,10 @@ def open_features_window():
     raise_frame(feature_device_frame)
     global flag_component_feature
     flag_component_feature = 1
+    # print("len",len(devices_names))
+    # if  devices_names == []:
+    #     feature_num_of_devices.place(x=180,y=240)
+
 
 def open_component_window():
     raise_frame(component_device_frame)
@@ -123,6 +128,9 @@ entry_device_name.insert(0, 'My HUAWEI')#)'Child_Device'
 
 Button(add_device_frame, text='add', width=20, bg='brown', fg='white', command=lambda: add_device_button()).place(x=170, y=300)
 
+# no 2 devices are connected
+feature_num_of_devices = Label(add_device_frame, text="please connect 2 devices", width=20, font=("bold", 10))
+
 '''component_device_frame
 A screen where the user enters various details of the mobile device to which he wants to add.
 This allows you to connect to the device via the driver'''
@@ -165,6 +173,7 @@ Label(first_frame, text="Testing Menu", width=29, font=("bold", 20)).place(x=20,
 Button(first_frame, text='to component behavior tests', width=40, bg='brown', fg='white', command=open_component_window).place(x=110, y=150)
 Button(first_frame, text='to features tests', width=40, bg='brown', fg='white', command=open_features_window).place(x=110, y=230)
 Button(first_frame, text='exit', width=20, bg='brown', fg='white', command=main_win.destroy).place(x=180, y=350)
+
 
 #Starts the program by displaying the first screen
 main_win.mainloop()

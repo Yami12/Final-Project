@@ -32,7 +32,7 @@ appActivity - the application's activity name
 localhost - the appium's driver host
 apk_file - the application's apk file
 '''
-def initialize(platformName, platformVersion, udid, apk_file = ""):
+def initialize(platformVersion, udid, apk_file = ""):
 
     global global_driver
     global desired_caps
@@ -62,18 +62,18 @@ def identify_connected_device():
 
     devices_udid = []
     process = subprocess.Popen(['adb', 'devices'], stdout=subprocess.PIPE)
-    udids = str(process.stdout.read()).split('\\')
-    devices_udid.append(udids[2][1:])
-    devices_udid.append(udids[5][1:])
-    print(devices_udid)
-    # if len(devices_udid) != 2:
-    #     return False
+    a = str(process.stdout.read())
+    print(a)
+    udids = str(a).split('\\r\\n')
 
-    for i in range(len(devices_udid)):
+    for i in range(2):
         device = {}
-        device[sl.DEVICE_UDID] = devices_udid[i]
+        # if udids[i+1] == '':
+        #     return False
+        # else:
+        device[sl.DEVICE_UDID] = udids[i+1].split("\\tdevice")[0]
         process = subprocess.Popen(['adb', '-s', device[sl.DEVICE_UDID], 'shell', 'getprop', 'ro.build.version.release'], stdout=subprocess.PIPE)
-        device[sl.DEVICE_VERSION] = str(process.stdout.read())[2:5]
+        device[sl.DEVICE_VERSION] = str(process.stdout.read())[2:].split("\\r\\n")[0]
         device[sl.DEVICE_PLATFORM] = sl.DEVICE_OS
         devices.append(device)
         print(device)
