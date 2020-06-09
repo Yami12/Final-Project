@@ -7,45 +7,10 @@ from utils import string_list as sl
 import os
 
 parentDirectory = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
-# -------------------------------------devices------------------------------------
-
-def devices_xml_to_dictionary(file_name):
-    file = open(os.path.join(parentDirectory, sl.XML_FOLDER, file_name))
-    file_content = file.read()
-    tree = et.fromstring(file_content)
-    devices = tree.findall(sl.DEVICE)  # first node in the xml file
-
-    devices_arr = []
-    # go over the all tests
-    for device in devices:
-        device_dict = {}
-        device_dict[sl.DEVICE_NAME] = device.text
-        for i in device:
-            device_dict[i.tag] = i.text
-        devices_arr.append(device_dict)
-    return devices_arr
-
-def device_dictionary_to_xml(dict, file_name):
-    root = et.Element(sl.DEVICES)
-    for device in dict:
-        device_node = et.SubElement(root, sl.DEVICE)
-        for key in device.keys():
-            et.SubElement(device_node, key).text = device[key]
-
-    tree = et.ElementTree(root)
-    tree.write(file_name)
-
-
-def add_new_device(device, file_name):
-    devices_list = devices_xml_to_dictionary(file_name)#parse the file to list of dictionaries
-    devices_list.append(device)
-    device_dictionary_to_xml(devices_list, file_name)#write to the file
-
 
 # -------------------------------------features------------------------------------
 
 def feature_xml_to_dictionary(file_name):
-    os.chdir("..")
     file = open(os.path.join(parentDirectory, sl.XML_FOLDER, file_name))
     file_content = file.read()
     tree = et.fromstring(file_content)

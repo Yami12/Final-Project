@@ -122,6 +122,8 @@ class Messaging (unittest.TestCase):
         networks = xml_parsing.tests_xml_to_dictionary(sl.NETWORKS_FILE)
         for network in networks:
             if network[sl.S_NETWORK_NAME] == driver.current_test[sl.TEST_APP_NAME]:
+                driver.current_test[sl.CHILD_NAME] = network[sl.CHILD_NAME]
+                driver.current_test[sl.PARENT_NAME] = network[sl.PARENT_NAME]
                 if from_child == False: # send a message to the child
                     driver.connect_driver(network[sl.APP_PACKAGE],network[sl.APP_ACTIVITY])# connect the driver
                     for step in network[sl.STEPS]:

@@ -59,7 +59,7 @@ def add_device_button():
 def tester_device_frame_ok():
     if tester_devices.get() != 'Not Selected':
         tester_device = next(i for i in devices if i[sl.DEVICE_UDID] == tester_devices.get())
-        driver.initialize("tester", tester_device[sl.DEVICE_PLATFORM], tester_device[sl.DEVICE_VERSION], tester_devices.get())
+        driver.initialize(tester_device[sl.DEVICE_PLATFORM], tester_device[sl.DEVICE_VERSION], tester_devices.get())
         next_window()
 
 def open_features_window():

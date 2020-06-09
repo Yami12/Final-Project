@@ -14,8 +14,8 @@ def do_action(component, action , content):
                 component.send_keys(driver.current_test[sl.MESSAGING_CONTENT])
                 driver.sending_time = datetime.datetime.now()  # save the sending time
             elif content == sl.TEST_CONTACT:
-                print("1", )
-                component.send_keys(driver.current_s_network['child_name'][:-1])
+                print("1")
+                component.send_keys(driver.current_test[sl.CHILD_NAME][:-1])
 
 
         elif action == sl.ACTION_GET:
