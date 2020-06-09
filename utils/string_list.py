@@ -32,6 +32,7 @@ CHILD_NAME = "child_name"
 
 MESSAGING_CONTENT = "text"
 CHAT_NAME = "chat_name"
+ALL = "all"
 
 TYPE_STEP = "type"
 ID_STEP = "id"
