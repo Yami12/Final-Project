@@ -78,7 +78,7 @@ def add_step_to_removal_from_group():
 
 def run_all_messaging_tests():
     from main_tester import MainTester
-    MainTester().run_messaging_feature_test("all", "all")
+    MainTester().run_messaging_feature_test(sl.ALL, sl.ALL)
 
 def removal_from_group():
     return

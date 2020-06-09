@@ -11,6 +11,7 @@ import driver
 import xml_parsing
 import messaging
 import components_tests
+import string_list as sl
 from time import sleep
 from threading import Thread
 import subprocess
@@ -52,7 +53,7 @@ class MainTester(unittest.TestCase):
     def run_messaging_feature_test(self, test_name, s_network_name):
         tests = xml_parsing.feature_xml_to_dictionary("messaging_feature_tests.xml")# converts the xml file to list of diction
         for test in tests:
-            if test['name'] == test_name or test_name == "all":
+            if test['name'] == test_name or test_name == sl.ALL:
                 driver.current_test = test
                 driver.current_s_network = s_network_name
                 suite = unittest.TestLoader().loadTestsFromTestCase(messaging.Messaging)
