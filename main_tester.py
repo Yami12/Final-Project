@@ -52,8 +52,7 @@ class MainTester(unittest.TestCase):
     def run_messaging_feature_test(self, test_name, s_network_name):
         tests = xml_parsing.feature_xml_to_dictionary("messaging_feature_tests.xml")# converts the xml file to list of diction
         for test in tests:
-            if test['name'] == test_name:
-                print("yay")
+            if test['name'] == test_name or test_name == "all":
                 driver.current_test = test
                 driver.current_s_network = s_network_name
                 suite = unittest.TestLoader().loadTestsFromTestCase(messaging.Messaging)
