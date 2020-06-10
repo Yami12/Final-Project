@@ -5,18 +5,14 @@ import datetime
 def do_action(component, action , content):
     try:
         if action == sl.ACTION_CLICK:
-            print("click")
+            print("in click")
             component.click()
-
         elif action == sl.ACTION_SEND_KEYS:
             if content == sl.MESSAGING_CONTENT:
-                print("hi")
                 component.send_keys(driver.current_test[sl.MESSAGING_CONTENT])
                 driver.sending_time = datetime.datetime.now()  # save the sending time
             elif content == sl.TEST_CONTACT:
-                print("1")
                 component.send_keys(driver.current_test[sl.CHILD_NAME][:-1])
-
 
         elif action == sl.ACTION_GET:
             component_text = component.get_attribute("text")
@@ -28,6 +24,7 @@ def do_action(component, action , content):
         return ['Failed', e]
 
 def id_operation(resource_id, action, content):
+    print(resource_id)
     try:
         component = driver.global_driver.find_element_by_id(resource_id)
         print(resource_id)
@@ -50,8 +47,6 @@ def uiautomator_operation(resource_id, action, content):
     except Exception as e:
         return ['Failed', e]
 
-# def xpath_operation(resource_id,action,content = ""):
-#    return
 
 def xpath_operation(resource_id, action):
     try:
@@ -62,26 +57,24 @@ def xpath_operation(resource_id, action):
 
 
 def component_operation(step):
+    print(step)
     #id type
     if step[sl.TYPE_STEP] == sl.TYPE_ID:
-
         return id_operation(step[sl.ID_STEP], step[sl.ACTION_STEP], step[sl.CONTENT_STEP])
     #class type
     elif step[sl.TYPE_STEP] == sl.TYPE_CLASS:
         return class_operation(step[sl.ID_STEP], step[sl.ACTION_STEP], step[sl.CONTENT_STEP])
-
     #uiautomator type
     elif step[sl.TYPE_STEP] == sl.TYPE_UIAUTOMATOR:
-
         if step[sl.CONTENT_STEP] == sl.UIAUTOMATOR_CHAT_NAME:
-            print("-----", step)
-            resource_id = 'new UiSelector().textContains("' + driver.current_test[sl.TEST_APP_NAME] + '")'
+            resource_id = 'new UiSelector().textContains("' + driver.current_test[sl.CHAT_NAME] + '")'
         elif step[sl.CONTENT_STEP] == 'Group info':
             resource_id = 'new UiSelector().textContains("Group info")'
         elif step[sl.CONTENT_STEP] == 'More options':
             resource_id = 'new UiSelector().descriptionContains("More options")'
         else:
             resource_id = 'new UiSelector().descriptionContains("' + step[sl.CONTENT_STEP] + '")'
+        print(resource_id)
         return uiautomator_operation(resource_id, step[sl.ACTION_STEP], "")
 
 
