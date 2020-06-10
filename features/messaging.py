@@ -25,15 +25,17 @@ logs = []
 
 class Messaging (unittest.TestCase):
     # A function that checks whether the message sent in a test exists in the list of received logs
-    def check_logs(self,parent_name):
+    def check_logs(self, parent_name):
         global logs
         current_test = driver.current_test
         for log in logs:
+            print("log: ", log)
             specific_log = log.replace("false", "False").replace("true", "True")
             specific_log = specific_log.split("HttpKeepersLogger: ")[1]
             specific_log =specific_log.split("\\r\\n")[0]
+            print("specific log: ", specific_log)
             logs_dict = ast.literal_eval(specific_log)
-
+            print("log_dict: ", logs_dict)
             if logs_dict['applicationName'] == current_test['application']:
                 if logs_dict['isGroup'] == strtobool(current_test['isGroup']):
                     if logs_dict['title'] == parent_name:
@@ -61,13 +63,13 @@ class Messaging (unittest.TestCase):
             elif step[sl.TYPE_STEP] == sl.TYPE_UIAUTOMATOR and 'class="android.widget.ImageView"' not in node:
 
                 if step[sl.CONTENT_STEP] == sl.UIAUTOMATOR_CHAT_NAME:
-                    print("1")
+                    # print("1")
                     if parent_name in node:
-                        print("2")
+                        # print("2")
                         process.kill()
                         return re.search('bounds="\[([0-9]+),([0-9]+)\]', node)
                 elif 'content-desc="' + step[sl.CONTENT_STEP] in node:
-                    print("3")
+                    # print("3")
                     process.kill()
                     return re.search('bounds="\[([0-9]+),([0-9]+)\]', node)
 
@@ -86,12 +88,11 @@ class Messaging (unittest.TestCase):
             if step[sl.ACTION_STEP] == sl.ACTION_SEND_KEYS :
                 if step[sl.CONTENT_STEP] == sl.MESSAGING_CONTENT and from_child == True:
                     driver.sending_time = datetime.datetime.now()  # save the sending time
-                    subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'text',
-                                    driver.current_test[sl.MESSAGING_CONTENT]])
-
+                    subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'text', driver.current_test[sl.MESSAGING_CONTENT]])
+                elif step[sl.CONTENT_STEP] == sl.MESSAGING_CONTENT and from_child == False:
+                    return
                 else:
                     subprocess.run(['adb','-s', driver.child_device ,'shell', 'input', 'text', s_network[sl.PARENT_NAME][:-1]])
-
             elif step[sl.ACTION_STEP] == sl.ACTION_CLICK:
                 coordinates = self.return_coordinates_by_resource_id(step,s_network[sl.PARENT_NAME])
                 print("----", coordinates[1], coordinates[2])
@@ -118,12 +119,14 @@ class Messaging (unittest.TestCase):
                 logs.append(str(line))
         print(self.check_logs(s_network[sl.PARENT_NAME]))
 
-    def send_message(self,from_child = False):
+    def send_message(self, from_child=False):
         networks = xml_parsing.tests_xml_to_dictionary(sl.NETWORKS_FILE)
         for network in networks:
             if network[sl.S_NETWORK_NAME] == driver.current_test[sl.TEST_APP_NAME]:
-                driver.current_test[sl.CHILD_NAME] = network[sl.CHILD_NAME]
-                driver.current_test[sl.PARENT_NAME] = network[sl.PARENT_NAME]
+                if driver.current_test[sl.TEST_SIDE] == sl.TEST_RECIVE_SIDE:
+                    driver.current_test[sl.CHAT_NAME] = network[sl.CHILD_NAME]
+                else:
+                    driver.current_test[sl.CHAT_NAME] = network[sl.PARENT_NAME]
                 if from_child == False: # send a message to the child
                     driver.connect_driver(network[sl.APP_PACKAGE],network[sl.APP_ACTIVITY])# connect the driver
                     for step in network[sl.STEPS]:
