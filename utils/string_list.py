@@ -58,9 +58,13 @@ ACTION_GET = "get"
 NETWORKS_FILE ="social_networks.xml"
 MESSAGING_FEATURE_FILE = "messaging_feature_tests.xml"
 COMPONENTS_FILE = "components_behavior_tests.xml"
+REMOVAL_FILE = "removal_from_group.xml"
 
 XML_FOLDER = "xml_files"
 DEVICE_UDID = "udid"
 DEVICE_VERSION = "version"
 DEVICE_OS = "Android"
 DEVICE_PLATFORM = "platform"
+
+REMOVEAL_TEST = "Removal from group"
+GROUP_NAME = "group_name"

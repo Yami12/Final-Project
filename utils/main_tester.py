@@ -49,8 +49,6 @@ class MainTester(unittest.TestCase):
 
 
     def run_messaging_feature_test(self, test_name, s_network_name):
-        # print("aaaaaaaaaaaa")
-        # time.sleep(10)
         tests = xml_parsing.feature_xml_to_dictionary(sl.MESSAGING_FEATURE_FILE)# converts the xml file to list of diction
         for test in tests:
             if test['name'] == test_name or test_name == sl.ALL:

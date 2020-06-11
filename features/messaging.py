@@ -118,7 +118,6 @@ class Messaging (unittest.TestCase):
         time.sleep(15)
         while not stdout_reader.stopped():  # the queue is empty and the thread terminated
             line = stdout_queue.get()
-            print("line= ", line)
             if "taggedText"in str(line):
                 logs.append(str(line))
         print(self.check_logs(s_network[sl.PARENT_NAME]))
@@ -159,12 +158,38 @@ class Messaging (unittest.TestCase):
                 #         logs.append(str(line))
                 # print(logs)
 
+    def remove_from_group(self):
+
+        networks = xml_parsing.tests_xml_to_dictionary(sl.NETWORKS_FILE)
+        removal_networks = xml_parsing.tests_xml_to_dictionary(sl.REMOVAL_FILE)
+
+        for removal_network in removal_networks:
+            if removal_network[sl.S_NETWORK_NAME] == driver.current_test[sl.TEST_APP_NAME]:
+                driver.current_test[sl.CHAT_NAME] = removal_network[sl.GROUP_NAME]
+
+                for network in networks:
+                    if network[sl.S_NETWORK_NAME] == driver.current_test[sl.TEST_APP_NAME]:
+                        driver.current_test[sl.CHILD_NAME] = network[sl.CHILD_NAME]
+                        driver.connect_driver(network[sl.APP_PACKAGE], network[sl.APP_ACTIVITY])  # connect the driver
+                        for step in network[sl.STEPS]:
+                            if step[sl.CONTENT_STEP] == 'text':
+                                break
+                            driver.global_tests_result.append(components_operations.component_operation(step))
+                        break
+                for step in removal_network[sl.STEPS]:
+                    driver.global_tests_result.append(components_operations.component_operation(step))
+                break
 
     def test_manage_message(self):
+        print(driver.current_test)
+        if driver.current_test['name'] == 'Removal from group':  # removal from group test
+            self.remove_from_group()
         if driver.current_test[sl.TEST_SIDE] == sl.TEST_RECIVE_SIDE:
             self.send_message()
         elif driver.current_test[sl.TEST_SIDE] == sl.TEST_SEND_SIDE:
             self.send_message(True)
+
+
 
 
 

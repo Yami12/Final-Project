@@ -16,7 +16,7 @@
         <side>send</side>
     </test>
     <test>
-        <name>Removal from whatsapp group</name>
+        <name>Removal from group</name>
         <application>WhatsApp</application>
         <action>removal</action>
         <groupName>check-group</groupName>

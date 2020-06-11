@@ -31,7 +31,7 @@ def tests_xml_to_dictionary(file_name):
     file = open(os.path.join(parentDirectory, sl.XML_FOLDER, file_name))
     file_content = file.read()
     tree = et.fromstring(file_content)
-    if file_name == sl.NETWORKS_FILE:
+    if file_name == sl.NETWORKS_FILE or file_name == sl.REMOVAL_FILE:
         tests = tree.findall(sl.SOCIAL_NETWORK)  # first node in the xml file
     else:
         tests = tree.findall(sl.TEST)  # first node in the xml file

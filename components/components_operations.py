@@ -43,8 +43,10 @@ def class_operation(resource_id, action, content):
 def uiautomator_operation(resource_id, action, content):
     try:
         component = driver.global_driver.find_element_by_android_uiautomator(resource_id)
+
         return do_action(component, action, content)
     except Exception as e:
+        print("--------------------------------66")
         return ['Failed', e]
 
 
@@ -72,6 +74,9 @@ def component_operation(step):
             resource_id = 'new UiSelector().textContains("Group info")'
         elif step[sl.CONTENT_STEP] == 'More options':
             resource_id = 'new UiSelector().descriptionContains("More options")'
+        elif step[sl.CONTENT_STEP] == 'child name':
+            print(step)
+            resource_id = 'new UiSelector().textContains("' + driver.current_test[sl.CHILD_NAME] + '")'
         else:
             resource_id = 'new UiSelector().descriptionContains("' + step[sl.CONTENT_STEP] + '")'
         print(resource_id)
