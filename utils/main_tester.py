@@ -11,7 +11,7 @@ import os
 from utils import driver
 from utils import xml_parsing
 from utils import string_list as sl
-
+import time
 from features import messaging
 
 from components import components_tests
@@ -49,6 +49,8 @@ class MainTester(unittest.TestCase):
 
 
     def run_messaging_feature_test(self, test_name, s_network_name):
+        # print("aaaaaaaaaaaa")
+        # time.sleep(10)
         tests = xml_parsing.feature_xml_to_dictionary(sl.MESSAGING_FEATURE_FILE)# converts the xml file to list of diction
         for test in tests:
             if test['name'] == test_name or test_name == sl.ALL:
@@ -59,3 +61,5 @@ class MainTester(unittest.TestCase):
                 suite = unittest.TestLoader().loadTestsFromTestCase(messaging.Messaging)
                 result = unittest.TextTestRunner(verbosity=1).run(suite)
                 tests_results.append("test: {} result: {}".format(test['name'], result))  # save the test result
+
+        return

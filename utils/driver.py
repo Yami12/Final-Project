@@ -17,6 +17,7 @@ global_tests_result = []
 requested_flow = None
 current_test = None
 current_s_network = None
+current_thread = None
 desired_caps = {}
 sending_time = ""
 child_device = ""

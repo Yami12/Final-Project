@@ -2,6 +2,8 @@ from tkinter import *
 from threading import Thread
 from utils import xml_parsing
 from utils import string_list as sl
+from utils import driver
+import time
 
 tests = xml_parsing.feature_xml_to_dictionary(sl.MESSAGING_FEATURE_FILE)
 tests_names = [x[sl.TEST_NAME] for x in tests]
@@ -18,6 +20,9 @@ def send_message():
     if feature_tests.get() != 'Not Selected':
         from utils import main_tester
         main_tester.MainTester().run_messaging_feature_test(feature_tests.get(), social_network.get())
+        print("byeeeeee")
+        button_run_message.configure(background="brown")
+        button_run_message["state"] = "active"
 
 '''Accepts screen name making a move to it'''
 def raise_frame(frame):
@@ -83,8 +88,15 @@ def run_all_messaging_tests():
 def removal_from_group():
     return
 
+def thread_send_messaging():
+    button_run_message.configure(background ="gray")
+    button_run_message["state"] = "disabled"
+    driver.current_thread = Thread(target=send_message)
+    driver.current_thread.start()
 
-run_test_thread = Thread(target=send_message)
+
+
+
 
 #Visual display of screens
 main_window = Tk()
@@ -118,8 +130,8 @@ social_network_entry = OptionMenu(run_messaging_test_frame, social_network, *soc
 social_network_entry.place(x=240, y=350)
 social_network.set("Not Selected")
 
-Button(run_messaging_test_frame, text='start test', width=20, bg='brown', fg='white', command=lambda: run_test_thread.start()).place(x=170, y=400)
-
+button_run_message = Button(run_messaging_test_frame, text='start test', width=20, bg='brown', fg='white', command=lambda: thread_send_messaging())
+button_run_message.place(x=170, y=400)
 '''main_messaging_test_frame'''
 Button(main_messaging_test_frame, text='run all send messaging tests', width=20, bg='brown', fg='white', command=run_all_messaging_tests).place(x=180, y=220)
 Button(main_messaging_test_frame, text='run specific messaging test', width=20, bg='brown', fg='white', command=lambda: raise_frame(run_messaging_test_frame)).place(x=180, y=290)
