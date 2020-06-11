@@ -25,6 +25,7 @@ def device_frame_ok():
          child_device = next(i for i in devices if i["udid"] == child_devices.get())
          driver.initialize(father_device['version'], father_devices.get())
          driver.child_device = child_devices.get()
+         driver.father_device = father_devices.get()
          print(driver.child_device)
          next_window()
 

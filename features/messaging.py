@@ -117,22 +117,42 @@ class Messaging (unittest.TestCase):
             line = stdout_queue.get()
             if "taggedText"in str(line):
                 logs.append(str(line))
-        print(self.check_logs(s_network[sl.PARENT_NAME]))
+        # print(self.check_logs(s_network[sl.PARENT_NAME]))
 
     def send_message(self, from_child=False):
         networks = xml_parsing.tests_xml_to_dictionary(sl.NETWORKS_FILE)
         for network in networks:
             if network[sl.S_NETWORK_NAME] == driver.current_test[sl.TEST_APP_NAME]:
-                if driver.current_test[sl.TEST_SIDE] == sl.TEST_RECIVE_SIDE:
-                    driver.current_test[sl.CHAT_NAME] = network[sl.CHILD_NAME]
-                else:
-                    driver.current_test[sl.CHAT_NAME] = network[sl.PARENT_NAME]
-                if from_child == False: # send a message to the child
-                    driver.connect_driver(network[sl.APP_PACKAGE],network[sl.APP_ACTIVITY])# connect the driver
-                    for step in network[sl.STEPS]:
-                        driver.global_tests_result.append(components_operations.component_operation(step))
-
-                self.get_keepers_logs(network, from_child)
+                # if driver.current_test[sl.TEST_SIDE] == sl.TEST_RECIVE_SIDE:
+                #     driver.current_test[sl.CHAT_NAME] = network[sl.CHILD_NAME]
+                # else:
+                #     driver.current_test[sl.CHAT_NAME] = network[sl.PARENT_NAME]
+                # if from_child == False: # send a message to the child
+                #     driver.connect_driver(network[sl.APP_PACKAGE],network[sl.APP_ACTIVITY])# connect the driver
+                #     for step in network[sl.STEPS]:
+                #         driver.global_tests_result.append(components_operations.component_operation(step))
+                #
+                # self.get_keepers_logs(network, from_child)
+                driver.connect_driver(network[sl.APP_PACKAGE], network[sl.APP_ACTIVITY])
+                global logs
+                # get keepers logcats to a PIPE
+                process = subprocess.Popen(['adb', '-s', driver.father_device, 'logcat', '-s', 'HttpKeepersLogger'],
+                                           stdout=subprocess.PIPE)
+                stdout_queue = Queue()
+                stdout_reader = read_messaging_logs.AsynchronousFileReader(process.stdout, stdout_queue)
+                stdout_reader.start()
+                time.sleep(20)
+                # uplaod the keepers logs
+                subprocess.run(['adb', '-s', driver.father_device, 'shell', 'am', 'broadcast', '-a',
+                                'com.keepers.childmodule.ACTION_UPLOAD_CONVERSATIONS'])
+                print("***")
+                time.sleep(50)
+                print("****")
+                while not stdout_reader.stopped():  # thequeueisemptyandthethreadterminated
+                    line = stdout_queue.get()
+                    if "taggedText" in str(line):
+                        logs.append(str(line))
+                print(logs)
 
 
     def test_manage_message(self):
@@ -140,6 +160,7 @@ class Messaging (unittest.TestCase):
             self.send_message()
         elif driver.current_test[sl.TEST_SIDE] == sl.TEST_SEND_SIDE:
             self.send_message(True)
+
 
 
 

@@ -91,8 +91,8 @@ def removal_from_group():
 def thread_send_messaging():
     button_run_message.configure(background ="gray")
     button_run_message["state"] = "disabled"
-    driver.current_thread = Thread(target=send_message)
-    driver.current_thread.start()
+    send_message_thread = Thread(target=send_message)
+    send_message_thread.start()
 
 
 
