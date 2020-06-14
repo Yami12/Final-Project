@@ -19,7 +19,7 @@ current_test = None
 current_s_network = None
 desired_caps = {}
 sending_time = ""
-# child_device = ""
+child_device = ""
 father_device = ""
 tester_device = ""
 '''
