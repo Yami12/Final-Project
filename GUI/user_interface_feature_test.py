@@ -3,7 +3,6 @@ from threading import Thread
 from utils import xml_parsing
 from utils import string_list as sl
 from utils import driver
-import time
 
 tests = xml_parsing.feature_xml_to_dictionary(sl.MESSAGING_FEATURE_FILE)
 tests_names = [x[sl.TEST_NAME] for x in tests]
@@ -17,12 +16,12 @@ def run_messaging_feature_test():
     main_window.mainloop()
 
 def send_message():
-    if feature_tests.get() != 'Not Selected':
+    if feature_tests.get() != sl.NOT_SELECTED:
         from utils import main_tester
         main_tester.MainTester().run_messaging_feature_test(feature_tests.get(), social_network.get())
-        print("byeeeeee")
         button_run_message.configure(background="brown")
         button_run_message["state"] = "active"
+
 
 '''Accepts screen name making a move to it'''
 def raise_frame(frame):
@@ -45,57 +44,48 @@ def add_social_network():
     new_social_network_remove_group[sl.STEPS] = steps_group
     xml_parsing.add_new_item_to_xml(new_social_network_remove_group, sl.REMOVE_GROUP_FILE)
 
+def add_step(type, id, action, content):
+    new_step = {}
+    new_step[sl.TYPE_STEP] = type.get()
+    new_step[sl.ID_STEP] = id.get()
+    new_step[sl.ACTION_STEP] = action.get()
+    new_step[sl.CONTENT_STEP] = content.get()
+
+    type.delete(0, END)
+    type.insert(0, "")
+    id.delete(0, END)
+    id.insert(0, "")
+    action.delete(0, END)
+    action.insert(0, "")
+    content.delete(0, END)
+    content.insert(0, "")
+
+    return new_step
+
 def add_step_to_social_network():
     global steps
-    new_step = {}
-    new_step[sl.TYPE_STEP] = entry_type_step.get()
-    new_step[sl.ID_STEP] = entry_id_step.get()
-    new_step[sl.ACTION_STEP] = entry_action_step.get()
-    new_step[sl.CONTENT_STEP] = entry_content_step.get()
-    steps.append(new_step)
+    steps.append(add_step(entry_type_step, entry_id_step, entry_action_step, entry_content_step))
 
-    entry_type_step.delete(0, END)
-    entry_type_step.insert(0, "")
-    entry_id_step.delete(0, END)
-    entry_id_step.insert(0, "")
-    entry_action_step.delete(0, END)
-    entry_action_step.insert(0, "")
-    entry_content_step.delete(0, END)
-    entry_content_step.insert(0, "")
 
 def add_step_to_removal_from_group():
     global steps_group
-    new_step = {}
-    new_step[sl.TYPE_STEP] = entry_type_step_remove.get()
-    new_step[sl.ID_STEP] = entry_id_step_remove.get()
-    new_step[sl.ACTION_STEP] = entry_action_step_remove.get()
-    new_step[sl.CONTENT_STEP] = entry_content_step_remove.get()
-    steps.append(new_step)
+    steps_group.append(add_step(entry_type_step_remove, entry_id_step_remove, entry_action_step_remove, entry_content_step_remove))
 
-    entry_type_step_remove.delete(0, END)
-    entry_type_step_remove.insert(0, "")
-    entry_id_step_remove.delete(0, END)
-    entry_id_step_remove.insert(0, "")
-    entry_action_step_remove.delete(0, END)
-    entry_action_step_remove.insert(0, "")
-    entry_content_step_remove.delete(0, END)
-    entry_content_step_remove.insert(0, "")
 
 def run_all_messaging_tests():
     from utils import main_tester
     main_tester.MainTester().run_messaging_feature_test(sl.ALL, sl.ALL)
 
+
 def removal_from_group():
     return
 
+
 def thread_send_messaging():
-    button_run_message.configure(background ="gray")
+    button_run_message.configure(background="gray")
     button_run_message["state"] = "disabled"
     send_message_thread = Thread(target=send_message)
     send_message_thread.start()
-
-
-
 
 
 #Visual display of screens
@@ -122,16 +112,17 @@ Label(run_messaging_test_frame, text="Choose test", width=20, font=("bold", 20))
 feature_tests = StringVar()
 feature_tests_entry = OptionMenu(run_messaging_test_frame, feature_tests, *tests_names)
 feature_tests_entry.place(x=180, y=140)
-feature_tests.set("Not Selected")
+feature_tests.set(sl.NOT_SELECTED)
 
 Label(run_messaging_test_frame, text="social network:", width=20, font=("bold", 10)).place(x=80, y=350)
 social_network = StringVar()
 social_network_entry = OptionMenu(run_messaging_test_frame, social_network, *social_networks_name)
 social_network_entry.place(x=240, y=350)
-social_network.set("Not Selected")
+social_network.set(sl.NOT_SELECTED)
 
 button_run_message = Button(run_messaging_test_frame, text='start test', width=20, bg='brown', fg='white', command=lambda: thread_send_messaging())
 button_run_message.place(x=170, y=400)
+
 '''main_messaging_test_frame'''
 Button(main_messaging_test_frame, text='run all send messaging tests', width=20, bg='brown', fg='white', command=run_all_messaging_tests).place(x=180, y=220)
 Button(main_messaging_test_frame, text='run specific messaging test', width=20, bg='brown', fg='white', command=lambda: raise_frame(run_messaging_test_frame)).place(x=180, y=290)

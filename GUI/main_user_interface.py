@@ -7,7 +7,7 @@ from utils import xml_parsing
 from utils import driver
 from utils import string_list as sl
 
-flag_component_feature = 0#component=0, feature=1
+flag_component_feature = 0  #component=0, feature=1
 devices = driver.identify_connected_device()
 # if not devices == False:
 devices_names = [x[sl.DEVICE_UDID] for x in devices]
@@ -20,9 +20,9 @@ def raise_frame(frame):
 '''When: The user has finished entering the phone information and press the button on the "device_frame" screen
 What: Connects to the appium driver and moves to the next screen'''
 def device_frame_ok():
-     if father_devices.get() != 'Not Selected' and child_devices.get() != 'Not Selected':
+     if father_devices.get() != sl.NOT_SELECTED and child_devices.get() != sl.NOT_SELECTED:
          father_device = next(i for i in devices if i[sl.DEVICE_UDID] == father_devices.get())
-         child_device = next(i for i in devices if i[sl.DEVICE_UDID] == child_devices.get())
+         # child_device = next(i for i in devices if i[sl.DEVICE_UDID] == child_devices.get())
          driver.initialize(father_device[sl.DEVICE_VERSION], father_devices.get())
          driver.child_device = child_devices.get()
          driver.father_device = father_devices.get()
@@ -31,7 +31,7 @@ def device_frame_ok():
 
 
 def tester_device_frame_ok():
-    if tester_devices.get() != 'Not Selected':
+    if tester_devices.get() != sl.NOT_SELECTED:
         tester_device = next(i for i in devices if i[sl.DEVICE_UDID] == tester_devices.get())
         driver.initialize(tester_device[sl.DEVICE_VERSION], tester_devices.get())
         driver.tester_device = tester_devices.get()
@@ -90,7 +90,7 @@ Label(component_device_frame, text="tester device:", width=20, font=("bold", 10)
 tester_devices = StringVar()
 tester_devices_entry = OptionMenu(component_device_frame, tester_devices, *devices_names)
 tester_devices_entry.place(x=240, y=170)
-tester_devices.set("Not Selected")
+tester_devices.set(sl.NOT_SELECTED)
 
 Button(component_device_frame, text='next', width=20, bg='brown', fg='white', command=lambda: tester_device_frame_ok()).place(x=170, y=450)
 
@@ -104,13 +104,13 @@ Label(feature_device_frame, text="father device:", width=20, font=("bold", 10)).
 father_devices = StringVar()
 father_devices_entry = OptionMenu(feature_device_frame, father_devices, *devices_names)
 father_devices_entry.place(x=240, y=170)
-father_devices.set("Not Selected")
+father_devices.set(sl.NOT_SELECTED)
 
 Label(feature_device_frame, text="child device:", width=20, font=("bold", 10)).place(x=80, y=300)
 child_devices = StringVar()
 child_devices_entry = OptionMenu(feature_device_frame, child_devices, *devices_names)
 child_devices_entry.place(x=240, y=300)
-child_devices.set("Not Selected")
+child_devices.set(sl.NOT_SELECTED)
 
 Button(feature_device_frame, text='next', width=20, bg='brown', fg='white', command=lambda: device_frame_ok()).place(x=170, y=450)
 

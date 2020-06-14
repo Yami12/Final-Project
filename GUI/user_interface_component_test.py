@@ -34,7 +34,7 @@ def open_update_frame():
 '''When: The user press the button on the "run_test_frame" screen
 What: send name of flow to run function to run it'''
 def run_test():
-    if run_flow_s.get() != "Not Selected":
+    if run_flow_s.get() != sl.NOT_SELECTED:
         main_tester.MainTester().run_specific_behvior_flow(run_flow_s.get())
 
 
@@ -179,7 +179,7 @@ Label(run_test_frame, text="choose the test::", width=20, font=("bold", 10)).pla
 run_flow_s = StringVar()
 entry_run_flow = OptionMenu(run_test_frame, run_flow_s, *tests_names)
 entry_run_flow.place(x=170, y=140)
-run_flow_s.set("Not Selected")
+run_flow_s.set(sl.NOT_SELECTED)
 
 Button(run_test_frame, text='run', width=20, bg='brown', fg='white', command=lambda: run_test_thread.start()).place(x=170, y=300)
 
@@ -195,7 +195,7 @@ Label(add_component_behavior_test_frame, text="What expected result:", width=20,
 expected_result_type = StringVar() # there is the rule: variable name lowercase with _
 expected_result_entry = OptionMenu(add_component_behavior_test_frame, expected_result_type, "toastMessage", "disabled", "labelMessage‏", command=expected_result_change)
 expected_result_entry.place(x=240, y=150)
-expected_result_type.set("Not Selected")
+expected_result_type.set(sl.NOT_SELECTED)
 
 #add steps to test
 Label(add_component_behavior_test_frame, text="type step:", width=20, font=("bold", 10)).place(x=80, y=240)
@@ -225,13 +225,13 @@ Label(delete_component_behavior_frame, text="choose the test:", width=20, font=(
 delete_test_name = StringVar()
 entry_delete_test_name = OptionMenu(delete_component_behavior_frame, delete_test_name, *tests_names, command=choose_test_to_delete)
 entry_delete_test_name.place(x=200, y=80)
-delete_test_name.set("Not Selected")
+delete_test_name.set(sl.NOT_SELECTED)
 
 Label(delete_component_behavior_frame, text="choose the step:", width=20, font=("bold", 10)).place(x=70, y=150)
 delete_step_name = StringVar()
 entry_delete_step_name = OptionMenu(delete_component_behavior_frame, delete_step_name, *steps)
 entry_delete_step_name.place(x=200, y=150)
-delete_step_name.set("Not Selected")
+delete_step_name.set(sl.NOT_SELECTED)
 
 continue_update_button = Button(delete_component_behavior_frame, text='to continue', width=20, bg='brown', fg='white', command=choose_step_from_test)
 

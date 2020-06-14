@@ -68,3 +68,5 @@ DEVICE_PLATFORM = "platform"
 
 REMOVEAL_TEST = "Removal from group"
 GROUP_NAME = "group_name"
+
+NOT_SELECTED = 'Not Selected'

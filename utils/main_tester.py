@@ -64,5 +64,4 @@ class MainTester(unittest.TestCase):
                 suite = unittest.TestLoader().loadTestsFromTestCase(messaging.Messaging)
                 result = unittest.TextTestRunner(verbosity=1).run(suite)
                 tests_results.append("test: {} result: {}".format(test['name'], result))  # save the test result
-
         return
