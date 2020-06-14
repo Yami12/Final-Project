@@ -35,7 +35,7 @@ def open_update_frame():
 What: send name of flow to run function to run it'''
 def run_test():
     if run_flow_s.get() != "Not Selected":
-        main_tester.MainTester.run_specific_behvior_flow(run_flow_s.get())
+        main_tester.MainTester().run_specific_behvior_flow(run_flow_s.get())
 
 
 '''When: The user press the button on the "add_component_behavior_frame" screen

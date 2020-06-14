@@ -102,22 +102,30 @@ class Messaging (unittest.TestCase):
             time.sleep(3)
 
 
-    def get_keepers_logs(self, s_network, from_child):
+    def get_keepers_logs(self, s_network, from_child = False):
+        if driver.current_test[sl.TEST_NAME] == sl.REMOVEAL_TEST:
+            device = driver.father_device
+        else:
+            dvice = driver.child_device
         global logs
         # get keepers logcats to a PIPE
-        process = subprocess.Popen(['adb', '-s', driver.child_device, 'logcat', '-s', 'HttpKeepersLogger'],
+        process = subprocess.Popen(['adb', '-s', device, 'logcat', '-s', 'HttpKeepersLogger'],
                                    stdout=subprocess.PIPE)
         stdout_queue = Queue()
         stdout_reader = read_messaging_logs.AsynchronousFileReader(process.stdout, stdout_queue)
         stdout_reader.start()
 
-        self.child_open_chat_screen(s_network, from_child)#child reed the message
+        if driver.current_test[sl.TEST_NAME] == sl.REMOVEAL_TEST:
+            self.remove_from_group()
+        else:
+            self.child_open_chat_screen(s_network, from_child)#child reed the message
 
         # uplaod the keepers logs
-        subprocess.run(['adb', '-s', driver.child_device,'shell', 'am', 'broadcast', '-a', 'com.keepers.childmodule.ACTION_UPLOAD_CONVERSATIONS'])
+        subprocess.run(['adb', '-s', device,'shell', 'am', 'broadcast', '-a', 'com.keepers.childmodule.ACTION_UPLOAD_CONVERSATIONS'])
         time.sleep(15)
         while not stdout_reader.stopped():  # the queue is empty and the thread terminated
             line = stdout_queue.get()
+            print("line = ", line)
             if "taggedText"in str(line):
                 logs.append(str(line))
         print(self.check_logs(s_network[sl.PARENT_NAME]))
@@ -159,14 +167,12 @@ class Messaging (unittest.TestCase):
                 # print(logs)
 
     def remove_from_group(self):
-
         networks = xml_parsing.tests_xml_to_dictionary(sl.NETWORKS_FILE)
         removal_networks = xml_parsing.tests_xml_to_dictionary(sl.REMOVAL_FILE)
 
         for removal_network in removal_networks:
             if removal_network[sl.S_NETWORK_NAME] == driver.current_test[sl.TEST_APP_NAME]:
                 driver.current_test[sl.CHAT_NAME] = removal_network[sl.GROUP_NAME]
-
                 for network in networks:
                     if network[sl.S_NETWORK_NAME] == driver.current_test[sl.TEST_APP_NAME]:
                         driver.current_test[sl.CHILD_NAME] = network[sl.CHILD_NAME]
@@ -182,9 +188,9 @@ class Messaging (unittest.TestCase):
 
     def test_manage_message(self):
         print(driver.current_test)
-        if driver.current_test['name'] == 'Removal from group':  # removal from group test
-            self.remove_from_group()
-        if driver.current_test[sl.TEST_SIDE] == sl.TEST_RECIVE_SIDE:
+        if driver.current_test[sl.TEST_NAME] == 'Removal from group':  # removal from group test
+            self.get_keepers_logs(driver.current_test[sl.TEST_APP_NAME])
+        elif driver.current_test[sl.TEST_SIDE] == sl.TEST_RECIVE_SIDE:
             self.send_message()
         elif driver.current_test[sl.TEST_SIDE] == sl.TEST_SEND_SIDE:
             self.send_message(True)

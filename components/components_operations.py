@@ -13,6 +13,8 @@ def do_action(component, action , content):
                 driver.sending_time = datetime.datetime.now()  # save the sending time
             elif content == sl.TEST_CONTACT:
                 component.send_keys(driver.current_test[sl.CHAT_NAME][:-1])
+            else:
+                component.send_keys(content)
 
         elif action == sl.ACTION_GET:
             component_text = component.get_attribute("text")
@@ -43,7 +45,7 @@ def class_operation(resource_id, action, content):
 def uiautomator_operation(resource_id, action, content):
     try:
         component = driver.global_driver.find_element_by_android_uiautomator(resource_id)
-
+        print(component)
         return do_action(component, action, content)
     except Exception as e:
         print("--------------------------------66")
@@ -70,13 +72,15 @@ def component_operation(step):
     elif step[sl.TYPE_STEP] == sl.TYPE_UIAUTOMATOR:
         if step[sl.CONTENT_STEP] == sl.UIAUTOMATOR_CHAT_NAME:
             resource_id = 'new UiSelector().textContains("' + driver.current_test[sl.CHAT_NAME] + '")'
-        elif step[sl.CONTENT_STEP] == 'Group info':
-            resource_id = 'new UiSelector().textContains("Group info")'
-        elif step[sl.CONTENT_STEP] == 'More options':
-            resource_id = 'new UiSelector().descriptionContains("More options")'
         elif step[sl.CONTENT_STEP] == 'child name':
-            print(step)
             resource_id = 'new UiSelector().textContains("' + driver.current_test[sl.CHILD_NAME] + '")'
+        elif "text:" in step[sl.CONTENT_STEP]:
+            resource_id = 'new UiSelector().textContains("' + str(step[sl.CONTENT_STEP]).split("text:")[1] + '")'
+        elif "desc:" in step[sl.CONTENT_STEP]:
+            resource_id = 'new UiSelector().descriptionContains("' + str(step[sl.CONTENT_STEP]).split("desc:")[1] + '")'
+        elif "resourceid-" in step[sl.CONTENT_STEP]:
+            print(str(step[sl.CONTENT_STEP]).split("-"))
+            resource_id = 'new UiSelector().resourceId("' + str(step[sl.CONTENT_STEP]).split("-")[2] + '")'
         else:
             resource_id = 'new UiSelector().descriptionContains("' + step[sl.CONTENT_STEP] + '")'
         print(resource_id)

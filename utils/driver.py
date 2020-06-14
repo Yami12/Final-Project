@@ -14,13 +14,14 @@ from utils import string_list as sl
 global_driver = None
 global_tests_result = []
 
-requested_flow = None
+# requested_flow = None
 current_test = None
 current_s_network = None
 desired_caps = {}
 sending_time = ""
 child_device = ""
 father_device = ""
+tester_device = ""
 '''
 function:initialize
 description: initializes the appium's driver
@@ -54,7 +55,7 @@ def connect_driver(appPackage, appActivity):
     global global_driver
     desired_caps['appPackage'] = appPackage
     desired_caps['appActivity'] = appActivity
-
+    print(desired_caps)
     global_driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
 
 
