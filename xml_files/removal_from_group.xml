@@ -1,7 +1,7 @@
 <social_networks>
 	<social_network>
 		<name>WhatsApp</name>
-		<group_name>Keepers</group_name>
+		<group_name>KeepersRemove</group_name>
 		<steps>
 			<step>
 				<type>id</type>

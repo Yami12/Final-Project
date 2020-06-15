@@ -5,7 +5,6 @@ import datetime
 def do_action(component, action , content):
     try:
         if action == sl.ACTION_CLICK:
-            print("in click")
             component.click()
         elif action == sl.ACTION_SEND_KEYS:
             if content == sl.MESSAGING_CONTENT:
@@ -26,10 +25,9 @@ def do_action(component, action , content):
         return ['Failed', e]
 
 def id_operation(resource_id, action, content):
-    print(resource_id)
     try:
         component = driver.global_driver.find_element_by_id(resource_id)
-        print(resource_id)
+
         return do_action(component, action, content)
     except Exception as e:
         return ['Failed', e]
@@ -45,10 +43,8 @@ def class_operation(resource_id, action, content):
 def uiautomator_operation(resource_id, action, content):
     try:
         component = driver.global_driver.find_element_by_android_uiautomator(resource_id)
-        print(component)
         return do_action(component, action, content)
     except Exception as e:
-        print("--------------------------------66")
         return ['Failed', e]
 
 
@@ -61,7 +57,7 @@ def xpath_operation(resource_id, action):
 
 
 def component_operation(step):
-    print(step)
+
     #id type
     if step[sl.TYPE_STEP] == sl.TYPE_ID:
         return id_operation(step[sl.ID_STEP], step[sl.ACTION_STEP], step[sl.CONTENT_STEP])
@@ -79,11 +75,9 @@ def component_operation(step):
         elif "desc:" in step[sl.CONTENT_STEP]:
             resource_id = 'new UiSelector().descriptionContains("' + str(step[sl.CONTENT_STEP]).split("desc:")[1] + '")'
         elif "resourceid-" in step[sl.CONTENT_STEP]:
-            print(str(step[sl.CONTENT_STEP]).split("-"))
             resource_id = 'new UiSelector().resourceId("' + str(step[sl.CONTENT_STEP]).split("-")[2] + '")'
         else:
             resource_id = 'new UiSelector().descriptionContains("' + step[sl.CONTENT_STEP] + '")'
-        print(resource_id)
         return uiautomator_operation(resource_id, step[sl.ACTION_STEP], "")
 
 
