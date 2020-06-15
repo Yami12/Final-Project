@@ -6,7 +6,6 @@ from distutils.util import strtobool
 import subprocess
 from queue import Queue
 import re
-import os
 
 from utils import driver
 from utils import read_messaging_logs
@@ -16,6 +15,7 @@ from utils import string_list as sl
 from components import components_operations
 
 logs = []
+
 # app_information = {'WhatsApp': ['com.whatsapp', 'com.whatsapp.HomeActivity t475'],
 #                    'Facebook': ['com.facebook.katana', 'com.facebook.katana.activity.FbMainTabActivity'],
 #                    'Instagram': ['com.instagram.android', 'com.instagram.mainactivity.MainActivity'],
@@ -58,6 +58,7 @@ class Messaging (unittest.TestCase):
         global logs
         print("logs: ", logs)
         current_test = driver.current_test
+
         for log in logs:
             print("log: ", log)
             specific_log = log.replace("false", "False").replace("true", "True")
@@ -67,9 +68,9 @@ class Messaging (unittest.TestCase):
             logs_dict = ast.literal_eval(specific_log)
             print("log_dict: ", logs_dict)
 
-            if logs_dict['eventData'] == current_test[sl.CHAT_NAME]:
-                if logs_dict['eventType'] == "CHILD_REMOVED_FROM_WA_GROUP":
-                    return True
+            if logs_dict['eventData'] == current_test[sl.CHAT_NAME] and "CHILD_REMOVED_FROM" in logs_dict['eventType']:
+                return True
+
         return False
 
     def return_coordinates_by_resource_id(self, step, parent_name):
@@ -187,12 +188,12 @@ class Messaging (unittest.TestCase):
 
     def test_manage_message(self):
         print(driver.current_test)
-        if driver.current_test[sl.TEST_NAME] == 'Removal from group':  # removal from group test
-            self.get_keepers_logs(driver.current_test[sl.TEST_APP_NAME])
-        elif driver.current_test[sl.TEST_SIDE] == sl.TEST_RECIVE_SIDE:
-            self.send_message()
-        elif driver.current_test[sl.TEST_SIDE] == sl.TEST_SEND_SIDE:
-            self.send_message(True)
+        # if driver.current_test[sl.TEST_NAME] == 'Removal from group':  # removal from group test
+        self.get_keepers_logs(driver.current_test[sl.TEST_APP_NAME])
+        # elif driver.current_test[sl.TEST_SIDE] == sl.TEST_RECIVE_SIDE:
+        #     self.send_message()
+        # elif driver.current_test[sl.TEST_SIDE] == sl.TEST_SEND_SIDE:
+        #     self.send_message(True)
 
 
 
