@@ -22,6 +22,8 @@ sending_time = ""
 child_device = ""
 father_device = ""
 tester_device = ""
+
+appium_service = ""
 '''
 function:initialize
 description: initializes the appium's driver
@@ -70,9 +72,6 @@ def identify_connected_device():
 
     for i in range(2):
         device = {}
-        # if udids[i+1] == '':
-        #     return False
-        # else:
         device[sl.DEVICE_UDID] = udids[i+1].split("\\tdevice")[0]
         process = subprocess.Popen(['adb', '-s', device[sl.DEVICE_UDID], 'shell', 'getprop', 'ro.build.version.release'], stdout=subprocess.PIPE)
         device[sl.DEVICE_VERSION] = str(process.stdout.read())[2:].split("\\r\\n")[0]

@@ -28,7 +28,7 @@ def feature_xml_to_dictionary(file_name):
     return tests_arr
 
 def tests_xml_to_dictionary(file_name):
-    file = open(os.path.join(parentDirectory, sl.XML_FOLDER, file_name))
+    file = open(os.path.join(parentDirectory, sl.XML_FOLDER, file_name),encoding='utf8')
     file_content = file.read()
     tree = et.fromstring(file_content)
     if file_name == sl.NETWORKS_FILE or file_name == sl.REMOVAL_FILE:
