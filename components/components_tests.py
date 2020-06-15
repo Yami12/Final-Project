@@ -19,15 +19,18 @@ class ComponentsTest(unittest.TestCase):
     def check_expected_result(self, expected_result):
         result = ["Passed", ""]
         if not expected_result == '':
-            if re.search("toastMessage:.*", driver.current_test['expectedResult']):# taost message
-                result = components_operations.xpath_operation('//android.widget.Toast[1]', sl.ACTION_GET, "")
-
-            elif re.search("labelMessage:.*", driver.current_test['expectedResult']):# label message
+            if re.search("labelMessage:.*", driver.current_test[sl.TEST_EXPECTED_RES]):# label message
                 result = components_operations.id_operation('com.keepers:id/textinput_error',sl.ACTION_GET, "")
-            print("result: ", result)
-            print(expected_result.split(":")[1])
-            if (result[0] == 'Passed') and (result[1] == expected_result.split(":")[1]):
+                if (result[0] == 'Passed') and (result[1] == expected_result.split(":")[1]):
                     return result
+            elif re.search("wrongMessage:.*", driver.current_test[sl.TEST_EXPECTED_RES]):# label message
+                result = components_operations.id_operation('com.keepers:id/snackbar_text',sl.ACTION_GET, "")
+                if (result[0] == 'Passed') and (result[1] == expected_result.split(":")[1]):
+                    return result
+            elif re.search("enabled:.*", driver.current_test[sl.TEST_EXPECTED_RES]):
+                element = driver.global_driver.find_element_by_id(expected_result.split("enabled:id:")[1])
+                if element.is_enabled() == False:
+                    return ["Passed", "Button not enabled"]
             result[0] = "Failed"
             result[1] = "Data Mismatch"
         return result
