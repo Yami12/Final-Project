@@ -51,16 +51,8 @@ def uiautomator_operation(resource_id, action, content):
         return ['Failed', e]
 
 
-def xpath_operation(resource_id, action):
-    try:
-        component = driver.global_driver.find_element_by_xpath(resource_id)
-        return do_action(component,action, "")
-    except Exception as e:
-        return ['Failed', e]
-
 
 def component_operation(step):
-    print("step: ", step)
     #id type
     if step[sl.TYPE_STEP] == sl.TYPE_ID:
         return id_operation(step[sl.ID_STEP], step[sl.ACTION_STEP], step[sl.CONTENT_STEP])
@@ -82,49 +74,3 @@ def component_operation(step):
         else:
             resource_id = 'new UiSelector().descriptionContains("' + step[sl.CONTENT_STEP] + '")'
         return uiautomator_operation(resource_id, step[sl.ACTION_STEP], "")
-
-
-
-
-
-
-
-
-
-
-
-
-
-# def button_operation(resours_id, action):
-#     try:
-#         component = driver.global_current_driver.find_element_by_id(resours_id)
-#         if action == 'click':
-#             component.click()
-#             return ['Passed',"SUCCESS"]
-#     except Exception as e:
-#         return ['Failed', e]
-#
-#
-# def input_operation(resours_id, content):
-#     try:
-#         input = driver.global_current_driver.find_element_by_id(resours_id)
-#         input.send_keys(content)
-#         return ['Passed','SUCCESS']
-#     except Exception as e:
-#         return ['Failed', e]
-#
-# def label_operation(resorce_id):
-#     try:
-#         error_message = driver.global_current_driver.find_element_by_id(resorce_id)
-#         error_message_text = error_message.get_attribute("text")
-#         return ['Passed', error_message_text]
-#     except Exception as e:
-#         return ['Failed', e]
-#
-# def toast_operation(resorce_id):
-#     try:
-#         error_message = driver.global_driver.find_element_by_xpath(resorce_id)
-#         error_message_text = error_message.get_attribute("text")
-#         return ['Passed', error_message_text]
-#     except Exception as e:
-#         return ['Failed', e]
