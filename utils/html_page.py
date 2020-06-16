@@ -28,7 +28,7 @@ def send_email():
     msg['From'] = me
     msg['To'] = you
 
-    # Create the body of the message (a plain-text and an HTML version).
+    # Create the body of the message
     html = create([[1,2,3],[4,5,6]])
 
     msg.attach(MIMEText(html, 'html'))

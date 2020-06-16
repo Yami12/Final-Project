@@ -45,7 +45,7 @@ TYPE_CLASS = "class"
 TYPE_UIAUTOMATOR = "uiautomator"
 TYPE_XPATH = "xpath"
 
-UIAUTOMATOR_CHAT_NAME = "chat name"
+# UIAUTOMATOR_CHAT_NAME = "chat_name"
 
 
 BUTTON = "button"

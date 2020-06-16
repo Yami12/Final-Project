@@ -1,11 +1,32 @@
 <social_networks>
 	<social_network>
 		<name>WhatsApp</name>
-		<group_name>KeepersRemove</group_name>
+		<group_name>Keepers</group_name>
 		<steps>
 			<step>
+				<type>uiautomator</type>
+				<action>click</action>
+				<content>אפשרויות נוספות</content>
+			</step>
+			<step>
 				<type>id</type>
-				<id>com.whatsapp:id/conversation_contact_name</id>
+				<id>com.whatsapp:id/title</id>
+				<action>click</action>
+				<content></content>
+			</step>
+			<step>
+				<type>uiautomator</type>
+				<action>click</action>
+				<content>Navigate up</content>
+			</step>
+			<step>
+				<type>uiautomator</type>
+				<action>click</action>
+				<content>אפשרויות נוספות</content>
+			</step>
+			<step>
+				<type>id</type>
+				<id>com.whatsapp:id/title</id>
 				<action>click</action>
 				<content></content>
 			</step>
@@ -19,12 +40,12 @@
 				<type>id</type>
 				<id>com.whatsapp:id/search_src_text</id>
 				<action>send keys</action>
-				<content>child name</content>
+				<content>child_name</content>
 			</step>
 			<step>
 				<type>uiautomator</type>
 				<action>click</action>
-				<content>child name</content>
+				<content>child_name</content>
 			</step>
 			<step>
 				<type>uiautomator</type>
@@ -46,7 +67,7 @@
 			<step>
 				<type>uiautomator</type>
 				<action>click</action>
-				<content>chat name</content>
+				<content>chat_name</content>
 			</step>
 			<step>
 				<type>uiautomator</type>

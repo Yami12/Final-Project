@@ -3,8 +3,8 @@
 		<name>WhatsApp</name>
 		<app_package>com.whatsapp</app_package>
 		<app_activity>com.whatsapp.HomeActivity t475</app_activity>
-		<parent_name>Father</parent_name>
-		<child_name>Child</child_name>
+		<parent_name>Yami</parent_name>
+		<child_name>Yechiel</child_name>
 		<steps>
 			<step>
 				<type>id</type>
@@ -21,7 +21,7 @@
 			<step>
 				<type>uiautomator</type>
 				<action>click</action>
-				<content>chat name</content>
+				<content>chat_name</content>
 			</step>
 			<step>
 				<type>id</type>
@@ -71,7 +71,7 @@
             <step>
 				<type>uiautomator</type>
 				<action>click</action>
-				<content>chat name</content>
+				<content>chat_name</content>
 			</step>
             <step>
 				<type>id</type>
@@ -108,7 +108,7 @@
             <step>
 				<type>uiautomator</type>
 				<action>click</action>
-				<content>chat name</content>
+				<content>chat_name</content>
 			</step>
             <step>
 				<type>class</type>
