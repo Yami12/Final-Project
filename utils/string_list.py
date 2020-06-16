@@ -1,12 +1,12 @@
 "this file contains consts for all the other files"
 
 #xml_parsing
-DEVICES ="devices"
+DEVICES = "devices"
 DEVICE = "device"
 DEVICE_NAME ="name"
 #---flow
-FLOW ="flow"
-FLOWES ="flowes"
+FLOW = "flow"
+FLOWES = "flowes"
 FLOW_NAME = "name"
 TESTS = "tests"
 
@@ -20,8 +20,8 @@ TEST_APP_NAME = "application"
 TEST_MESSAGE = "message"
 TEST_CONTACT = "contact"
 TEST_SIDE="side"
-TEST_RECIVE_SIDE="recive"
-TEST_SEND_SIDE="send"
+TEST_RECIVE_SIDE = "recive"
+TEST_SEND_SIDE = "send"
 SOCIAL_NETWORK = "social_network"
 S_NETWORK_NAME = "name"
 STEPS = "steps"
@@ -39,14 +39,13 @@ TYPE_STEP = "type"
 ID_STEP = "id"
 ACTION_STEP = "action"
 CONTENT_STEP = "content"
+WEBSITE = 'website'
+WEBSITE_ADDRESS = 'website_address'
 
 TYPE_ID = "id"
 TYPE_CLASS = "class"
 TYPE_UIAUTOMATOR = "uiautomator"
 TYPE_XPATH = "xpath"
-
-# UIAUTOMATOR_CHAT_NAME = "chat_name"
-
 
 BUTTON = "button"
 LABEL = "label"

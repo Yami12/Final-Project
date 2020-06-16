@@ -121,6 +121,17 @@ class Messaging (unittest.TestCase):
                 subprocess.run(['adb', '-s', driver.child_device,'shell', 'input', 'tap', coordinates[1] , coordinates[2]])
             time.sleep(3)
 
+    def signing_website(self):
+        networks = xml_parsing.tests_xml_to_dictionary(sl.NETWORKS_FILE)
+        for network in networks:
+            if network[sl.S_NETWORK_NAME] == driver.current_test[sl.TEST_APP_NAME]:
+                driver.connect_driver(network[sl.APP_PACKAGE], network[sl.APP_ACTIVITY])  # connect the driver
+                for step in network[sl.STEPS]:
+                    driver.global_tests_result.append(components_operations.component_operation(step))
+                    time.sleep(1)
+                
+
+
 
     def get_keepers_logs(self, s_network, from_child = False):
         device = driver.child_device
@@ -134,6 +145,8 @@ class Messaging (unittest.TestCase):
 
         if driver.current_test[sl.TEST_NAME] == sl.REMOVEAL_TEST:
             self.remove_from_group()
+        elif driver.current_test[sl.TEST_NAME] == "Signing in is not allowed":
+            self.signing_website()
         else:
             self.child_open_chat_screen(s_network, from_child)#child reed the message
 

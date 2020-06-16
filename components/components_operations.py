@@ -7,7 +7,6 @@ def do_action(component, action , content):
         if action == sl.ACTION_CLICK:
             component.click()
         elif action == sl.ACTION_SEND_KEYS:
-            print("content: ", content)
             if content == sl.MESSAGING_CONTENT:
                 component.send_keys(driver.current_test[sl.MESSAGING_CONTENT])
                 driver.sending_time = datetime.datetime.now()  # save the sending time
@@ -15,6 +14,8 @@ def do_action(component, action , content):
                 component.send_keys(driver.current_test[sl.CHAT_NAME][:-1])
             elif content == sl.CHILD_NAME:
                 component.send_keys(driver.current_test[sl.CHILD_NAME][:-1])
+            elif content == sl.WEBSITE:
+                component.send_keys(driver.current_test[sl.WEBSITE_ADDRESS])
             else:
                 component.send_keys(content)
 
@@ -30,7 +31,6 @@ def do_action(component, action , content):
 def id_operation(resource_id, action, content):
     try:
         component = driver.global_driver.find_element_by_id(resource_id)
-
         return do_action(component, action, content)
     except Exception as e:
         return ['Failed', e]
@@ -60,7 +60,7 @@ def xpath_operation(resource_id, action):
 
 
 def component_operation(step):
-
+    print("step: ", step)
     #id type
     if step[sl.TYPE_STEP] == sl.TYPE_ID:
         return id_operation(step[sl.ID_STEP], step[sl.ACTION_STEP], step[sl.CONTENT_STEP])

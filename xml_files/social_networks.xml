@@ -124,13 +124,28 @@
         </steps>
     </social_network>
     <social_network>
-        <name>Snapchat</name>
-		<app_package>com.snapchat.android</app_package>
-		<app_activity>com.snapchat.android.LandingPageActivity</app_activity>
-		<parent_name>Father</parent_name>
-		<child_name>child</child_name>
+        <name>Chrome</name>
+		<app_package>com.android.chrome</app_package>
+		<app_activity>com.google.android.apps.chrome.Main</app_activity>
         <steps>
-
+			<step>
+				<type>id</type>
+				<id>com.android.chrome:id/menu_button</id>
+				<action>click</action>
+				<content></content>
+			</step>
+			<step>
+				<type>id</type>
+				<id>com.android.chrome:id/menu_item_text</id>
+				<action>click</action>
+				<content></content>
+			</step>
+			<step>
+				<type>id</type>
+				<id>com.android.chrome:id/search_box_text</id>
+				<action>send keys</action>
+				<content>website</content>
+			</step>
         </steps>
     </social_network>
 </social_networks>

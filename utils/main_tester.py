@@ -9,13 +9,11 @@ import unittest
 import subprocess
 import os
 from appium.webdriver.appium_service import AppiumService
-
 from utils import driver
 from utils import xml_parsing
 from utils import string_list as sl
 import time
 from features import messaging
-
 from components import components_tests
 
 
@@ -29,7 +27,7 @@ class MainTester(unittest.TestCase):
         #send whatsapp message to child
         suite = unittest.TestLoader().loadTestsFromTestCase(messaging.FatherSentWhatsappMessage)
         result = unittest.TextTestRunner(verbosity=1).run(suite)
-        tests_results.append("test: {} result: {}".format(test['name'], result))  # save the test result
+        tests_results.append("test: {} result: {}".format(test[sl.TEST_NAME], result))  # save the test result
 
         #child read the message
         MainTester.child_read_messages('com.whatsapp/com.whatsapp.HomeActivity')
@@ -45,14 +43,14 @@ class MainTester(unittest.TestCase):
         parameters:
         flow_name - the name of the flow to run
     '''
-    def run_specific_behvior_flow(self, test_name):
-        tests = xml_parsing.tests_xml_to_dictionary(sl.COMPONENTS_FILE)  # converts the xml file to list of dictionaries
-        for test in tests:
-            if test[sl.TEST_NAME] == test_name:
-                driver.current_test = test
-                suite = unittest.TestLoader().loadTestsFromTestCase(components_tests.ComponentsTest)
-                result = unittest.TextTestRunner(verbosity=1).run(suite)
-                tests_results.append("test: {} result: {}".format(test['name'], result))  # save the test result
+    # def run_specific_behvior_flow(self, test_name):
+    #     tests = xml_parsing.tests_xml_to_dictionary(sl.COMPONENTS_FILE)  # converts the xml file to list of dictionaries
+    #     for test in tests:
+    #         if test[sl.TEST_NAME] == test_name:
+    #             driver.current_test = test
+    #             suite = unittest.TestLoader().loadTestsFromTestCase(components_tests.ComponentsTest)
+    #             result = unittest.TextTestRunner(verbosity=1).run(suite)
+    #             tests_results.append("test: {} result: {}".format(test[sl.TEST_NAME], result))  # save the test result
 
 
     def run_messaging_feature_test(self, test_name, s_network_name):
@@ -62,9 +60,8 @@ class MainTester(unittest.TestCase):
             if test[sl.TEST_NAME] == test_name or test_name == sl.ALL:
                 test[sl.TEST_APP_NAME] = s_network_name
                 driver.current_test = test
-                # driver.current_s_network = s_network_name
-
                 suite = unittest.TestLoader().loadTestsFromTestCase(messaging.Messaging)
                 result = unittest.TextTestRunner(verbosity=1).run(suite)
-                tests_results.append("test: {} result: {}".format(test['name'], result))  # save the test result
+                tests_results.append("test: {} result: {}".format(test[sl.TEST_NAME], result))  # save the test result
+
 
