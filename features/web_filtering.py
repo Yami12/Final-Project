@@ -24,12 +24,12 @@ class WebFiltering (unittest.TestCase):
         stdout_reader = read_messaging_logs.AsynchronousFileReader(process.stdout, stdout_queue)
         stdout_reader.start()
 
-        browsers = xml_parsing.tests_xml_to_dictionary(sl.WEB_FILTERING_FILE)
-        print(browsers)
-        for browser in browsers:
-            if browser[sl.S_NETWORK_NAME] == driver.current_test[sl.TEST_APP_NAME]:
-                driver.connect_driver(browser[sl.APP_PACKAGE], browser[sl.APP_ACTIVITY])  # connect the driver
-                for step in browser[sl.STEPS]:
+        applications = xml_parsing.tests_xml_to_dictionary(sl.NETWORKS_FILE)
+        print(applications)
+        for application in applications:
+            if application[sl.S_NETWORK_NAME] == driver.current_test[sl.TEST_APP_NAME]:
+                driver.connect_driver(application[sl.APP_PACKAGE], application[sl.APP_ACTIVITY])  # connect the driver
+                for step in application[sl.STEPS]:
                     print("hii")
                     driver.global_tests_result.append(components_operations.component_operation(step))
                     time.sleep(1)

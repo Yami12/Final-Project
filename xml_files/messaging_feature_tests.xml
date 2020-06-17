@@ -1,26 +1,25 @@
 <tests>
     <test>
         <name>Recive an offensive message via Whatsapp</name>
-        <application>WhatsApp</application>
         <text>my love</text>
         <isGroup>False</isGroup>
         <side>recive</side>
     </test>
     <test>
         <name>Send an offensive message through whatsapp</name>
-        <application>WhatsApp</application>
         <text>test555</text>
         <isGroup>False</isGroup>
         <side>send</side>
     </test>
     <test>
         <name>Removal from group</name>
-        <application>WhatsApp</application>
         <groupName>check-group</groupName>
     </test>
     <test>
         <name>Signing in is not allowed</name>
-        <application>Chrome</application>
-        <website_address>www.kikar.co.il</website_address>
+        <website_address>amazon.com</website_address>
+    </test>
+    <test>
+        <name>device lock</name>
     </test>
 </tests>
