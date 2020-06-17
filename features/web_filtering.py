@@ -33,6 +33,7 @@ class WebFiltering (unittest.TestCase):
                     print("hii")
                     driver.global_tests_result.append(components_operations.component_operation(step))
                     time.sleep(1)
+                subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'keyevent', '66'])
 
         while not stdout_reader.stopped():  # the queue is empty and the thread terminated
             line = stdout_queue.get()

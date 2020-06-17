@@ -21,6 +21,6 @@
     <test>
         <name>Signing in is not allowed</name>
         <application>Chrome</application>
-        <website_address>https://www.kikar.co.il/</website_address>
+        <website_address>www.kikar.co.il</website_address>
     </test>
 </tests>

@@ -137,6 +137,12 @@
 			<step>
 				<type>id</type>
 				<id>com.android.chrome:id/search_box_text</id>
+				<action>click</action>
+				<content></content>
+			</step>
+			<step>
+				<type>id</type>
+				<id>com.android.chrome:id/search_box_text</id>
 				<action>send keys</action>
 				<content>website</content>
 			</step>
