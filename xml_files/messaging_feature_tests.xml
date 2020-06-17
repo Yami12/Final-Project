@@ -2,7 +2,7 @@
     <test>
         <name>Recive an offensive message via Whatsapp</name>
         <application>WhatsApp</application>
-        <text>test1</text>
+        <text>my love</text>
         <isGroup>False</isGroup>
         <side>recive</side>
     </test>

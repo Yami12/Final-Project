@@ -33,6 +33,8 @@ def tests_xml_to_dictionary(file_name):
     tree = et.fromstring(file_content)
     if file_name == sl.NETWORKS_FILE or file_name == sl.REMOVAL_FILE:
         tests = tree.findall(sl.SOCIAL_NETWORK)  # first node in the xml file
+    elif file_name == sl.WEB_FILTERING_FILE:
+        tests = tree.findall(sl.BROWSER)
     else:
         tests = tree.findall(sl.TEST)  # first node in the xml file
 

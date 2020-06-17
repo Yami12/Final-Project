@@ -3,8 +3,8 @@
 		<name>WhatsApp</name>
 		<app_package>com.whatsapp</app_package>
 		<app_activity>com.whatsapp.HomeActivity t475</app_activity>
-		<parent_name>Yami</parent_name>
-		<child_name>Yechiel</child_name>
+		<parent_name>Father</parent_name>
+		<child_name>Child</child_name>
 		<steps>
 			<step>
 				<type>id</type>
@@ -28,12 +28,6 @@
 				<id>com.whatsapp:id/entry</id>
 				<action>send keys</action>
 				<content>text</content>
-			</step>
-			<step>
-				<type>id</type>
-				<id>com.whatsapp:id/send</id>
-				<action>click</action>
-				<content></content>
 			</step>
 			<step>
 				<type>id</type>

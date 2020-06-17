@@ -1,0 +1,27 @@
+<browsers>
+    <browser>
+        <name>Chrome</name>
+		<app_package>com.android.chrome</app_package>
+		<app_activity>com.google.android.apps.chrome.Main</app_activity>
+        <steps>
+			<step>
+				<type>id</type>
+				<id>com.android.chrome:id/menu_button</id>
+				<action>click</action>
+				<content></content>
+			</step>
+			<step>
+				<type>id</type>
+				<id>com.android.chrome:id/menu_item_text</id>
+				<action>click</action>
+				<content></content>
+			</step>
+			<step>
+				<type>id</type>
+				<id>com.android.chrome:id/search_box_text</id>
+				<action>send keys</action>
+				<content>website</content>
+			</step>
+        </steps>
+    </browser>
+</browsers>

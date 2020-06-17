@@ -1,12 +1,12 @@
 <social_networks>
 	<social_network>
 		<name>WhatsApp</name>
-		<group_name>Keepers</group_name>
+		<group_name>Kwork</group_name>
 		<steps>
 			<step>
 				<type>uiautomator</type>
 				<action>click</action>
-				<content>אפשרויות נוספות</content>
+				<content>more options</content>
 			</step>
 			<step>
 				<type>id</type>
@@ -22,7 +22,7 @@
 			<step>
 				<type>uiautomator</type>
 				<action>click</action>
-				<content>אפשרויות נוספות</content>
+				<content>more options</content>
 			</step>
 			<step>
 				<type>id</type>
