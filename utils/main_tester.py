@@ -15,7 +15,7 @@ from utils import string_list as sl
 import time
 from features import messaging
 from features import web_filtering
-from components import components_operations
+from features import device_locked
 
 
 tests_results = []
@@ -37,32 +37,21 @@ class MainTester(unittest.TestCase):
                 test[sl.TEST_APP_NAME] = s_network_name
                 driver.current_test = test
                 if test_name == "Signing in is not allowed":
-                    self.run_web_filtering_test(test_name)
+                    suite = unittest.TestLoader().loadTestsFromTestCase(web_filtering.WebFiltering)
+                    result = unittest.TextTestRunner(verbosity=1).run(suite)
                     return
                 elif test_name == "device lock":
-                    self.run_device_lock_test()
+                    suite = unittest.TestLoader().loadTestsFromTestCase(device_locked.DeviceLocked)
+                    result = unittest.TextTestRunner(verbosity=1).run(suite)
+                    print("the test result: ",result)
                     return
                 suite = unittest.TestLoader().loadTestsFromTestCase(messaging.Messaging)
                 result = unittest.TextTestRunner(verbosity=1).run(suite)
                 tests_results.append("test: {} result: {}".format(test[sl.TEST_NAME], result))  # save the test result
 
-    def run_device_lock_test(self):
-        applications = xml_parsing.tests_xml_to_dictionary(sl.NETWORKS_FILE)
-        print(applications)
-        for application in applications:
-            if application[sl.S_NETWORK_NAME] == "Keepers device lock":
-                driver.connect_driver(application[sl.APP_PACKAGE], application[sl.APP_ACTIVITY])  # connect the driver
-                time.sleep(6)
-                for step in application[sl.STEPS]:
-                    print("step: ", step)
-                    if step[sl.TYPE_STEP] == sl.TYPE_CLASS:
-                        component = driver.global_driver.find_elements_by_class_name(step[sl.ID_STEP])
-                        text = component[7].text
-                        print("text: ", text)
-                        component[7].send_keys(int(text)+10)
-                        continue
-                    driver.global_tests_result.append(components_operations.component_operation(step))
-                    time.sleep(2)
+
+
+
 
     def run_web_filtering_test(self, test_name):
         tests = xml_parsing.feature_xml_to_dictionary(

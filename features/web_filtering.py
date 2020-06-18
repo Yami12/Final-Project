@@ -10,6 +10,7 @@ from utils import read_messaging_logs
 from utils import xml_parsing
 from utils import string_list as sl
 from components import components_operations
+from features import messaging
 
 class WebFiltering (unittest.TestCase):
 
@@ -25,13 +26,20 @@ class WebFiltering (unittest.TestCase):
         stdout_reader.start()
 
         applications = xml_parsing.tests_xml_to_dictionary(sl.NETWORKS_FILE)
-        print(applications)
         for application in applications:
-            if application[sl.S_NETWORK_NAME] == driver.current_test[sl.TEST_APP_NAME]:
-                driver.connect_driver(application[sl.APP_PACKAGE], application[sl.APP_ACTIVITY])  # connect the driver
+            if application[sl.S_NETWORK_NAME] == driver.current_test[sl.TEST_APP_NAME]: #open the app
+                subprocess.run(['adb', '-s', driver.child_device, 'shell', 'am', 'start', '-n',
+                                application[sl.APP_PACKAGE] + "/" + application[sl.APP_ACTIVITY]])
                 for step in application[sl.STEPS]:
-                    print("hii")
-                    driver.global_tests_result.append(components_operations.component_operation(step))
+                    print("hii", step)
+                    if step[sl.ACTION_STEP] == sl.ACTION_SEND_KEYS:
+                        subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'text',
+                                        step[sl.CONTENT_STEP]])
+                    elif step[sl.ACTION_STEP] == sl.ACTION_CLICK:
+                        coordinates = messaging.Messaging.return_coordinates_by_resource_id(messaging.Messaging, step, "")
+                        subprocess.run(
+                            ['adb', '-s', driver.child_device, 'shell', 'input', 'tap', coordinates[1], coordinates[2]])
+
                     time.sleep(1)
                 subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'keyevent', '66'])
 

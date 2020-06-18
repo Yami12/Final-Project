@@ -81,9 +81,13 @@ class Messaging (unittest.TestCase):
     def return_coordinates_by_resource_id(self, step, parent_name):
         process = subprocess.Popen(['adb','-s', driver.child_device ,'exec-out', 'uiautomator', 'dump', '/dev/tty'],stdout=subprocess.PIPE)  # dump the uiautomator file
         content = str(process.stdout.read())
+        print(content)
         splitted_content = re.split("<node", content)
+        print(step)
         for node in splitted_content:
+            print(node)
             if step[sl.TYPE_STEP] == sl.TYPE_ID and step[sl.ID_STEP] in node: # id
+
                 process.kill()
                 return re.search('bounds="\[([0-9]+),([0-9]+)\]',node)
             elif step[sl.TYPE_STEP] == sl.TYPE_UIAUTOMATOR and 'class="android.widget.ImageView"' not in node:
