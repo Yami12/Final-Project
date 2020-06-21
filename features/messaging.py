@@ -6,6 +6,7 @@ from distutils.util import strtobool
 import subprocess
 from queue import Queue
 import re
+from utils import utils_funcs
 
 from utils import driver
 from utils import read_messaging_logs
@@ -16,19 +17,63 @@ from components import components_operations
 
 logs = []
 
-# app_information = {'WhatsApp': ['com.whatsapp', 'com.whatsapp.HomeActivity t475'],
-#                    'Facebook': ['com.facebook.katana', 'com.facebook.katana.activity.FbMainTabActivity'],
-#                    'Instagram': ['com.instagram.android', 'com.instagram.mainactivity.MainActivity'],
-#                    'Telegram': ['org.telegram.messenger', 'org.telegram.ui.LaunchActivity'],
-#                    'Snapchat': ['com.snapchat.android', 'com.snapchat.android.LandingPageActivity']}
-
 
 class Messaging (unittest.TestCase):
     # A function that checks whether the message sent in a test exists in the list of received logs
-    def check_messaging_logs(self, parent_name):
+    def check_messaging_logs(self, logs_dict, chat_name):
+        current_test = driver.current_test
+        if logs_dict['applicationName'] == current_test['application']:
+            if logs_dict['isGroup'] == strtobool(current_test['isGroup']):
+                if logs_dict['title'] == chat_name:
+                    messages = logs_dict['messages']
+                    for message in messages:
+                        if (message['isOutgoing'] == True and current_test['side'] == 'send') or (
+                                message['isOutgoing'] == False and current_test['side'] == 'recive'):
+                            if message['taggedText'] == current_test['text']:
+                                if utils_funcs.time_in_range(message['timeReceived'], 1) == True:
+                                    return True
+        return False
+
+    def check_parent_logs(self, parent_name):
+        # get keepers logcats to a PIPE
+        process = subprocess.Popen(['adb', '-s', driver.father_device, 'logcat', '-s', 'HttpKeepersLogger'],
+                                   stdout=subprocess.PIPE)
+        stdout_queue = Queue()
+        stdout_reader = read_messaging_logs.AsynchronousFileReader(process.stdout, stdout_queue)
+        stdout_reader.start()
+
+        time.sleep(2)
+        stdout_queue.clear()
+        while stdout_queue.empty():
+            continue
+        time.sleep(2)
+
+        parent_logs = ""
+        start_dict = False
+        while not stdout_reader.stopped():  # the queue is empty and the thread terminated
+            line = stdout_queue.get()
+            if "{" in line:
+                start_dict = True
+            if start_dict == True:
+                parent_logs = parent_logs + line.split("HttpKeepersLogger: ")[1].split("\n")[0]
+            if ": }" in line:
+                start_dict = False
+            print("parent log: ", parent_logs)
+            specific_log = parent_logs.replace("false", "False").replace("true", "True")
+            logs_dict = ast.literal_eval(specific_log)
+            print("logs_dict: ", logs_dict)
+            log_exist = self.check_messaging_logs(logs_dict, parent_name)
+            if log_exist == True:
+                driver.global_tests_result.append(['True', logs_dict])
+                return
+        driver.global_tests_result.append(['False', "No logs received"])
+        print("False")
+
+
+    def check_child_logs(self, parent_name):
         global logs
         print("logs: ", logs)
-        current_test = driver.current_test
+
         for log in logs:
             print("log: ", log)
             specific_log = log.replace("false", "False").replace("true", "True")
@@ -37,26 +82,12 @@ class Messaging (unittest.TestCase):
             print("specific log: ", specific_log)
             logs_dict = ast.literal_eval(specific_log)
             print("log_dict: ", logs_dict)
-            if logs_dict['applicationName'] == current_test['application']:
-                if logs_dict['isGroup'] == strtobool(current_test['isGroup']):
-                    if logs_dict['title'] == parent_name:
-                        messages = logs_dict['messages']
-                        for message in messages:
-                            if (message['isOutgoing'] == True and current_test['side'] == 'send') or (
-                                    message['isOutgoing'] == False and current_test['side'] == 'recive'):
-                                if message['taggedText'] == current_test['text']:
-                                    difference = datetime.datetime.fromtimestamp(message['timeReceived'] // 1000) - driver.sending_time
-                                    seconds_in_day = 24 * 60 * 60
-                                    datetime.timedelta(0, 8, 562000)
-                                    difference = divmod(difference.days * seconds_in_day + difference.seconds, 60)[0]
-                                    if difference <= 1 and difference >= -1:
-                                        driver.global_tests_result.append(['True',message])
-                                        print("True")
-                                        return True
+            log_exist = self.check_messaging_logs(logs_dict, parent_name)
+            if log_exist == True:
+                driver.global_tests_result.append(['True', logs_dict])
+                return
         driver.global_tests_result.append(['False', "No logs received"])
         print("False")
-        return False
-
 
     def check_remove_group_logs(self):
         global logs
@@ -156,7 +187,8 @@ class Messaging (unittest.TestCase):
         if driver.current_test[sl.TEST_NAME] == sl.REMOVEAL_TEST:
             self.check_remove_group_logs()
         else:
-            self.check_messaging_logs(s_network[sl.PARENT_NAME])
+            self.check_child_logs(s_network[sl.PARENT_NAME])
+            self.check_parent_logs(s_network[sl.PARENT_NAME])
 
 
     def send_message(self, from_child=False):
