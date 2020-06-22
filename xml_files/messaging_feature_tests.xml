@@ -1,7 +1,7 @@
 <tests>
     <test>
         <name>Recive an offensive message</name>
-        <text>Kill you</text>
+        <text>anorexia</text>
         <isGroup>False</isGroup>
         <side>recive</side>
         <offensive>True</offensive>

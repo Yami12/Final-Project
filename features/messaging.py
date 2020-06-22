@@ -22,15 +22,22 @@ class Messaging (unittest.TestCase):
     # A function that checks whether the message sent in a test exists in the list of received logs
     def check_messaging_logs(self, logs_dict, chat_name):
         current_test = driver.current_test
+        print("log dict: ", logs_dict)
         if logs_dict['applicationName'] == current_test['application']:
+            print("same app name")
             if logs_dict['isGroup'] == strtobool(current_test['isGroup']):
+                print("same is group")
                 if logs_dict['title'] == chat_name:
+                    print("same title")
                     messages = logs_dict['messages']
                     for message in messages:
                         if (message['isOutgoing'] == True and current_test['side'] == 'send') or (
                                 message['isOutgoing'] == False and current_test['side'] == 'recive'):
+                            print("same isOutgoing")
                             if message['taggedText'] == current_test['text']:
-                                if utils_funcs.time_in_range(message['timeReceived'], 1) == True:
+                                print("same text: ", message['taggedText'])
+                                if utils_funcs.time_in_range(message['timeReceived'], 2) == True:
+                                    print("same time")
                                     return True
         return False
 
@@ -43,11 +50,13 @@ class Messaging (unittest.TestCase):
         stdout_reader.start()
 
         time.sleep(2)
-        stdout_queue.clear()
+        # stdout_queue.clear()
+        while not stdout_queue.empty():
+            print("** ", stdout_queue.get())
         while stdout_queue.empty():
             continue
         time.sleep(2)
-
+        print("after")
         parent_logs = ""
         start_dict = False
         while not stdout_reader.stopped():  # the queue is empty and the thread terminated
@@ -55,7 +64,7 @@ class Messaging (unittest.TestCase):
             if "{" in line:
                 start_dict = True
             if start_dict == True:
-                parent_logs = parent_logs + line.split("HttpKeepersLogger: ")[1].split("\n")[0]
+                parent_logs = parent_logs + line.split("HttpKeepersLogger: ")[1].split("\\n")[0]
             if ": }" in line:
                 start_dict = False
             print("parent log: ", parent_logs)
@@ -67,27 +76,22 @@ class Messaging (unittest.TestCase):
                 driver.global_tests_result.append(['True', logs_dict])
                 return
         driver.global_tests_result.append(['False', "No logs received"])
-        print("False")
+        print("False in parent")
 
 
     def check_child_logs(self, parent_name):
         global logs
-        print("logs: ", logs)
-
         for log in logs:
-            print("log: ", log)
             specific_log = log.replace("false", "False").replace("true", "True")
             specific_log = specific_log.split("HttpKeepersLogger: ")[1]
             specific_log = specific_log.split("\\r\\n")[0]
-            print("specific log: ", specific_log)
             logs_dict = ast.literal_eval(specific_log)
-            print("log_dict: ", logs_dict)
             log_exist = self.check_messaging_logs(logs_dict, parent_name)
             if log_exist == True:
                 driver.global_tests_result.append(['True', logs_dict])
                 return
         driver.global_tests_result.append(['False', "No logs received"])
-        print("False")
+        print("False in child side")
 
     def check_remove_group_logs(self):
         global logs
@@ -112,13 +116,9 @@ class Messaging (unittest.TestCase):
     def return_coordinates_by_resource_id(self, step, parent_name):
         process = subprocess.Popen(['adb','-s', driver.child_device ,'exec-out', 'uiautomator', 'dump', '/dev/tty'],stdout=subprocess.PIPE)  # dump the uiautomator file
         content = str(process.stdout.read())
-        print(content)
         splitted_content = re.split("<node", content)
-        print(step)
         for node in splitted_content:
-            print(node)
             if step[sl.TYPE_STEP] == sl.TYPE_ID and step[sl.ID_STEP] in node: # id
-
                 process.kill()
                 return re.search('bounds="\[([0-9]+),([0-9]+)\]',node)
             elif step[sl.TYPE_STEP] == sl.TYPE_UIAUTOMATOR and 'class="android.widget.ImageView"' not in node:
@@ -151,10 +151,10 @@ class Messaging (unittest.TestCase):
                     subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'keyevent', '111'])
                     return
                 else:
-                    subprocess.run(['adb', '-s', driver.child_device ,'shell', 'input', 'text', driver.current_test[sl.CHAT_NAME][:-1]])
+                    subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'text', s_network[sl.PARENT_NAME][:-1]])
             elif step[sl.ACTION_STEP] == sl.ACTION_CLICK:
-                coordinates = self.return_coordinates_by_resource_id(step,s_network[sl.PARENT_NAME])
-                subprocess.run(['adb', '-s', driver.child_device,'shell', 'input', 'tap', coordinates[1] , coordinates[2]])
+                coordinates = self.return_coordinates_by_resource_id(step, s_network[sl.PARENT_NAME])
+                subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'tap', coordinates[1] , coordinates[2]])
             time.sleep(3)
 
 
@@ -203,7 +203,7 @@ class Messaging (unittest.TestCase):
                     driver.connect_driver(network[sl.APP_PACKAGE],network[sl.APP_ACTIVITY])# connect the driver
                     for step in network[sl.STEPS]:
                         driver.global_tests_result.append(components_operations.component_operation(step))
-
+                time.sleep(3)
                 self.get_keepers_logs(network, from_child)
 
 
