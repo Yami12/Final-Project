@@ -1,7 +1,7 @@
 <tests>
     <test>
         <name>invalid parent's email format</name>
-        <expectedResult>disabled:id:com.keepers:id/btn_continue</expectedResult>
+        <expectedResult>enabled:id:com.keepers:id/btn_continue</expectedResult>
         <steps>
             <step>
                 <type>id</type>
@@ -11,33 +11,32 @@
             </step>
         </steps>
     </test>
+
     <test>
-        <name>The parent name field is empty</name>
-        <expectedResult>disabled:id:com.keepers:id/btn_login</expectedResult>
+        <name></name>
+        <expectedResult></expectedResult>
         <steps>
             <step>
-                <type>id</type>
-                <id>com.keepers:id/input_email_text</id>
-                <action>send keys</action>
-                <content>yamushkach@gmail.com</content>
+                <type></type>
+                <id></id>
+                <action></action>
+                <content></content>
             </step>
             <step>
-                <type>id</type>
-                <id>com.keepers:id/btn_continue</id>
-                <action>click</action>
-                <content> </content>
-            </step>
-            <step>
-                <type>id</type>
-                <id>com.keepers:id/input_password_text</id>
-                <action>send keys</action>
-                <content>123456</content>
+                <type></type>
+                <id></id>
+                <action></action>
+                <content></content>
             </step>
         </steps>
     </test>
+
+
+
+
     <test>
         <name>The parent password field is empty</name>
-        <expectedResult>disabled:id:com.keepers:id/btn_login</expectedResult>
+        <expectedResult>enabled:id:com.keepers:id/btn_login</expectedResult>
         <steps>
             <step>
                 <type>id</type>
@@ -61,7 +60,7 @@
     </test>
     <test>
         <name>5-character password in parent</name>
-        <expectedResult>disabled:id:com.keepers:id/btn_login</expectedResult>
+        <expectedResult>enabled:id:com.keepers:id/btn_login</expectedResult>
         <steps>
             <step>
                 <type>id</type>
@@ -91,7 +90,7 @@
     </test>
     <test>
         <name>5-character password in an existing child</name>
-        <expectedResult>disabled:id:com.keepers:id/btn_login</expectedResult>
+        <expectedResult>enabled:id:com.keepers:id/btn_login</expectedResult>
         <steps>
             <step>
                 <type>id</type>

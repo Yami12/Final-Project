@@ -27,10 +27,10 @@ class ComponentsTest(unittest.TestCase):
                 result = components_operations.id_operation('com.keepers:id/snackbar_text',sl.ACTION_GET, "")
                 if (result[0] == 'Passed') and (result[1] == expected_result.split(":")[1]):
                     return result
-            elif re.search("enabled:.*", driver.current_test[sl.TEST_EXPECTED_RES]):
-                element = driver.global_driver.find_element_by_id(expected_result.split("enabled:id:")[1])
+            elif re.search("disabled:.*", driver.current_test[sl.TEST_EXPECTED_RES]):
+                element = driver.global_driver.find_element_by_id(expected_result.split("disabled:id:")[1])
                 if element.is_enabled() == False:
-                    return ["Passed", "Button not enabled"]
+                    return ["Passed", "Button disabled"]
             result[0] = "Failed"
             result[1] = "Data Mismatch"
         return result
