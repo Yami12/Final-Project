@@ -1,22 +1,22 @@
 import smtplib
+from utils import driver
 
-
-def create(test_results):
-    html = """<html><table border="1">
-    <tr><th style="width:50px">flow</th><th style="width:50px">test</th><th style="width:50px">result</th></tr>"""
-    for result in test_results:
+def create(test_name):
+    html = """<html><table border="1">"""
+    html += "<h1>{}</h1>".format(test_name)
+    html += '<tr><th style="width:50px">description</th><th style="width:50px">result</th></tr>'
+    for result in driver.global_tests_result:
         html += "<tr><td>{}</td>".format(result[0])
-        html += "<td>{}</td>".format(result[1])
         html += "<td>{}</td></tr>".format(result[2])
     html += "</table></html>"
 
-    file_ = open('tests_result.html', 'w')
+    file_ = open(test_name + '.html', 'w')
     file_.write(html)
     file_.close()
     return html
 
 
-def send_email():
+def send_email(tests_names):
     from email.mime.multipart import MIMEMultipart
     from email.mime.text import MIMEText
     me = "keepersAutomation@gmail.com"
@@ -29,9 +29,9 @@ def send_email():
     msg['To'] = you
 
     # Create the body of the message
-    html = create([[1,2,3],[4,5,6]])
-
-    msg.attach(MIMEText(html, 'html'))
+    for test_name in tests_names:
+        html = create(test_name)
+        msg.attach(MIMEText(html, 'html'))
     # Send the message via local SMTP server.
     mail = smtplib.SMTP('smtp.gmail.com', 587)
     mail.ehlo()
