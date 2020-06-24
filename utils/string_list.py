@@ -4,10 +4,7 @@
 DEVICES = "devices"
 DEVICE = "device"
 DEVICE_NAME ="name"
-#---flow
-FLOW = "flow"
-FLOWES = "flowes"
-FLOW_NAME = "name"
+
 TESTS = "tests"
 
 #----test
@@ -22,8 +19,8 @@ TEST_CONTACT = "contact"
 TEST_SIDE="side"
 TEST_RECIVE_SIDE = "recive"
 TEST_SEND_SIDE = "send"
-SOCIAL_NETWORK = "social_network"
-S_NETWORK_NAME = "name"
+app = "app"
+APP_NAME = "name"
 STEPS = "steps"
 STEP = "step"
 APP_PACKAGE = "app_package"
@@ -55,7 +52,7 @@ ACTION_SEND_KEYS = "send keys"
 ACTION_GET = "get"
 
 #xml files names
-NETWORKS_FILE ="social_networks.xml"
+APPS_FILE ="applications.xml"
 MESSAGING_FEATURE_FILE = "features_tests.xml"
 COMPONENTS_FILE = "components_behavior_tests.xml"
 REMOVAL_FILE = "removal_from_group.xml"

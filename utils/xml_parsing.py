@@ -31,8 +31,8 @@ def tests_xml_to_dictionary(file_name):
     file = open(os.path.join(parentDirectory, sl.XML_FOLDER, file_name),encoding='utf8')
     file_content = file.read()
     tree = et.fromstring(file_content)
-    if file_name == sl.NETWORKS_FILE or file_name == sl.REMOVAL_FILE:
-        tests = tree.findall(sl.SOCIAL_NETWORK)  # first node in the xml file
+    if file_name == sl.APPS_FILE or file_name == sl.REMOVAL_FILE:
+        tests = tree.findall(sl.app)  # first node in the xml file
     elif file_name == sl.WEB_FILTERING_FILE:
         tests = tree.findall(sl.BROWSER)
     else:
@@ -40,7 +40,7 @@ def tests_xml_to_dictionary(file_name):
 
 
     tests_arr = []
-    # go over the all the networks
+    # go over the all the apps
     for test in tests:
         test_dict = {}
         steps_arr = []
@@ -48,7 +48,7 @@ def tests_xml_to_dictionary(file_name):
             if not i.tag == sl.STEPS:
                 test_dict[i.tag] = i.text
             else:
-                for step in i:  # network's steps
+                for step in i:  # app's steps
                     step_dict = {}
                     for j in step:
                         step_dict[j.tag] = j.text
@@ -127,92 +127,4 @@ def update_tests(test_to_update, old_step, new_step, file_name):
                         step = new_step
                         break
 
-    tests_dictionary_to_xml(tests, file_name )
-#
-# '''
-# function: add_new_test_to_flow
-# description: adds new test to the given flow and writes it to the xml file
-# parameters:
-# flow_name - the flow to add the test to
-# test - the test to add
-# file_name - the name of the xml file
-# '''
-# #TODO add test_name in order to know where to locate the new test
-# def add_new_test_to_flow(flow_name, test, file_name):
-#     flowes_list=tests_xml_to_dictionary(file_name)#parse the file to list of dictionaries
-#     #go over all the flowes
-#     for flow in flowes_list:
-#         #go over all the flow's tests
-#         if flow[sl.FLOW_NAME] == flow_name:
-#             flow[sl.TESTS].append(test)#adds the new test
-#             break
-#     tests_dictionary_to_xml(flowes_list, file_name)#write to the file
-#
-#
-# '''
-# function: delete_test_from_flow
-# description: deletes the given test from the given flow and uptate it in the xml file
-# parameters:
-# flow_name - the flow to delete the test from
-# test_name - the test's name to delete
-# file_name - the name of the xml file
-# '''
-# def delete_test_from_flow(flow_name, test_name, file_name):
-#     flowes_list = tests_xml_to_dictionary(file_name)#parse the file to list of dictionaries
-#     for flow in flowes_list:
-#         #go over all the flowes
-#         if flow[sl.FLOW_NAME] == flow_name:
-#             # go over all the flow's tests
-#             for test in flow[sl.TESTS]:
-#                 if test[sl.TEST_NAME] == test_name:
-#                     flow[sl.TESTS].remove(test)#deletes the new test
-#                     break
-#             break
-#     tests_dictionary_to_xml(flowes_list, file_name)#write to the file
-#
-# '''
-# function: update_test_in_flow
-# description: update the given test from the given flow and uptate it in the xml file
-# parameters:
-# flow_name - the flow to update the test from
-# test_name - the test's name to update
-# expected_result - field to update
-# action_or_content - field to update
-# file_name - the name of the xml file
-# '''
-# def update_test_in_flow(flow_name, test_name, expected_result, action_or_content, file_name):
-#     flowes_list = tests_xml_to_dictionary(file_name)
-#     for flow in flowes_list:
-#         # go over all the flowes
-#         if flow[sl.FLOW_NAME] == flow_name:
-#             # go over all the flow's tests
-#             for test in flow[sl.TESTS]:
-#                 if test[sl.TEST_NAME] == test_name:#update test's fields
-#                     selected = test[sl.TEST_TYPE]
-#                     if selected == sl.BUTTON:
-#                         test[sl.TEST_ACTION_TYPE] = action_or_content
-#                     elif selected == sl.LABEL:
-#                         test[sl.TEST_CONTENT] = action_or_content
-#                     test[sl.TEST_EXPECTED_RES] = expected_result
-#                     break
-#             break
-#     tests_dictionary_to_xml(flowes_list, file_name)#write to the file
-#
-#
-# '''
-# function: return_test
-# description: return fields of the given test
-# parameters:
-# flow_name - the flow's test
-# test_name - the test's name to return
-# file_name - the name of the xml file
-# '''
-# def return_test(flow_name, test_name, file_name):
-#     flowes_list = tests_xml_to_dictionary(file_name)
-#     for flow in flowes_list:
-#         # go over all the flowes
-#         if flow[sl.FLOW_NAME] == flow_name:
-#             # go over all the flow's tests
-#             for test in flow[sl.TESTS]:
-#                 if test[sl.TEST_NAME] == test_name:
-#                     return test
+    tests_dictionary_to_xml(tests, file_name)

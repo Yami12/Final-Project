@@ -31,6 +31,7 @@ class ComponentsTest(unittest.TestCase):
                 element = driver.global_driver.find_element_by_id(expected_result.split("disabled:id:")[1])
                 if element.is_enabled() == False:
                     return ["Passed", "Button disabled"]
+            #not expected result
             result[0] = "Failed"
             result[1] = "Data Mismatch"
         return result
@@ -38,10 +39,10 @@ class ComponentsTest(unittest.TestCase):
 
 
     def test_flow_run(self):
-
         test = driver.current_test
         driver.connect_driver('com.keepers', 'com.keeper.common.splash.SplashActivity')
         time.sleep(4)
+        #   run all the steps in the test
         for step in test[sl.STEPS]:
             result = components_operations.component_operation(step)
             driver.global_tests_result.append("test: {} status: {} description: {}".format(test['name'], result[0], result[1]))

@@ -25,9 +25,9 @@ class WebFiltering (unittest.TestCase):
         stdout_reader = read_messaging_logs.AsynchronousFileReader(process.stdout, stdout_queue)
         stdout_reader.start()
 
-        applications = xml_parsing.tests_xml_to_dictionary(sl.NETWORKS_FILE)
+        applications = xml_parsing.tests_xml_to_dictionary(sl.APPS_FILE)
         for application in applications:
-            if application[sl.S_NETWORK_NAME] == driver.current_test[sl.TEST_APP_NAME]: #open the app
+            if application[sl.APP_NAME] == driver.current_test[sl.TEST_APP_NAME]: #open the app
                 subprocess.run(['adb', '-s', driver.child_device, 'shell', 'am', 'start', '-n',
                                 application[sl.APP_PACKAGE] + "/" + application[sl.APP_ACTIVITY]])
                 for step in application[sl.STEPS]:

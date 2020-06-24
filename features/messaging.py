@@ -7,12 +7,10 @@ import subprocess
 from queue import Queue
 import re
 from utils import utils_funcs
-
 from utils import driver
 from utils import read_messaging_logs
 from utils import xml_parsing
 from utils import string_list as sl
-
 from components import components_operations
 
 logs = []
@@ -20,7 +18,9 @@ logs = []
 
 class Messaging (unittest.TestCase):
 
-    # A function that checks whether the message sent in a test exists in the list of received logs
+    '''
+        A function that checks whether the message sent in a test equal to the received logs
+    '''
     def check_messaging_logs(self, logs_dict, chat_name, isParent = False):
         current_test = driver.current_test
         print("log dict: ", logs_dict)
@@ -40,6 +40,7 @@ class Messaging (unittest.TestCase):
                                 print("same isOutgoing")
                             else:
                                 break
+                        # check if the text is equal
                         words = current_test['text'].split(" ")
                         for word in words:
                             if word not in message['taggedText']:
@@ -50,8 +51,10 @@ class Messaging (unittest.TestCase):
                             return True
         return False
 
-    def check_parent_logs(self, parent_name, stdout_reader,stdout_queue,):
-
+    '''
+    
+    '''
+    def check_parent_logs(self, parent_name, stdout_reader, stdout_queue):
         time.sleep(20)
         print("after")
         parent_logs = ""
@@ -201,9 +204,9 @@ class Messaging (unittest.TestCase):
 
 
     def send_message(self, from_child = False):
-        networks = xml_parsing.tests_xml_to_dictionary(sl.NETWORKS_FILE)
+        networks = xml_parsing.tests_xml_to_dictionary(sl.APPS_FILE)
         for network in networks:
-            if network[sl.S_NETWORK_NAME] == driver.current_test[sl.TEST_APP_NAME]:
+            if network[sl.APP_NAME] == driver.current_test[sl.TEST_APP_NAME]:
                 if driver.current_test[sl.TEST_SIDE] == sl.TEST_RECIVE_SIDE:
                     driver.current_test[sl.CHAT_NAME] = network[sl.CHILD_NAME]
                 else:
@@ -217,15 +220,15 @@ class Messaging (unittest.TestCase):
 
 
     def remove_from_group(self):
-        networks = xml_parsing.tests_xml_to_dictionary(sl.NETWORKS_FILE)
+        networks = xml_parsing.tests_xml_to_dictionary(sl.APPS_FILE)
         removal_networks = xml_parsing.tests_xml_to_dictionary(sl.REMOVAL_FILE)
         current_network = None
 
         for removal_network in removal_networks:
-            if removal_network[sl.S_NETWORK_NAME] == driver.current_test[sl.TEST_APP_NAME]:
+            if removal_network[sl.APP_NAME] == driver.current_test[sl.TEST_APP_NAME]:
                 driver.current_test[sl.CHAT_NAME] = removal_network[sl.GROUP_NAME]
                 for network in networks:
-                    if network[sl.S_NETWORK_NAME] == driver.current_test[sl.TEST_APP_NAME]:
+                    if network[sl.APP_NAME] == driver.current_test[sl.TEST_APP_NAME]:
                         current_network = network
                         driver.current_test[sl.CHILD_NAME] = network[sl.CHILD_NAME]
                         driver.connect_driver(network[sl.APP_PACKAGE], network[sl.APP_ACTIVITY])  # connect the driver

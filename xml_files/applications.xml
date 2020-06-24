@@ -1,26 +1,41 @@
 <apps>
 	<app>
-		<name></name>
-		<app_package></app_package>
-		<app_activity></app_activity>
-		<parent_name></parent_name>
-		<child_name></child_name>
+		<name>WhatsApp</name>
+		<app_package>com.whatsapp</app_package>
+		<app_activity>com.whatsapp.HomeActivity t475</app_activity>
+		<parent_name>Child</parent_name>
+		<child_name>Father</child_name>
 		<steps>
 			<step>
-				<type></type>
-				<id></id>
-				<action></action>
+				<type>id</type>
+				<id>com.whatsapp:id/menuitem_search</id>
+				<action>click</action>
+				<content></content>
+			</step>
+			<step>
+				<type>id</type>
+				<id>com.whatsapp:id/search_src_text</id>
+				<action>send keys</action>
+				<content>contact</content>
+			</step>
+			<step>
+				<type>uiautomator</type>
+				<action>click</action>
+				<content>chat_name</content>
+			</step>
+			<step>
+				<type>id</type>
+				<id>com.whatsapp:id/entry</id>
+				<action>send keys</action>
+				<content>text</content>
+			</step>
+			<step>
+				<type>id</type>
+				<id>com.whatsapp:id/send</id>
+				<action>click</action>
 				<content></content>
 			</step>
 		</steps>
-        <removal_steps>
-            <step>
-                <type></type>
-				<id></id>
-				<action></action>
-				<content></content>
-            </step>
-        </removal_steps>
 	</app>
     <app>
         <name>Instagram</name>
@@ -122,14 +137,37 @@
         </steps>
     </app>
 	<app>
-		<name></name>
-		<app_package></app_package>
-		<app_activity></app_activity>
+		<name>Keepers device lock</name>
+		<app_package>com.keepers</app_package>
+		<app_activity>com.keeper.common.splash.SplashActivity</app_activity>
 		<steps>
 			<step>
-				<type></type>
-				<id></id>
-				<action></action>
+				<type>id</type>
+				<id>com.keepers:id/dashboard_menu_app_block</id>
+				<action>click</action>
+				<content></content>
+			</step>
+			<step>
+				<type>id</type>
+				<id>com.keepers:id/btn_lock_device</id>
+				<action>click</action>
+				<content></content>
+			</step>
+			<step>
+				<type>uiautomator</type>
+				<action>click</action>
+				<content>תזמון</content>
+			</step>
+			<step>
+				<type>class</type>
+				<id>android.widget.EditText</id>
+				<action>7:click</action>
+				<content></content>
+			</step>
+			<step>
+				<type>id</type>
+				<id>com.keepers:id/btn_lock</id>
+				<action>click</action>
 				<content></content>
 			</step>
 		</steps>
