@@ -39,5 +39,3 @@ def send_email(tests_names):
     mail.login(me, 'keepers123')
     mail.sendmail(me, you, msg.as_string())
     mail.quit()
-
-

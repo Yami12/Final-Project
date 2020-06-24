@@ -47,4 +47,3 @@ class ComponentsTest(unittest.TestCase):
             driver.global_tests_result.append("test: {} status: {} description: {}".format(test['name'], result[0], result[1]))
             time.sleep(2)
         print(self.check_expected_result(test[sl.TEST_EXPECTED_RES]))
-

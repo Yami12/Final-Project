@@ -1,7 +1,7 @@
 <tests>
     <test>
         <name>Recive an offensive message</name>
-        <text>anorexia</text>
+        <text>rrr drugged</text>
         <isGroup>False</isGroup>
         <side>recive</side>
         <offensive>True</offensive>
@@ -15,7 +15,7 @@
     </test>
     <test>
         <name>Send an offensive message through whatsapp</name>
-        <text>test555</text>
+        <text>kill you</text>
         <isGroup>False</isGroup>
         <side>send</side>
     </test>

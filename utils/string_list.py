@@ -56,7 +56,7 @@ ACTION_GET = "get"
 
 #xml files names
 NETWORKS_FILE ="social_networks.xml"
-MESSAGING_FEATURE_FILE = "messaging_feature_tests.xml"
+MESSAGING_FEATURE_FILE = "features_tests.xml"
 COMPONENTS_FILE = "components_behavior_tests.xml"
 REMOVAL_FILE = "removal_from_group.xml"
 WEB_FILTERING_FILE = "web_filtering_feature_tests.xml"

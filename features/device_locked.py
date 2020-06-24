@@ -27,7 +27,7 @@ class DeviceLocked (unittest.TestCase):
         print("False")
 
     def test_device_locked(self):
-        # get keepers logcats to a PIPE
+        # get keepers logcats to a
         process = subprocess.Popen(['adb', '-s', driver.child_device, 'logcat', '-s', 'HttpKeepersLogger'],
                                    stdout=subprocess.PIPE)
         stdout_queue = Queue()

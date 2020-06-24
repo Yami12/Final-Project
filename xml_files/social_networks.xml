@@ -3,8 +3,8 @@
 		<name>WhatsApp</name>
 		<app_package>com.whatsapp</app_package>
 		<app_activity>com.whatsapp.HomeActivity t475</app_activity>
-		<parent_name>Yami</parent_name>
-		<child_name>Yechiel</child_name>
+		<parent_name>Child</parent_name>
+		<child_name>Father</child_name>
 		<steps>
 			<step>
 				<type>id</type>
@@ -41,8 +41,8 @@
         <name>Instagram</name>
 		<app_package>com.instagram.android</app_package>
 		<app_activity>com.instagram.mainactivity.MainActivity</app_activity>
-		<parent_name>myfatherdevice</parent_name>
-		<child_name>child</child_name>
+		<parent_name>childmyfatherdevice</parent_name>
+		<child_name>myfatherdevice</child_name>
         <steps>
             <step>
 				<type>id</type>
@@ -85,8 +85,8 @@
         <name>Telegram</name>
 		<app_package>org.telegram.messenger</app_package>
 		<app_activity>org.telegram.ui.LaunchActivity</app_activity>
-		<parent_name>father</parent_name>
-		<child_name>child</child_name>
+		<parent_name>child</parent_name>
+		<child_name>father</child_name>
         <steps>
             <step>
 				<type>uiautomator</type>

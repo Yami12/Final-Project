@@ -19,8 +19,9 @@ logs = []
 
 
 class Messaging (unittest.TestCase):
+
     # A function that checks whether the message sent in a test exists in the list of received logs
-    def check_messaging_logs(self, logs_dict, chat_name):
+    def check_messaging_logs(self, logs_dict, chat_name, isParent = False):
         current_test = driver.current_test
         print("log dict: ", logs_dict)
         if logs_dict['applicationName'] == current_test['application']:
@@ -31,47 +32,49 @@ class Messaging (unittest.TestCase):
                     print("same title")
                     messages = logs_dict['messages']
                     for message in messages:
-                        if (message['isOutgoing'] == True and current_test['side'] == 'send') or (
+                        print("--------",message['isOutgoing'])
+                        if not isParent:
+                            print("is outgoing----------")
+                            if (message['isOutgoing'] == True and current_test['side'] == 'send') or (
                                 message['isOutgoing'] == False and current_test['side'] == 'recive'):
-                            print("same isOutgoing")
-                            if message['taggedText'] == current_test['text']:
-                                print("same text: ", message['taggedText'])
-                                if utils_funcs.time_in_range(message['timeReceived'], 2) == True:
-                                    print("same time")
-                                    return True
+                                print("same isOutgoing")
+                            else:
+                                break
+                        words = current_test['text'].split(" ")
+                        for word in words:
+                            if word not in message['taggedText']:
+                                break
+                        print("same text: ", message['taggedText'])
+                        if utils_funcs.time_in_range(message['timeReceived'], 2) == True:
+                            print("same time")
+                            return True
         return False
 
-    def check_parent_logs(self, parent_name):
-        # get keepers logcats to a PIPE
-        process = subprocess.Popen(['adb', '-s', driver.father_device, 'logcat', '-s', 'HttpKeepersLogger'],
-                                   stdout=subprocess.PIPE)
-        stdout_queue = Queue()
-        stdout_reader = read_messaging_logs.AsynchronousFileReader(process.stdout, stdout_queue)
-        stdout_reader.start()
+    def check_parent_logs(self, parent_name, stdout_reader,stdout_queue,):
 
-        time.sleep(2)
-        # stdout_queue.clear()
-        while not stdout_queue.empty():
-            print("** ", stdout_queue.get())
-        while stdout_queue.empty():
-            continue
-        time.sleep(2)
+        time.sleep(20)
         print("after")
         parent_logs = ""
-        start_dict = False
         while not stdout_reader.stopped():  # the queue is empty and the thread terminated
-            line = stdout_queue.get()
-            if "{" in line:
-                start_dict = True
-            if start_dict == True:
-                parent_logs = parent_logs + line.split("HttpKeepersLogger: ")[1].split("\\n")[0]
-            if ": }" in line:
-                start_dict = False
-            print("parent log: ", parent_logs)
+            line = str(stdout_queue.get())
+            print("**",str(line))
+            if '"messages":' in str(line):
+                parent_logs = "{"
+                while not ": }" in str(line):
+                    if "taggedText" in line:
+                        line = str(line).split("HttpKeepersLogger: ")[1].split("\\r\\n'")[0].strip()
+                        parent_logs = parent_logs + str(line).replace('\\"','').replace('\\','')
+                    else:
+                        parent_logs = parent_logs + str(line).split("HttpKeepersLogger: ")[1].split("\\r\\n'")[0].strip()
+                    line = str(stdout_queue.get())
+                parent_logs = parent_logs + "}"
+            if parent_logs == "":
+                continue
+
             specific_log = parent_logs.replace("false", "False").replace("true", "True")
             logs_dict = ast.literal_eval(specific_log)
             print("logs_dict: ", logs_dict)
-            log_exist = self.check_messaging_logs(logs_dict, parent_name)
+            log_exist = self.check_messaging_logs(logs_dict, parent_name, True)
             if log_exist == True:
                 driver.global_tests_result.append(['True', logs_dict])
                 return
@@ -146,7 +149,8 @@ class Messaging (unittest.TestCase):
             if step[sl.ACTION_STEP] == sl.ACTION_SEND_KEYS :
                 if step[sl.CONTENT_STEP] == sl.MESSAGING_CONTENT and from_child == True:
                     driver.sending_time = datetime.datetime.now()  # save the sending time
-                    subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'text', driver.current_test[sl.MESSAGING_CONTENT]])
+                    print(str(driver.current_test[sl.MESSAGING_CONTENT]))
+                    subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'text', '"' +str(driver.current_test[sl.MESSAGING_CONTENT]) +'"'])
                 elif step[sl.CONTENT_STEP] == sl.MESSAGING_CONTENT and from_child == False:
                     subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'keyevent', '111'])
                     return
@@ -157,11 +161,7 @@ class Messaging (unittest.TestCase):
                 subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'tap', coordinates[1] , coordinates[2]])
             time.sleep(3)
 
-
-    def get_keepers_logs(self, s_network, from_child = False):
-        device = driver.child_device
-        global logs
-
+    def start_listen_to_logs(self,device):
         # get keepers logcats to a PIPE
         process = subprocess.Popen(['adb', '-s', device, 'logcat', '-s', 'HttpKeepersLogger'],
                                    stdout=subprocess.PIPE)
@@ -169,13 +169,22 @@ class Messaging (unittest.TestCase):
         stdout_reader = read_messaging_logs.AsynchronousFileReader(process.stdout, stdout_queue)
         stdout_reader.start()
 
-        self.child_open_chat_screen(s_network, from_child)#child reed the message
+        return stdout_reader,stdout_queue
 
+    def get_keepers_logs(self, s_network, from_child = False):
+        device = driver.child_device
+        global logs
+
+        father_stdout_reader,father_stdout_queue = self.start_listen_to_logs(driver.father_device)
+
+        child_stdout_reader,child_stdout_queue = self.start_listen_to_logs(driver.child_device)
+        self.child_open_chat_screen(s_network, from_child)#child reed the message
+        time.sleep(3)
         # uplaod the keepers logs
-        subprocess.run(['adb', '-s', device,'shell', 'am', 'broadcast', '-a', 'com.keepers.childmodule.ACTION_UPLOAD_CONVERSATIONS'])
-        time.sleep(15)
-        while not stdout_reader.stopped():  # the queue is empty and the thread terminated
-            line = stdout_queue.get()
+        subprocess.run(['adb', '-s', driver.child_device,'shell', 'am', 'broadcast', '-a', 'com.keepers.childmodule.ACTION_UPLOAD_CONVERSATIONS'])
+        time.sleep(10)
+        while not child_stdout_reader.stopped():  # the queue is empty and the thread terminated
+            line = child_stdout_queue.get()
             print(line)
             if driver.current_test[sl.TEST_NAME] == sl.REMOVEAL_TEST:
                 if "eventType" in str(line):
@@ -188,10 +197,10 @@ class Messaging (unittest.TestCase):
             self.check_remove_group_logs()
         else:
             self.check_child_logs(s_network[sl.PARENT_NAME])
-            self.check_parent_logs(s_network[sl.PARENT_NAME])
+            self.check_parent_logs(s_network[sl.PARENT_NAME],father_stdout_reader,father_stdout_queue)
 
 
-    def send_message(self, from_child=False):
+    def send_message(self, from_child = False):
         networks = xml_parsing.tests_xml_to_dictionary(sl.NETWORKS_FILE)
         for network in networks:
             if network[sl.S_NETWORK_NAME] == driver.current_test[sl.TEST_APP_NAME]:
@@ -229,6 +238,7 @@ class Messaging (unittest.TestCase):
                     driver.global_tests_result.append(components_operations.component_operation(step))
                 break
         self.get_keepers_logs(current_network, False)
+
 
     def test_manage_message(self):
         if driver.current_test[sl.TEST_NAME] == 'Removal from group':  # removal from group test
