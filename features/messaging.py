@@ -39,6 +39,7 @@ class Messaging (unittest.TestCase):
                                 message['isOutgoing'] == False and current_test['side'] == 'recive'):
                                 print("same isOutgoing")
                             else:
+                                print("is parent")
                                 break
                         # check if the text is equal
                         words = current_test['text'].split(" ")
