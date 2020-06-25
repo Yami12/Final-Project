@@ -6,9 +6,6 @@ flowes: list of all the flowes
 '''
 
 import unittest
-import subprocess
-import os
-from appium.webdriver.appium_service import AppiumService
 from utils import driver
 from utils import xml_parsing
 from utils import string_list as sl

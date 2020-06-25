@@ -151,7 +151,6 @@ class Messaging (unittest.TestCase):
         else:
             driver.global_tests_result.append(['False', "Logs were not received respectively"])
 
-
     def return_coordinates_by_resource_id(self, step, parent_name):
         process = subprocess.Popen(['adb','-s', driver.child_device ,'exec-out', 'uiautomator', 'dump', '/dev/tty'],stdout=subprocess.PIPE)  # dump the uiautomator file
         content = str(process.stdout.read())

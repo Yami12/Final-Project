@@ -211,6 +211,18 @@
         <steps>
 			<step>
 				<type>id</type>
+				<id>com.android.chrome:id/tab_switcher_button</id>
+				<action>click</action>
+				<content></content>
+			</step>
+			<step>
+				<type>id</type>
+				<id>com.android.chrome:id/new_tab_button</id>
+				<action>click</action>
+				<content></content>
+			</step>
+			<step>
+				<type>id</type>
 				<id>com.android.chrome:id/search_box_text</id>
 				<action>click</action>
 				<content></content>
