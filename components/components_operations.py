@@ -20,9 +20,9 @@ def do_action(component, action , content):
                 component.send_keys(driver.current_test[sl.CHAT_NAME][:-1])
             elif content == sl.CHILD_NAME:
                 component.send_keys(driver.current_test[sl.CHILD_NAME][:-1])
-            elif content == sl.WEBSITE:
-                print(driver.current_test[sl.WEBSITE_ADDRESS])
-                component.send_keys(driver.current_test[sl.WEBSITE_ADDRESS])
+            # elif content == sl.WEBSITE:
+            #     print("web: ", driver.current_test[sl.WEBSITE_ADDRESS])
+            #     component.send_keys(driver.current_test[sl.WEBSITE_ADDRESS])
             else:
                 component.send_keys(content)
 

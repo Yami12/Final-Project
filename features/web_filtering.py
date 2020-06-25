@@ -31,10 +31,9 @@ class WebFiltering (unittest.TestCase):
                 subprocess.run(['adb', '-s', driver.child_device, 'shell', 'am', 'start', '-n',
                                 application[sl.APP_PACKAGE] + "/" + application[sl.APP_ACTIVITY]])
                 for step in application[sl.STEPS]:
-                    print("hii", step)
                     if step[sl.ACTION_STEP] == sl.ACTION_SEND_KEYS:
                         subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'text',
-                                        step[sl.CONTENT_STEP]])
+                                        driver.current_test[sl.WEBSITE_ADDRESS]])
                     elif step[sl.ACTION_STEP] == sl.ACTION_CLICK:
                         coordinates = messaging.Messaging.return_coordinates_by_resource_id(messaging.Messaging, step, "")
                         subprocess.run(
@@ -45,6 +44,7 @@ class WebFiltering (unittest.TestCase):
 
         while not stdout_reader.stopped():  # the queue is empty and the thread terminated
             line = stdout_queue.get()
+            print("line= ", line)
             #TODO check the log structure
             if "taggedText" in str(line):
                 logs.append(str(line))

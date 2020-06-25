@@ -7,7 +7,7 @@ from utils import driver
 tests = xml_parsing.feature_xml_to_dictionary(sl.MESSAGING_FEATURE_FILE)
 tests_names = [x[sl.TEST_NAME] for x in tests]
 social_networks = xml_parsing.tests_xml_to_dictionary("applications.xml")
-social_networks_name = [x[sl.S_NETWORK_NAME] for x in social_networks]
+social_networks_name = [x[sl.APP_NAME] for x in social_networks]
 steps = []
 steps_group = []
 

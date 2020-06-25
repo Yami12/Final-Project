@@ -31,29 +31,28 @@ def tests_xml_to_dictionary(file_name):
     file = open(os.path.join(parentDirectory, sl.XML_FOLDER, file_name),encoding='utf8')
     file_content = file.read()
     tree = et.fromstring(file_content)
-    if file_name == sl.APPS_FILE or file_name == sl.REMOVAL_FILE:
+    if file_name == sl.APPS_FILE:
         tests = tree.findall(sl.app)  # first node in the xml file
     elif file_name == sl.WEB_FILTERING_FILE:
         tests = tree.findall(sl.BROWSER)
     else:
         tests = tree.findall(sl.TEST)  # first node in the xml file
 
-
     tests_arr = []
     # go over the all the apps
     for test in tests:
         test_dict = {}
-        steps_arr = []
         for i in test:
-            if not i.tag == sl.STEPS:
+            if not i.tag == sl.STEPS and not i.tag == sl.REMOVAL_STEPS:
                 test_dict[i.tag] = i.text
             else:
+                steps_arr = []
                 for step in i:  # app's steps
                     step_dict = {}
                     for j in step:
                         step_dict[j.tag] = j.text
                     steps_arr.append(step_dict)
-            test_dict['steps'] = steps_arr
+                test_dict[i.tag] = steps_arr
         tests_arr.append(test_dict)
     return tests_arr
 

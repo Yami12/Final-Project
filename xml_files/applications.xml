@@ -3,8 +3,9 @@
 		<name>WhatsApp</name>
 		<app_package>com.whatsapp</app_package>
 		<app_activity>com.whatsapp.HomeActivity t475</app_activity>
-		<parent_name>Child</parent_name>
-		<child_name>Father</child_name>
+		<parent_name>Yami</parent_name>
+		<child_name>Yechiel</child_name>
+		<group_name>Remove</group_name>
 		<steps>
 			<step>
 				<type>id</type>
@@ -36,6 +37,63 @@
 				<content></content>
 			</step>
 		</steps>
+		<removal_steps>
+			<step>
+				<type>uiautomator</type>
+				<action>click</action>
+				<content>אפשרויות נוספות</content>
+			</step>
+			<step>
+				<type>id</type>
+				<id>com.whatsapp:id/title</id>
+				<action>click</action>
+				<content></content>
+			</step>
+			<step>
+				<type>uiautomator</type>
+				<action>click</action>
+				<content>Navigate up</content>
+			</step>
+			<step>
+				<type>uiautomator</type>
+				<action>click</action>
+				<content>אפשרויות נוספות</content>
+			</step>
+			<step>
+				<type>id</type>
+				<id>com.whatsapp:id/title</id>
+				<action>click</action>
+				<content></content>
+			</step>
+			<step>
+				<type>id</type>
+				<id>com.whatsapp:id/participants_search</id>
+				<action>click</action>
+				<content></content>
+			</step>
+			<step>
+				<type>id</type>
+				<id>com.whatsapp:id/search_src_text</id>
+				<action>send keys</action>
+				<content>child_name</content>
+			</step>
+			<step>
+				<type>uiautomator</type>
+				<action>click</action>
+				<content>child_name</content>
+			</step>
+			<step>
+				<type>uiautomator</type>
+				<action>click</action>
+				<content>text:Remove</content>
+			</step>
+			<step>
+				<type>id</type>
+				<id>android:id/button1</id>
+				<action>click</action>
+				<content></content>
+			</step>
+		</removal_steps>
 	</app>
     <app>
         <name>Instagram</name>
@@ -43,6 +101,7 @@
 		<app_activity>com.instagram.mainactivity.MainActivity</app_activity>
 		<parent_name>childmyfatherdevice</parent_name>
 		<child_name>myfatherdevice</child_name>
+		<group_name>Kwork</group_name>
         <steps>
             <step>
 				<type>id</type>
@@ -87,6 +146,7 @@
 		<app_activity>org.telegram.ui.LaunchActivity</app_activity>
 		<parent_name>child</parent_name>
 		<child_name>father</child_name>
+		<group_name>Kwork</group_name>
         <steps>
             <step>
 				<type>uiautomator</type>
@@ -116,6 +176,33 @@
 				<content>Send</content>
 			</step>
         </steps>
+		<removal_steps>
+			<step>
+				<type>uiautomator</type>
+				<action>click</action>
+				<content>chat_name</content>
+			</step>
+			<step>
+				<type>uiautomator</type>
+				<action>click</action>
+				<content>desc:Edit</content>
+			</step>
+			<step>
+				<type>uiautomator</type>
+				<action>click</action>
+				<content>text:2</content>
+			</step>
+			<step>
+				<type>uiautomator</type>
+				<action>click</action>
+				<content>desc:User options</content>
+			</step>
+			<step>
+				<type>uiautomator</type>
+				<action>click</action>
+				<content>text:Remove from group</content>
+			</step>
+		</removal_steps>
     </app>
     <app>
         <name>Chrome</name>

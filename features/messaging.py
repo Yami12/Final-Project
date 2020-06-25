@@ -81,9 +81,10 @@ class Messaging (unittest.TestCase):
             log_exist = self.check_messaging_logs(logs_dict, parent_name, True)
             if log_exist == True:
                 driver.global_tests_result.append(['True', logs_dict])
-                return
+                return True
         driver.global_tests_result.append(['False', "No logs received"])
         print("False in parent")
+        return False
 
 
     def check_child_logs(self, parent_name):
@@ -100,8 +101,17 @@ class Messaging (unittest.TestCase):
         driver.global_tests_result.append(['False', "No logs received"])
         print("False in child side")
 
-    def check_remove_group_logs(self):
+    def check_remove_group_logs(self, child_stdout_reader, child_stdout_queue):
         global logs
+        subprocess.run(['adb', '-s', driver.child_device, 'shell', 'am', 'broadcast', '-a',
+                        'com.keepers.childmodule.ACTION_UPLOAD_CONVERSATIONS'])
+        time.sleep(20)
+        while not child_stdout_reader.stopped():  # the queue is empty and the thread terminated
+            line = child_stdout_queue.get()
+            print("line removal: ", line)
+            if "eventType" in str(line):
+                logs.append(str(line))
+
         print("logs: ", logs)
         current_test = driver.current_test
 
@@ -110,15 +120,37 @@ class Messaging (unittest.TestCase):
             specific_log = specific_log.split("HttpKeepersLogger: ")[1]
             specific_log = specific_log.split("\\r\\n")[0]
             logs_dict = ast.literal_eval(specific_log)
-
             if logs_dict['eventData'] == current_test[sl.CHAT_NAME] and "CHILD_REMOVED_FROM" in logs_dict['eventType']:
                 driver.global_tests_result.append(['True', logs_dict])
                 print(['True', logs_dict])
-                return True
 
         driver.global_tests_result.append(['False', "No logs received"])
         print(['False', "No logs received"])
-        return False
+
+    def get_keepers_logs(self, s_network, from_child=False):
+        global logs
+        father_stdout_reader, father_stdout_queue = self.start_listen_to_logs(driver.father_device)
+        child_stdout_reader, child_stdout_queue = self.start_listen_to_logs(driver.child_device)
+
+        self.child_open_chat_screen(s_network, from_child)  # child reed the message
+        time.sleep(3)
+        # uplaod the keepers logs
+        subprocess.run(['adb', '-s', driver.child_device, 'shell', 'am', 'broadcast', '-a',
+                        'com.keepers.childmodule.ACTION_UPLOAD_CONVERSATIONS'])
+        time.sleep(10)
+        while not child_stdout_reader.stopped():  # the queue is empty and the thread terminated
+            line = child_stdout_queue.get()
+            print(line)
+            if "taggedText" in str(line):
+                logs.append(str(line))
+
+        self.check_child_logs(s_network[sl.PARENT_NAME])
+        parent_logs = self.check_parent_logs(s_network[sl.PARENT_NAME], father_stdout_reader, father_stdout_queue)
+        if parent_logs == strtobool(driver.current_test[sl.OFFENSIVE]):
+            driver.global_tests_result.append(['True', "Logs were received respectively"])
+        else:
+            driver.global_tests_result.append(['False', "Logs were not received respectively"])
+
 
     def return_coordinates_by_resource_id(self, step, parent_name):
         process = subprocess.Popen(['adb','-s', driver.child_device ,'exec-out', 'uiautomator', 'dump', '/dev/tty'],stdout=subprocess.PIPE)  # dump the uiautomator file
@@ -175,34 +207,6 @@ class Messaging (unittest.TestCase):
 
         return stdout_reader,stdout_queue
 
-    def get_keepers_logs(self, s_network, from_child = False):
-        device = driver.child_device
-        global logs
-
-        father_stdout_reader,father_stdout_queue = self.start_listen_to_logs(driver.father_device)
-
-        child_stdout_reader,child_stdout_queue = self.start_listen_to_logs(driver.child_device)
-        self.child_open_chat_screen(s_network, from_child)#child reed the message
-        time.sleep(3)
-        # uplaod the keepers logs
-        subprocess.run(['adb', '-s', driver.child_device,'shell', 'am', 'broadcast', '-a', 'com.keepers.childmodule.ACTION_UPLOAD_CONVERSATIONS'])
-        time.sleep(10)
-        while not child_stdout_reader.stopped():  # the queue is empty and the thread terminated
-            line = child_stdout_queue.get()
-            print(line)
-            if driver.current_test[sl.TEST_NAME] == sl.REMOVEAL_TEST:
-                if "eventType" in str(line):
-                    logs.append(str(line))
-            else:
-                if "taggedText" in str(line):
-                    logs.append(str(line))
-
-        if driver.current_test[sl.TEST_NAME] == sl.REMOVEAL_TEST:
-            self.check_remove_group_logs()
-        else:
-            self.check_child_logs(s_network[sl.PARENT_NAME])
-            self.check_parent_logs(s_network[sl.PARENT_NAME],father_stdout_reader,father_stdout_queue)
-
 
     def send_message(self, from_child = False):
         networks = xml_parsing.tests_xml_to_dictionary(sl.APPS_FILE)
@@ -222,30 +226,25 @@ class Messaging (unittest.TestCase):
 
     def remove_from_group(self):
         networks = xml_parsing.tests_xml_to_dictionary(sl.APPS_FILE)
-        removal_networks = xml_parsing.tests_xml_to_dictionary(sl.REMOVAL_FILE)
-        current_network = None
 
-        for removal_network in removal_networks:
-            if removal_network[sl.APP_NAME] == driver.current_test[sl.TEST_APP_NAME]:
-                driver.current_test[sl.CHAT_NAME] = removal_network[sl.GROUP_NAME]
-                for network in networks:
-                    if network[sl.APP_NAME] == driver.current_test[sl.TEST_APP_NAME]:
-                        current_network = network
-                        driver.current_test[sl.CHILD_NAME] = network[sl.CHILD_NAME]
-                        driver.connect_driver(network[sl.APP_PACKAGE], network[sl.APP_ACTIVITY])  # connect the driver
-                        for step in network[sl.STEPS]:
-                            if step[sl.CONTENT_STEP] == 'text':
-                                break
-                            driver.global_tests_result.append(components_operations.component_operation(step))
+        child_stdout_reader, child_stdout_queue = self.start_listen_to_logs(driver.child_device)
+
+        for network in networks:
+            if network[sl.APP_NAME] == driver.current_test[sl.TEST_APP_NAME]:
+                driver.current_test[sl.CHAT_NAME] = network[sl.GROUP_NAME]
+                driver.current_test[sl.CHILD_NAME] = network[sl.CHILD_NAME]
+                driver.connect_driver(network[sl.APP_PACKAGE], network[sl.APP_ACTIVITY])  # connect the driver
+                for step in network[sl.STEPS]:
+                    if step[sl.CONTENT_STEP] == 'text':
                         break
-                for step in removal_network[sl.STEPS]:
                     driver.global_tests_result.append(components_operations.component_operation(step))
-                break
-        self.get_keepers_logs(current_network, False)
+                for step in network[sl.REMOVAL_STEPS]:
+                    driver.global_tests_result.append(components_operations.component_operation(step))
+        self.check_remove_group_logs(child_stdout_reader, child_stdout_queue)
 
 
     def test_manage_message(self):
-        if driver.current_test[sl.TEST_NAME] == 'Removal from group':  # removal from group test
+        if driver.current_test[sl.TEST_NAME] == sl.REMOVAL_TEST:  # removal from group test
             self.remove_from_group()
         elif driver.current_test[sl.TEST_SIDE] == sl.TEST_RECIVE_SIDE:
             self.send_message()

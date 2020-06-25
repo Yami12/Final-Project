@@ -7,7 +7,7 @@ def create(test_name):
     html += '<tr><th style="width:50px">description</th><th style="width:50px">result</th></tr>'
     for result in driver.global_tests_result:
         html += "<tr><td>{}</td>".format(result[0])
-        html += "<td>{}</td></tr>".format(result[2])
+        html += "<td>{}</td></tr>".format(result[1])
     html += "</table></html>"
 
     file_ = open(test_name + '.html', 'w')
