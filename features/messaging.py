@@ -123,9 +123,11 @@ class Messaging (unittest.TestCase):
             if logs_dict['eventData'] == current_test[sl.CHAT_NAME] and "CHILD_REMOVED_FROM" in logs_dict['eventType']:
                 driver.global_tests_result.append(['True', logs_dict])
                 print(['True', logs_dict])
+                return True
 
         driver.global_tests_result.append(['False', "No logs received"])
         print(['False', "No logs received"])
+        return False
 
     def get_keepers_logs(self, s_network, from_child=False):
         global logs
@@ -190,6 +192,7 @@ class Messaging (unittest.TestCase):
                     subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'keyevent', '111'])
                     return
                 else:
+                    print("parenttttt")
                     subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'text', s_network[sl.PARENT_NAME][:-1]])
             elif step[sl.ACTION_STEP] == sl.ACTION_CLICK:
                 coordinates = self.return_coordinates_by_resource_id(step, s_network[sl.PARENT_NAME])
@@ -232,13 +235,18 @@ class Messaging (unittest.TestCase):
             if network[sl.APP_NAME] == driver.current_test[sl.TEST_APP_NAME]:
                 driver.current_test[sl.CHAT_NAME] = network[sl.GROUP_NAME]
                 driver.current_test[sl.CHILD_NAME] = network[sl.CHILD_NAME]
+                network[sl.PARENT_NAME] = network[sl.GROUP_NAME]
                 driver.connect_driver(network[sl.APP_PACKAGE], network[sl.APP_ACTIVITY])  # connect the driver
                 for step in network[sl.STEPS]:
                     if step[sl.CONTENT_STEP] == 'text':
+                        print("break")
                         break
                     driver.global_tests_result.append(components_operations.component_operation(step))
                 for step in network[sl.REMOVAL_STEPS]:
                     driver.global_tests_result.append(components_operations.component_operation(step))
+
+                self.child_open_chat_screen(network, False)
+                break
         self.check_remove_group_logs(child_stdout_reader, child_stdout_queue)
 
 

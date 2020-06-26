@@ -17,8 +17,10 @@ def do_action(component, action , content):
                 component.send_keys(driver.current_test[sl.MESSAGING_CONTENT])
                 driver.sending_time = datetime.datetime.now()  # save the sending time
             elif content == sl.TEST_CONTACT:
+                print("--------------1",content)
                 component.send_keys(driver.current_test[sl.CHAT_NAME][:-1])
             elif content == sl.CHILD_NAME:
+                print("--------------2",content)
                 component.send_keys(driver.current_test[sl.CHILD_NAME][:-1])
             else:
                 component.send_keys(content)

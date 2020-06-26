@@ -1,7 +1,7 @@
 <tests>
     <test>
         <name>Recive an offensive message</name>
-        <text>dump fat</text>
+        <text>kill you</text>
         <isGroup>False</isGroup>
         <side>recive</side>
         <offensive>True</offensive>
@@ -21,7 +21,7 @@
     </test>
     <test>
         <name>Removal from group</name>
-        <groupName>check-group</groupName>
+        <groupName>check</groupName>
     </test>
     <test>
         <name>Signing in is not allowed</name>
