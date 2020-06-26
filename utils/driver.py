@@ -13,8 +13,8 @@ from utils import string_list as sl
 
 global_driver = None
 global_tests_result = []
+#[{name: name_test, results:[[True, 'device lock'], [false, 'command not found']},{...}]
 
-# requested_flow = None
 current_test = None
 current_app = None
 desired_caps = {}

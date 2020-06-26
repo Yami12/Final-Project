@@ -80,9 +80,9 @@ class Messaging (unittest.TestCase):
             print("logs_dict: ", logs_dict)
             log_exist = self.check_messaging_logs(logs_dict, parent_name, True)
             if log_exist == True:
-                driver.global_tests_result.append(['True', logs_dict])
+                driver.global_tests_result[-1]['results'].append(['True', logs_dict])
                 return True
-        driver.global_tests_result.append(['False', "No logs received"])
+        driver.global_tests_result[-1]['results'].append(['False', "No logs received"])
         print("False in parent")
         return False
 
@@ -96,9 +96,9 @@ class Messaging (unittest.TestCase):
             logs_dict = ast.literal_eval(specific_log)
             log_exist = self.check_messaging_logs(logs_dict, parent_name)
             if log_exist == True:
-                driver.global_tests_result.append(['True', logs_dict])
+                driver.global_tests_result[-1]['results'].append(['True', logs_dict])
                 return
-        driver.global_tests_result.append(['False', "No logs received"])
+        driver.global_tests_result[-1]['results'].append(['False', "No logs received"])
         print("False in child side")
 
     def check_remove_group_logs(self, child_stdout_reader, child_stdout_queue):
@@ -121,11 +121,11 @@ class Messaging (unittest.TestCase):
             specific_log = specific_log.split("\\r\\n")[0]
             logs_dict = ast.literal_eval(specific_log)
             if logs_dict['eventData'] == current_test[sl.CHAT_NAME] and "CHILD_REMOVED_FROM" in logs_dict['eventType']:
-                driver.global_tests_result.append(['True', logs_dict])
+                driver.global_tests_result[-1]['results'].append(['True', logs_dict])
                 print(['True', logs_dict])
                 return True
 
-        driver.global_tests_result.append(['False', "No logs received"])
+        driver.global_tests_result[-1]['results'].append(['False', "No logs received"])
         print(['False', "No logs received"])
         return False
 
@@ -149,9 +149,9 @@ class Messaging (unittest.TestCase):
         self.check_child_logs(s_network[sl.PARENT_NAME])
         parent_logs = self.check_parent_logs(s_network[sl.PARENT_NAME], father_stdout_reader, father_stdout_queue)
         if parent_logs == strtobool(driver.current_test[sl.OFFENSIVE]):
-            driver.global_tests_result.append(['True', "Logs were received respectively"])
+            driver.global_tests_result[-1]['results'].append(['True', "Logs were received respectively"])
         else:
-            driver.global_tests_result.append(['False', "Logs were not received respectively"])
+            driver.global_tests_result[-1]['results'].append(['False', "Logs were not received respectively"])
 
     def return_coordinates_by_resource_id(self, step, parent_name):
         process = subprocess.Popen(['adb','-s', driver.child_device ,'exec-out', 'uiautomator', 'dump', '/dev/tty'],stdout=subprocess.PIPE)  # dump the uiautomator file
@@ -221,7 +221,7 @@ class Messaging (unittest.TestCase):
                 if from_child == False: # send a message to the child
                     driver.connect_driver(network[sl.APP_PACKAGE],network[sl.APP_ACTIVITY])# connect the driver
                     for step in network[sl.STEPS]:
-                        driver.global_tests_result.append(components_operations.component_operation(step))
+                        driver.global_tests_result[-1]['results'].append(components_operations.component_operation(step))
                 time.sleep(3)
                 self.get_keepers_logs(network, from_child)
 
@@ -241,9 +241,9 @@ class Messaging (unittest.TestCase):
                     if step[sl.CONTENT_STEP] == 'text':
                         print("break")
                         break
-                    driver.global_tests_result.append(components_operations.component_operation(step))
+                    driver.global_tests_result[-1]['results'].append(components_operations.component_operation(step))
                 for step in network[sl.REMOVAL_STEPS]:
-                    driver.global_tests_result.append(components_operations.component_operation(step))
+                    driver.global_tests_result[-1]['results'].append(components_operations.component_operation(step))
 
                 self.child_open_chat_screen(network, False)
                 break

@@ -45,6 +45,6 @@ class ComponentsTest(unittest.TestCase):
         #   run all the steps in the test
         for step in test[sl.STEPS]:
             result = components_operations.component_operation(step)
-            driver.global_tests_result.append("test: {} status: {} description: {}".format(test['name'], result[0], result[1]))
+            # driver.global_tests_result.append("test: {} status: {} description: {}".format(test['name'], result[0], result[1]))
             time.sleep(2)
         print(self.check_expected_result(test[sl.TEST_EXPECTED_RES]))

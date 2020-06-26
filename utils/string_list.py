@@ -67,5 +67,7 @@ DEVICE_OS = "Android"
 DEVICE_PLATFORM = "platform"
 
 REMOVAL_TEST = "Removal from group"
+WEB_TEST = "Signing in is not allowed"
+DEVICE_LOCK_TEST = "device lock"
 
 NOT_SELECTED = 'Not Selected'

@@ -25,9 +25,9 @@ class DeviceLocked (unittest.TestCase):
                 if utils_funcs.time_in_range(int(logs[i].split('"start": ')[1].split(",\\r\\n")[0]), 1) == True and (
                     utils_funcs.time_in_range(int(logs[i+1].split('"end": ')[1].split("\\r\\n")[0]), 4) == True) and (
                     logs[i+2].split('"didStart":')[1].split("}\\r\\n")[0] == "true"):
-                    driver.global_tests_result.append(['True', "The child device is locked"])
+                    driver.global_tests_result[-1]['results'].append(['True', "The child device is locked"])
                     return
-        driver.global_tests_result.append(['False', "The child device is not locked"])
+        driver.global_tests_result[-1]['results'].append(['False', "The child device is not locked"])
 
     '''
         A function that performs the child device lock test 
@@ -62,7 +62,7 @@ class DeviceLocked (unittest.TestCase):
                         component[7].send_keys(str((text + 3) % 60))    #the end time is 3 minute from the current time
                         driver.global_driver.press_keycode(66)
                         continue
-                    driver.global_tests_result.append(components_operations.component_operation(step))
+                    driver.global_tests_result[-1]['results'].append(components_operations.component_operation(step))
                     time.sleep(2)
                 driver.sending_time = datetime.datetime.now()
         time.sleep(10)
