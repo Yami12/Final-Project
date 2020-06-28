@@ -101,7 +101,7 @@ class Messaging (unittest.TestCase):
         driver.global_tests_result[-1]['results'].append(['False', "No logs received"])
         print("False in child side")
 
-    def check_remove_group_logs(self, child_stdout_reader, child_stdout_queue):
+    def check_removal_from_group_logs(self, child_stdout_reader, child_stdout_queue):
         global logs
         subprocess.run(['adb', '-s', driver.child_device, 'shell', 'am', 'broadcast', '-a',
                         'com.keepers.childmodule.ACTION_UPLOAD_CONVERSATIONS'])
@@ -247,15 +247,15 @@ class Messaging (unittest.TestCase):
 
                 self.child_open_chat_screen(network, False)
                 break
-        self.check_remove_group_logs(child_stdout_reader, child_stdout_queue)
+        self.check_removal_from_group_logs(child_stdout_reader, child_stdout_queue)
 
 
     def test_manage_message(self):
-        if driver.current_test[sl.TEST_NAME] == sl.REMOVAL_TEST:  # removal from group test
-            self.remove_from_group()
-        elif driver.current_test[sl.TEST_SIDE] == sl.TEST_RECIVE_SIDE:
+        if driver.current_test[sl.TEST_SIDE] == sl.TEST_RECIVE_SIDE: # child recive a message
             self.send_message()
-        elif driver.current_test[sl.TEST_SIDE] == sl.TEST_SEND_SIDE:
+        elif driver.current_test[sl.TEST_SIDE] == sl.TEST_SEND_SIDE: # child send a message
             self.send_message(True)
+        else: # child be removed from group
+            self.remove_from_group()
 
 

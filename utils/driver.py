@@ -23,7 +23,6 @@ child_device = ""
 father_device = ""
 tester_device = ""
 
-appium_service = ""
 '''
 function:initialize
 description: initializes the appium's driver
@@ -36,14 +35,13 @@ appActivity - the application's activity name
 localhost - the appium's driver host
 apk_file - the application's apk file
 '''
-def initialize(platformVersion, udid, apk_file = ""):
+def initialize(device, apk_file = ""):
 
-    global global_driver
     global desired_caps
     desired_caps['automationName'] = 'UiAutomator2'
     desired_caps['platformName'] = 'Android'
-    desired_caps['platformVersion'] = platformVersion
-    desired_caps['udid'] = udid
+    desired_caps['platformVersion'] = get_device_version(device)
+    desired_caps['udid'] = device
     desired_caps['adbExecTimeout'] = '500000'
     # Returns abs path relative to this file and not cwd
     if apk_file != "":
@@ -61,21 +59,32 @@ def connect_driver(appPackage, appActivity):
     global_driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
 
 
-def identify_connected_device():
-    devices = []
+def get_device_version(device):
+    process = subprocess.Popen(['adb', '-s', device, 'shell', 'getprop', 'ro.build.version.release'],
+                               stdout=subprocess.PIPE)
+    device_ver = str(process.stdout.read())[2:].split("\\r\\n")[0]
 
-    devices_udid = []
-    process = subprocess.Popen(['adb', 'devices'], stdout=subprocess.PIPE)
-    a = str(process.stdout.read())
-    print(a)
-    udids = str(a).split('\\r\\n')
+    process.kill()
 
-    for i in range(2):
-        device = {}
-        device[sl.DEVICE_UDID] = udids[i+1].split("\\tdevice")[0]
-        process = subprocess.Popen(['adb', '-s', device[sl.DEVICE_UDID], 'shell', 'getprop', 'ro.build.version.release'], stdout=subprocess.PIPE)
-        device[sl.DEVICE_VERSION] = str(process.stdout.read())[2:].split("\\r\\n")[0]
-        device[sl.DEVICE_PLATFORM] = sl.DEVICE_OS
-        devices.append(device)
-        print(device)
-    return devices
+    print(device_ver)
+    return device_ver
+
+
+    #
+    # devices = []
+    #
+    # devices_udid = []
+    # process = subprocess.Popen(['adb', 'devices'], stdout=subprocess.PIPE)
+    # a = str(process.stdout.read())
+    # print(a)
+    # udids = str(a).split('\\r\\n')
+    #
+    # for i in range(2):
+    #     device = {}
+    #     device[sl.DEVICE_UDID] = udids[i+1].split("\\tdevice")[0]
+    #     process = subprocess.Popen(['adb', '-s', device[sl.DEVICE_UDID], 'shell', 'getprop', 'ro.build.version.release'], stdout=subprocess.PIPE)
+    #     device[sl.DEVICE_VERSION] = str(process.stdout.read())[2:].split("\\r\\n")[0]
+    #     device[sl.DEVICE_PLATFORM] = sl.DEVICE_OS
+    #     devices.append(device)
+    #     print(device)
+    # return devices
