@@ -11,28 +11,30 @@ return: if the action succeeded or not
 def do_action(component, action , content):
     try:
         if action == sl.ACTION_CLICK:
+            print("click")
             component.click()
         elif action == sl.ACTION_SEND_KEYS:
+            print("send keys")
             if content == sl.MESSAGING_CONTENT:
                 component.send_keys(driver.current_test[sl.MESSAGING_CONTENT])
-                driver.sending_time = datetime.datetime.now()  # save the sending time
+                driver.sending_time = datetime.d
             elif content == sl.TEST_CONTACT:
-                print("--------------1",content)
                 component.send_keys(driver.current_test[sl.CHAT_NAME][:-1])
             elif content == sl.CHILD_NAME:
-                print("--------------2",content)
                 component.send_keys(driver.current_test[sl.CHILD_NAME][:-1])
             else:
                 component.send_keys(content)
 
         elif action == sl.ACTION_GET:
+            print("get component content")
             #get the component text
             component_text = component.get_attribute("text")
             return ['Passed', component_text]
-
+        print("SUCCESS")
         return ['Passed', "SUCCESS"]
 
     except Exception as e:
+        print("FAILED")
         return ['Failed', e]
 
 '''

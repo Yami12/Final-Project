@@ -55,7 +55,7 @@ def connect_driver(appPackage, appActivity):
     global global_driver
     desired_caps['appPackage'] = appPackage
     desired_caps['appActivity'] = appActivity
-    print(desired_caps)
+    print("connecting to appium server...")
     global_driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
 
 
@@ -63,10 +63,9 @@ def get_device_version(device):
     process = subprocess.Popen(['adb', '-s', device, 'shell', 'getprop', 'ro.build.version.release'],
                                stdout=subprocess.PIPE)
     device_ver = str(process.stdout.read())[2:].split("\\r\\n")[0]
-
     process.kill()
+    print("get device version: ", device_ver)
 
-    print(device_ver)
     return device_ver
 
 
