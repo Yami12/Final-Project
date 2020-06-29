@@ -72,4 +72,6 @@ REMOVAL_TEST = "Removal from group"
 WEB_TEST = "Signing in is not allowed"
 DEVICE_LOCK_TEST = "device lock"
 
+#apps names
+KEEPERS_DEVICE_LOCKED = "Keepers device lock"
 NOT_SELECTED = 'Not Selected'

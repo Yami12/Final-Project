@@ -3,19 +3,23 @@ import time
 import subprocess
 from queue import Queue
 import datetime
+import sys
+
 from utils import driver
 from utils import read_messaging_logs
 from utils import xml_parsing
 from utils import string_list as sl
-from components import components_operations
 from utils import utils_funcs
+
+from components import components_operations
+
 
 logs = []
 
 class DeviceLocked (unittest.TestCase):
 
     '''
-        check if the expected log exist in the sended logs by the child
+        check if the expected log exist in the received logs
         and save the result (if exist or not)
     '''
     def check_keepers_logs(self):
@@ -26,7 +30,16 @@ class DeviceLocked (unittest.TestCase):
                     utils_funcs.time_in_range(int(logs[i+1].split('"end": ')[1].split("\\r\\n")[0]), 4) == True) and (
                     logs[i+2].split('"didStart":')[1].split("}\\r\\n")[0] == "true"):
                     driver.global_tests_result[-1]['results'].append(['True', "The child device is locked"])
+                    print("The found log is : ", logs[i])
+                    sys.stdout.flush()
+                    print("The child device is locked")
+                    sys.stdout.flush()
                     return
+
+        print("No matching logs")
+        sys.stdout.flush()
+        print("The child device is not locked")
+        sys.stdout.flush()
         driver.global_tests_result[-1]['results'].append(['False', "The child device is not locked"])
 
     '''
@@ -34,6 +47,11 @@ class DeviceLocked (unittest.TestCase):
         and sends the function to check whether the device is actually locked
     '''
     def test_device_locked(self):
+        global logs
+        print("locking child device...")
+        sys.stdout.flush()
+        print("begin to listen to parent logs...")
+        sys.stdout.flush()
         # get keepers logcats in child device
         process = subprocess.Popen(['adb', '-s', driver.child_device, 'logcat', '-s', 'HttpKeepersLogger'],
                                    stdout=subprocess.PIPE)
@@ -43,9 +61,14 @@ class DeviceLocked (unittest.TestCase):
 
         applications = xml_parsing.tests_xml_to_dictionary(sl.APPSS_FILE)
         for application in applications:
-            if application[sl.APP_NAME] == "Keepers device lock":   # Keepers app
+            if application[sl.APP_NAME] == sl.KEEPERS_DEVICE_LOCKED:   # Keepers app
+                print("connecting to appium server")
+                sys.stdout.flush()
                 driver.connect_driver(application[sl.APP_PACKAGE], application[sl.APP_ACTIVITY])  # connect the driver
                 time.sleep(6)
+
+                print("starting to run the test steps")
+                sys.stdout.flush()
                 #   do all the steps on the parent device to lock the child device
                 for step in application[sl.STEPS]:
                     if step[sl.TYPE_STEP] == sl.TYPE_CLASS: #this is the step that define the end time
@@ -66,11 +89,13 @@ class DeviceLocked (unittest.TestCase):
                     time.sleep(2)
                 driver.sending_time = datetime.datetime.now()
         time.sleep(10)
-        # check if the lock screen is displayed on the child device
+
+        print("checking if the child's device is locked ")
+        sys.stdout.flush()
         subprocess.run(['adb', '-s', driver.child_device, 'shell', 'am', 'broadcast', '-a',
-                        'com.keepers.childmodule.ACTION_UPLOAD_CONVERSATIONS'])
+                        'com.keepers.childmodule.ACTION_UPLOAD_CONVERSATIONS']) # upload keepers locked
         time.sleep(15)
-        global logs
+
         flag_timeRange = 0
         while not stdout_reader.stopped():  # the queue is empty and the thread terminated
             line = str(stdout_queue.get())
@@ -81,4 +106,6 @@ class DeviceLocked (unittest.TestCase):
                 flag_timeRange = 2
             elif "didStart" in line:
                 logs.append(line)
+        print("checking child logs.")
+        sys.stdout.flush()
         self.check_keepers_logs()

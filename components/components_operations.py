@@ -1,6 +1,8 @@
+import datetime
+import sys
+
 from utils import driver
 from utils import string_list as sl
-import datetime
 
 '''
 accepts: component, action, content
@@ -12,9 +14,11 @@ def do_action(component, action , content):
     try:
         if action == sl.ACTION_CLICK:
             print("click")
+            sys.stdout.flush()
             component.click()
         elif action == sl.ACTION_SEND_KEYS:
             print("send keys")
+            sys.stdout.flush()
             if content == sl.MESSAGING_CONTENT:
                 component.send_keys(driver.current_test[sl.MESSAGING_CONTENT])
                 driver.sending_time = datetime.d
@@ -27,14 +31,17 @@ def do_action(component, action , content):
 
         elif action == sl.ACTION_GET:
             print("get component content")
+            sys.stdout.flush()
             #get the component text
             component_text = component.get_attribute("text")
             return ['Passed', component_text]
         print("SUCCESS")
+        sys.stdout.flush()
         return ['Passed', "SUCCESS"]
 
     except Exception as e:
         print("FAILED")
+        sys.stdout.flush()
         return ['Failed', e]
 
 '''

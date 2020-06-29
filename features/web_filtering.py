@@ -3,13 +3,13 @@ import unittest
 import time
 import subprocess
 from queue import Queue
-import re
+
 
 from utils import driver
 from utils import read_messaging_logs
 from utils import xml_parsing
 from utils import string_list as sl
-from components import components_operations
+
 from features import messaging
 
 class WebFiltering (unittest.TestCase):
