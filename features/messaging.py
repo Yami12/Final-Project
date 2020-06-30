@@ -38,28 +38,36 @@ class Messaging (unittest.TestCase):
                 if logs_dict['title'] == chat_name:
                     print("'title' match")
                     sys.stdout.flush()
-                    messages = logs_dict['messages']
-                    for message in messages:
-                        if not isParent:
+                    if isParent:
+                        words = current_test['text'].split(" ")
+                        for word in words:
+                            if word not in logs_dict['quote']:
+                                break
+                        print("'text' match: ", logs_dict['quote'])
+                        sys.stdout.flush()
+                        message = logs_dict
+                    else:
+                        messages = logs_dict['messages']
+                        for message in messages:
                             if (message['isOutgoing'] == True and current_test['side'] == 'send') or (
                                 message['isOutgoing'] == False and current_test['side'] == 'recive'):
                                 print("'isOutgoing' match")
                                 sys.stdout.flush()
                             else:
                                 break
-                        # check if the text is equal
-                        words = current_test['text'].split(" ")
-                        for word in words:
-                            if word not in message['taggedText']:
-                                break
-                        print("'text' match: ", message['taggedText'])
+                            # check if the text is equal
+                            words = current_test['text'].split(" ")
+                            for word in words:
+                                if word not in message['taggedText']:
+                                    break
+                            print("'text' match: ", message['taggedText'])
+                            sys.stdout.flush()
+                    if utils_funcs.time_in_range(message['timeReceived'], 2) == True:
+                        print("'time' match")
                         sys.stdout.flush()
-                        if utils_funcs.time_in_range(message['timeReceived'], 2) == True:
-                            print("'time' match")
-                            sys.stdout.flush()
-                            print("The found log is: ", logs_dict)
-                            sys.stdout.flush()
-                            return True
+                        print("The found log is: ", logs_dict)
+                        sys.stdout.flush()
+                        return True
         print("No matching logs")
         sys.stdout.flush()
         return False
@@ -77,16 +85,15 @@ class Messaging (unittest.TestCase):
 
         while not stdout_reader.stopped():  # the queue is empty and the thread terminated
             line = str(stdout_queue.get())
-            print("**",str(line))
-            sys.stdout.flush()
-            if '"messages":' in str(line):
+            if '"quote":' in line:
                 parent_logs = "{"
-                while not ": }" in str(line):
-                    if "taggedText" in line:
-                        line = str(line).split("HttpKeepersLogger: ")[1].split("\\r\\n'")[0].strip()
-                        parent_logs = parent_logs + str(line).replace('\\"','').replace('\\','')
+                while not "}" in line:
+                    if "quote" in line:
+                        line = line.split("HttpKeepersLogger: ")[1].split("\\r\\n'")[0].strip()
+                        parent_logs = parent_logs + line.replace('\\"','').replace('\\','')
+                        print(parent_logs)
                     else:
-                        parent_logs = parent_logs + str(line).split("HttpKeepersLogger: ")[1].split("\\r\\n'")[0].strip()
+                        parent_logs = parent_logs + line.split("HttpKeepersLogger: ")[1].split("\\r\\n'")[0].strip()
                     line = str(stdout_queue.get())
 
                 parent_logs = parent_logs + "}"
@@ -96,8 +103,6 @@ class Messaging (unittest.TestCase):
 
             specific_log = parent_logs.replace("false", "False").replace("true", "True")
             logs_dict = ast.literal_eval(specific_log)
-            print("logs_dict: ", logs_dict)
-            sys.stdout.flush()
 
             log_exist = self.check_messaging_logs(logs_dict, parent_name, True)
             if log_exist == True:
@@ -187,7 +192,8 @@ class Messaging (unittest.TestCase):
 
         self.child_open_chat_screen(s_network, from_child)  # child reed the message
         time.sleep(3)
-
+        print("!!!!!!!!!!!!!!..")
+        sys.stdout.flush()
         subprocess.run(['adb', '-s', driver.child_device, 'shell', 'am', 'broadcast', '-a',
                         'com.keepers.childmodule.ACTION_UPLOAD_CONVERSATIONS']) # uplaod the keepers logs
         time.sleep(10)
@@ -200,7 +206,12 @@ class Messaging (unittest.TestCase):
 
         print("checking child logs.")
         sys.stdout.flush()
+        print("current test: ", driver.current_test)
+        sys.stdout.flush()
         self.check_child_logs(s_network[sl.PARENT_NAME])
+        print("checking parent logs.")
+        subprocess.run(['adb', '-s', driver.father_device, 'shell', 'am', 'start', '-n',
+                        'com.keepers/com.keeper.common.splash.SplashActivity'])  # open keepers application in father device
         parent_logs = self.check_parent_logs(s_network[sl.PARENT_NAME], father_stdout_reader, father_stdout_queue)
         if parent_logs == strtobool(driver.current_test[sl.OFFENSIVE]):
             print("SUCCESS, Logs were received respectively")
@@ -217,7 +228,7 @@ class Messaging (unittest.TestCase):
             description: A function that returns a device component coordinates by its resource id
     '''
     def get_coordinates_by_resource_id(self, step, parent_name):
-        print("searching for coordinates of ", step[sl.ID_STEP])
+        print("searching for coordinates ")
         sys.stdout.flush()
         process = subprocess.Popen(['adb','-s', driver.child_device ,'exec-out', 'uiautomator', 'dump', '/dev/tty'],stdout=subprocess.PIPE)  # dump the uiautomator file
         content = str(process.stdout.read())
@@ -230,6 +241,8 @@ class Messaging (unittest.TestCase):
             elif step[sl.TYPE_STEP] == sl.TYPE_UIAUTOMATOR and 'class="android.widget.ImageView"' not in node: # uiautomator
                 if step[sl.CONTENT_STEP] == sl.CHAT_NAME:
                     if parent_name in node:
+                        print(parent_name)
+                        sys.stdout.flush()
                         process.kill()
                         break
                 elif 'content-desc="' + step[sl.CONTENT_STEP] in node:
@@ -261,21 +274,23 @@ class Messaging (unittest.TestCase):
         time.sleep(3)
         print("running the opening steps")
         sys.stdout.flush()
+        print(s_network[sl.STEPS][1:])
+        sys.stdout.flush()
         for step in s_network[sl.STEPS]:
             if step[sl.ACTION_STEP] == sl.ACTION_SEND_KEYS: # send keys action
                 if step[sl.CONTENT_STEP] == sl.MESSAGING_CONTENT and from_child == True:
                     driver.sending_time = datetime.datetime.now()  # save the sending time
-                    print('enter text. run command: adb -s' + driver.child_device +'shell input text' +str(
-                        driver.current_test[sl.MESSAGING_CONTENT]))
+                    print('enter text. run command: adb -s ' + driver.child_device +' shell input text: "' +str(
+                        driver.current_test[sl.MESSAGING_CONTENT]) + '"')
                     sys.stdout.flush()
                     subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'text', '"' +str(driver.current_test[sl.MESSAGING_CONTENT]) +'"'])
                 elif step[sl.CONTENT_STEP] == sl.MESSAGING_CONTENT and from_child == False:
-                    print('hide keyboard. run command: adb -s' + driver.child_device + 'shell input keyevent 111')
+                    print('hide keyboard. run command: adb -s ' + driver.child_device + ' shell input keyevent 111')
                     sys.stdout.flush()
                     subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'keyevent', '111'])
                     return
                 else:
-                    print('enter text. run command: adb -s' + driver.child_device + 'shell input text' + s_network[sl.PARENT_NAME][:-1])
+                    print('enter text. run command: adb -s ' + driver.child_device + ' shell input text : "' + s_network[sl.PARENT_NAME][:-1] + '"')
                     sys.stdout.flush()
                     subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'text', s_network[sl.PARENT_NAME][:-1]])
             elif step[sl.ACTION_STEP] == sl.ACTION_CLICK: # click action
@@ -283,7 +298,7 @@ class Messaging (unittest.TestCase):
                 print('click. run command: adb -s' + driver.child_device + 'shell input tap ' +str(coordinates[1]) + ' ' + str(coordinates[2]))
                 sys.stdout.flush()
                 subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'tap', coordinates[1] , coordinates[2]])
-            time.sleep(3)
+            #time.sleep(3)
 
 
     '''
