@@ -28,24 +28,14 @@ class Messaging (unittest.TestCase):
     '''
     def check_messaging_logs(self, logs_dict, chat_name, isParent = False):
         current_test = driver.current_test
-        # print("log dict: ", logs_dict)
-        # sys.stdout.flush()
         if logs_dict['applicationName'] == current_test['application']:
-            # print("'app name' match")
-            # sys.stdout.flush()
             if logs_dict['isGroup'] == strtobool(current_test['isGroup']):
-                # print("'is group' match")
-                # sys.stdout.flush()
                 if logs_dict['title'] == chat_name:
-                    # print("'title' match")
-                    # sys.stdout.flush()
                     if isParent:
                         words = current_test['text'].split(" ")
                         for word in words:
                             if word not in logs_dict['quote']:
                                 break
-                        # print("'text' match: ", logs_dict['quote'])
-                        # sys.stdout.flush()
                         message = logs_dict
                     else:
                         messages = logs_dict['messages']
@@ -59,20 +49,9 @@ class Messaging (unittest.TestCase):
                             else:
                                 break
                     if utils_funcs.time_in_range(message['timeReceived'], 2) == True:
-                        # print("'time' match")
-                        # sys.stdout.flush()
                         print("The found log is: ", logs_dict)
                         sys.stdout.flush()
                         return True
-                            #     # print("'isOutgoing' match")
-                            #     # sys.stdout.flush()
-                            # else:
-                            #     break
-                            # # check if the text is equal
-                            #
-                            # # print("'text' match: ", message['taggedText'])
-                            # # sys.stdout.flush()
-
         return False
 
 
@@ -134,11 +113,12 @@ class Messaging (unittest.TestCase):
             log_exist = self.check_messaging_logs(logs_dict, parent_name)
             if log_exist == True:
                 driver.global_tests_result[-1]['results'].append(['True', logs_dict])
-                return
+                return True
 
         driver.global_tests_result[-1]['results'].append(['False', "No logs received"])
         print("No logs received in child side")
         sys.stdout.flush()
+        return False
 
 
     '''
@@ -172,12 +152,12 @@ class Messaging (unittest.TestCase):
                 driver.global_tests_result[-1]['results'].append(['True', logs_dict])
                 print("The found log is : ", logs_dict)
                 sys.stdout.flush()
-                print(colored('SUCCESS, Logs were received respectively', "green"))
+                print(colored('SUCCESS, Removal from group Logs were received respectively', "green"))
                 sys.stdout.flush()
                 return True
 
         driver.global_tests_result[-1]['results'].append(['False', "No matching logs"])
-        print(colored('No matching logs', 'red'))
+        print(colored('No matching Removal from group logs', 'red'))
         sys.stdout.flush()
         return False
 
@@ -212,20 +192,25 @@ class Messaging (unittest.TestCase):
 
         print("checking child logs.")
         sys.stdout.flush()
-        print("current test: ", driver.current_test)
-        sys.stdout.flush()
-        self.check_child_logs(s_network[sl.PARENT_NAME])
+        child_logs = self.check_child_logs(s_network[sl.PARENT_NAME])
+        if child_logs:
+            print(colored("SUCCESS, Child's Logs were received respectively", "green"))
+            sys.stdout.flush()
+            driver.global_tests_result[-1]['results'].append(['True', "Child's Logs were received respectively"])
+        else:
+            print(colored("FAILED, Child's Logs were not received respectively", 'red'))
+            sys.stdout.flush()
+            driver.global_tests_result[-1]['results'].append(['False', "Child's Logs were not received respectively"])
+            return False
         print("checking parent logs.")
-        # subprocess.run(['adb', '-s', driver.father_device, 'shell', 'am', 'start', '-n',
-        #                 'com.keepers/com.keeper.common.splash.SplashActivity'])  # open keepers application in father device
         parent_logs = self.check_parent_logs(s_network[sl.PARENT_NAME], father_stdout_reader, father_stdout_queue)
         if parent_logs == strtobool(driver.current_test[sl.OFFENSIVE]):
-            print(colored('SUCCESS, Logs were received respectively',"green"))
+            print(colored("SUCCESS, Parent's Logs were received respectively","green"))
             sys.stdout.flush()
             driver.global_tests_result[-1]['results'].append(['True', "Logs were received respectively"])
             return True
 
-        print(colored('FAILED, Logs were not received respectively', 'red'))
+        print(colored("FAILED, Parent's Logs were not received respectively", 'red'))
         sys.stdout.flush()
         driver.global_tests_result[-1]['results'].append(['False', "Logs were not received respectively"])
         return False

@@ -15,7 +15,7 @@
     </test>
     <test>
         <name>Send an offensive message through whatsapp</name>
-        <text>fat drug anorexic</text>
+        <text>Stupid dumb</text>
         <isGroup>False</isGroup>
         <side>send</side>
         <offensive>True</offensive>
