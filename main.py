@@ -2,6 +2,8 @@ import sys
 import unittest
 import os
 import time
+from termcolor import colored
+from colorama import init
 
 from utils import driver
 from utils import xml_parsing
@@ -18,9 +20,16 @@ from components import components_tests
 
 if __name__ == '__main__':
     result = " "
+    init()
     try:
-        # os.system("start cmd.exe @cmd /k appium ")
-        # time.sleep(5)
+        # print(colored('One or more parametrs are missing', 'red'))
+        # sys.stdout.flush()
+        # print(colored('FAILED, Logs were not received respectively', 'red'))
+        # sys.stdout.flush()
+        # print(colored('SUCCESS, Logs were received respectively', "green"))
+        # sys.stdout.flush()
+        os.system("start cmd.exe @cmd /k appium ")
+        time.sleep(5)
 
         if sys.argv[1] == sl.FEATURE_TEST: # feature test
             test_name = sys.argv[2] # test name
@@ -28,12 +37,16 @@ if __name__ == '__main__':
             driver.father_device = sys.argv[4] # parent device
             driver.child_device = sys.argv[5] # child device
 
+            print("initializing parent driver.")
+            sys.stdout.flush()
             driver.initialize(driver.father_device)
 
             tests = xml_parsing.feature_xml_to_dictionary(
                 sl.MESSAGING_FEATURE_FILE)  # converts the xml file to list of dictionaries
             for test in tests:
                 if test[sl.TEST_NAME] == test_name or test_name == sl.ALL:
+                    print("start to run test: ", test_name)
+                    sys.stdout.flush()
                     test[sl.TEST_APP_NAME] = app_name
                     driver.current_test = test
                     driver.global_tests_result.append({"name": test_name, "results": []})
@@ -55,12 +68,16 @@ if __name__ == '__main__':
             test_name = sys.argv[2]  # test name
             driver.tester_device = sys.argv[3] # tester device
 
+            print("initializing tester driver.")
+            sys.stdout.flush()
             driver.initialize(driver.tester_device)
 
             tests = xml_parsing.tests_xml_to_dictionary(
                 sl.COMPONENTS_FILE)  # converts the xml file to list of dictionaries
             for test in tests:
                 if test[sl.TEST_NAME] == test_name or test_name == sl.ALL:
+                    print("start to run test: ", test_name)
+                    sys.stdout.flush()
                     driver.current_test = test
                     driver.global_tests_result.append({"name": test_name, "results": []})
 
@@ -70,9 +87,11 @@ if __name__ == '__main__':
                     driver.global_tests_result.append({"name": test_name, "results": []})
 
     except:
-        print("One or more parametrs are missing\nPlease try again.")
+        # print(Fore.RED + 'One or more parametrs are missing\nPlease try again.')
+        print (colored('One or more parametrs are missing\nPlease try again.', 'red'))
+        # print(colored('One or more parametrs are missing\nPlease try again.', 'red'))
         sys.stdout.flush()
         for arg in sys.argv:
             print(arg)
-        os._exit(1)
-    os._exit(os.EX_OK)
+        sys.exit(1)
+    os._exit(0)

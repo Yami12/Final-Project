@@ -5,7 +5,7 @@
 		<app_activity>com.whatsapp.HomeActivity t475</app_activity>
 		<parent_name>Child</parent_name>
 		<child_name>Father</child_name>
-		<group_name>check</group_name>
+		<group_name>chnai</group_name>
 		<steps>
 			<step>
 				<type>id</type>
