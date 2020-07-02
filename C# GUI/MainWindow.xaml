@@ -1,20 +1,46 @@
 ﻿<Window x:Class="try_python_connection.MainWindow"
+        xmlns:wpfTool="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:try_python_connection"
+        
         mc:Ignorable="d"
         Title="keepers auto tests" Height="800" Width="800"
         >
     <Window.Resources>
+        
+        <ControlTemplate x:Key="NoDeviceComboTemplate" TargetType="{x:Type ComboBox}">
+            <ComboBox SelectedIndex="0"
+                      Opacity="0.4"
+                      IsEnabled="False">
+                <ComboBoxItem Focusable="False" Opacity="0.4">No device found</ComboBoxItem>
+            </ComboBox>
+        </ControlTemplate>
+        <ControlTemplate x:Key="OneDeviceComboTemplate" TargetType="{x:Type ComboBox}">
+            <ComboBox SelectedIndex="0"
+                      Opacity="0.4"
+                      IsEnabled="False">
+                <ComboBoxItem Focusable="False" Opacity="0.4">Just one device found.</ComboBoxItem>
+            </ComboBox>
+        </ControlTemplate>
         <Style x:Key="buttonstyle" TargetType="{x:Type Button}">
             <EventSetter Event="MouseDoubleClick" Handler="Button_MouseDoubleClick" />
         </Style>
-        
-        
 
-      
+        <Style TargetType="ComboBox" x:Key="featuresComboBoxStyle">
+            <Style.Triggers>
+                <Trigger Property="ItemsSource" Value="{x:Null}">
+                    <Setter Property="Template" Value="{StaticResource NoDeviceComboTemplate}" />
+                </Trigger>
+                <DataTrigger Binding="{Binding Path=Items.Count, RelativeSource={RelativeSource Self}}" Value="1">
+                    <Setter Property="Template" Value="{StaticResource OneDeviceComboTemplate}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+
     </Window.Resources>
 
     <StackPanel>
@@ -24,11 +50,12 @@
                      Header="Features"
                      FontSize="15">
 
-            <!---->    
+                <!---->    
             <StackPanel Orientation="Horizontal"
                         >
 
-                <!--main list--><!--
+                <!--main list-->
+                <!--
                 <ListView SelectionChanged="TestListView_SelectionChanged"
                           x:Name="mainListView"
                           BorderThickness="0">
@@ -36,24 +63,24 @@
                     <ListViewItem Content="Comonents"/>
                 </ListView>-->
 
-                
+
                 <!--<Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />-->
 
                 <ListView x:Name="featuresListView"
                           SelectionChanged="FeaturesListView_SelectionChanged"
                           ItemsSource="{Binding featuresList}"
                           SelectedIndex="0">
-              
-                    
+
+
                 </ListView>
-                
+
                 <!---->
                 <StackPanel>
                     
                     <!--<TextBlock x:Name="txtbTitle" 
                                Text="Features"
                                Margin="2"/>-->
-                    <ListView SelectionMode="Extended"
+                <ListView SelectionMode="Extended"
                               Name="ftestListView"
                               Height="200"
                               MinWidth="200"
@@ -63,53 +90,54 @@
                               SelectionChanged="FtestListView_SelectionChanged">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
-                            
+
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                             <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick" />
                         </Style>
                     </ListView.ItemContainerStyle>
                     <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid HorizontalAlignment="Stretch"
+                        <DataTemplate>
+                            <Grid HorizontalAlignment="Stretch"
                                       >
-                                
-                                
+
+
                                 <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
                                 <CheckBox IsChecked="{Binding IsSelected}"/>
                                 <TextBlock Text="{Binding name}"
                                            FontSize="12"
                                            Margin="2"
                                            Grid.Column="1"
                                                HorizontalAlignment="Center"/>
-                                    <Button Margin="2"
+                                <Button Margin="2"
                                             FontFamily="Segoe MDL2 Assets"
                                             Grid.Column="2"
                                             HorizontalAlignment="Right"
                                             BorderThickness="0" 
                                             Background="{x:Null}"
-                                            Click="Btn1_Click"
-                                            Style="{StaticResource buttonstyle}">
-                                        &#xE711;
-                                    </Button>
+                                            Click="BtnRemoveTest_Click"
+                                            Style="{StaticResource buttonstyle}"
+                                            x:Name="btnRemoveTest">
+                                    &#xE711;
+                                </Button>
 
-                                </Grid>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                    <StackPanel Orientation="Horizontal">
-                        <Button Content="add test"
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="add test"
                                 Margin="2"/>
-                       
-                    </StackPanel>
-                    
-               
+
                 </StackPanel>
-                
-                <!--social networks list-->
+
+
+    </StackPanel>
+
+    <!--social networks list-->
     <StackPanel>
         <ToggleButton Content="All"/>
         <ListView SelectionMode="Multiple"
@@ -154,40 +182,58 @@
 
         </ListView>
     </StackPanel>
-               
 
 
 
 
-                <!--choose a device-->
-                <StackPanel>
-                    <TextBlock Text="Choose a device/s"/>
-                    <StackPanel Orientation="Vertical">
-                        <StackPanel Grid.Column="0"
+
+    <!--choose a device-->
+    <StackPanel Orientation="Horizontal">
+
+
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="Choose a device/s"/>
+            <StackPanel Grid.Column="0"
                                             Margin="5">
-                            <TextBlock Text="father"/>
-                            <ComboBox MinWidth="80"
-                                              MaxWidth="200"
+                <TextBlock Text="father"/>
+                <ComboBox MinWidth="80"
+                                              
                                               HorizontalAlignment="Left"
-                                      ItemsSource="{Binding Devices}"
+                                      ItemsSource="{Binding devices}"
                                       x:Name="fDeviceComboBox"
-                                      GotFocus="FDeviceComboBox_GotFocus"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1"
+                                      Style="{StaticResource featuresComboBoxStyle}"
+                          SelectionChanged="DeviceComboBox_SelectionChanged"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1"
                                             Margin="5">
-                            <TextBlock Text="child"/>
-                            <ComboBox MinWidth="80"
+                <TextBlock Text="child"/>
+                <ComboBox MinWidth="80"
                                               MaxWidth="200"
                                               HorizontalAlignment="Left"
-                                      ItemsSource="{Binding Devices}"/>
-                        </StackPanel>
-                    </StackPanel>
-                
-                
-                </StackPanel>
+                                      ItemsSource="{Binding devices}"
+                                      Style="{StaticResource featuresComboBoxStyle}"
+                          x:Name="cDeviceComboBox"
+                          SelectionChanged="DeviceComboBox_SelectionChanged"/>
+            </StackPanel>
+
+        </StackPanel>
+        <Button Margin="5"
+                FontFamily="Segoe MDL2 Assets"
+                BorderThickness="0" 
+                Background="{x:Null}"
+                x:Name="btnRefreshDevices"
+                Width="20"
+                Height="20"
+                VerticalAlignment="Top"
+                Click="btnRefreshDevices_Click">
+            &#xE72C;
+        </Button>
+
+
     </StackPanel>
-            </TabItem>
-            <TabItem >
+    </StackPanel>
+    </TabItem>
+    <TabItem >
         <TabItem.Header>
             <TextBlock Text="Comonents"
                                Width="100"
@@ -244,7 +290,7 @@
                                             HorizontalAlignment="Right"
                                             BorderThickness="0" 
                                             Background="{x:Null}"
-                                            Click="Btn1_Click"
+                                            Click="BtnRemoveTest_Click"
                                             Style="{StaticResource buttonstyle}">
                                 &#xE711;
                             </Button>
@@ -257,17 +303,18 @@
                 <Button Content="add test"
                                 Margin="2"/>
 
+
             </StackPanel>
 
 
         </StackPanel>
 
-       
 
 
 
 
-                <!--choose a device-->
+
+        <!--choose a device-->
         <StackPanel>
             <TextBlock Text="Choose a device/s"/>
             <StackPanel Orientation="Vertical">
@@ -292,15 +339,15 @@
         </StackPanel>
     </TabItem>
 
-        </TabControl>
-    
+    </TabControl>
 
-        <StackPanel Margin="10" 
+
+    <StackPanel Margin="10" 
                    >
-            
-            
-            
-            
+
+
+
+
 
         <StackPanel Orientation="Horizontal">
             <!--playlist List View-->
@@ -310,25 +357,68 @@
                       MinHeight="200"
                       MinWidth="200"
                       BorderThickness="0"
-                      ItemsSource="{Binding fPlaylist, Mode=TwoWay}">
+                      ItemsSource="{Binding fPlaylist, Mode=TwoWay}"
+                      >
+                   
                     <ListView.ItemTemplate >
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding name}"
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding name}"
+                                           FontSize="15"
+                                           Margin="2"
+                                               VerticalAlignment="Bottom"/>
+                                    <TextBlock Text="{Binding appName}"
                                            FontSize="12"
-                                               Margin="2"/>
-                                <TextBlock Text="{Binding appName}"
-                                           FontSize="12"
-                                               Margin="2"/>
-                                
+                                           Margin="5,2,2,2"
+                                               VerticalAlignment="Bottom"/>
 
+
+                                </StackPanel>
+
+                                <TextBlock Text="{Binding status}"
+                                           FontSize="12"
+                                           Margin="2">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <Trigger Property="Text" Value="waiting">
+                                                    <Setter Property="Foreground" Value="LightYellow"/>
+                                                </Trigger>
+                                                <Trigger Property="Text" Value="runing">
+                                                    <Setter Property="Foreground" Value="LightGreen"/>
+                                                </Trigger>
+                                                <Trigger Property="Text" Value="PASSED">
+                                                    <Setter Property="Foreground" Value="ForestGreen"/>
+                                                </Trigger>
+                                                <Trigger Property="Text" Value="FAILED">
+                                                    <Setter Property="Foreground" Value="DarkRed"/>
+                                                </Trigger>
+                                                <Trigger Property="Text" Value="ERROR">
+                                                    <Setter Property="Foreground" Value="OrangeRed"/>
+                                                </Trigger>
+                                                
+                                            </Style.Triggers>
+                                            
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                    
+
+
+                               
+                                
                             </StackPanel>
+                           
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
                 <Button Content="Run!"
                         HorizontalAlignment="Right"
-                        MinWidth="50"/>
+                        MinWidth="50"
+                        Click="BtnRun_Click"
+                        x:Name="btnRun"
+                        IsEnabled="False"/>
             </StackPanel>
 
 
@@ -339,20 +429,39 @@
                 <StackPanel>
 
                     <TextBlock Text="Output"/>
-                    <TextBlock MinHeight="200"
+                    <ScrollViewer Height="200"
+                                  >
+                        <!--<TextBlock MinHeight="200"
                        MinWidth="500"
-                        x:Name="txtOutput"/>
+                        x:Name="txtOutput"
+                               Text="{Binding ElementName=playlistListView, Path=SelectedItem.output}"
+                  
+                               />-->
+                        <wpfTool:RichTextBox x:Name="rtbOutput" Width="800" IsReadOnly="True" BorderBrush="{x:Null}" Text="{Binding ElementName=playlistListView, Path=SelectedItem.output}" TextChanged="rtbOutput_TextChanged"  >
+
+                            <RichTextBox.Resources>
+                                <Style TargetType="{x:Type Paragraph}">
+                                    <Setter Property="Margin" Value="0"/>
+                                   
+                                    
+                                </Style>
+                            </RichTextBox.Resources>
+                        </wpfTool:RichTextBox>
+
+                       
+                    </ScrollViewer>
+
                 </StackPanel>
             </Border>
-            
-           
 
-        </StackPanel>
-            
-            
 
 
         </StackPanel>
+
+
+
+
+    </StackPanel>
 
 
 

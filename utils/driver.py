@@ -9,7 +9,7 @@ import os
 import subprocess
 
 from appium import webdriver
-from utils import string_list as sl
+
 
 global_driver = None
 global_tests_result = []
@@ -22,6 +22,7 @@ sending_time = ""
 child_device = ""
 father_device = ""
 tester_device = ""
+test_result = ""
 
 '''
 function:initialize

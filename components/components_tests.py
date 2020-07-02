@@ -57,4 +57,9 @@ class ComponentsTest(unittest.TestCase):
             time.sleep(2)
         print("checking expected results")
         sys.stdout.flush()
-        driver.global_tests_result[-1]['results'].append(self.check_expected_result(test[sl.TEST_EXPECTED_RES]))
+        result = self.check_expected_result(test[sl.TEST_EXPECTED_RES])
+        driver.global_tests_result[-1]['results'].append(result)
+        if result[0] == "Passed":
+            driver.test_result = True
+        else:
+            driver.test_result = False

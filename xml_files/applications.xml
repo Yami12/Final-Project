@@ -99,8 +99,8 @@
         <name>Instagram</name>
 		<app_package>com.instagram.android</app_package>
 		<app_activity>com.instagram.mainactivity.MainActivity</app_activity>
-		<parent_name>childmyfatherdevice</parent_name>
-		<child_name>myfatherdevice</child_name>
+		<parent_name>myfatherdevice</parent_name>
+		<child_name>childmyfatherdevice</child_name>
 		<group_name>Kwork</group_name>
         <steps>
             <step>

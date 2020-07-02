@@ -22,6 +22,8 @@ logs = []
 
 class Messaging (unittest.TestCase):
 
+    def shortDescription(self):
+        return None
     '''
            function: check_messaging_logs
            description: A function that checks whether the message sent in a test match the received logs
@@ -49,7 +51,7 @@ class Messaging (unittest.TestCase):
                             else:
                                 break
                     if utils_funcs.time_in_range(message['timeReceived'], 2) == True:
-                        print("The found log is: ", logs_dict)
+                        print("\cf1 \\b The found log is: \\b0", logs_dict,"\line")
                         sys.stdout.flush()
                         return True
         return False
@@ -60,7 +62,7 @@ class Messaging (unittest.TestCase):
             description: A function that checks if logs are received in parent device
     '''
     def check_parent_logs(self, parent_name, stdout_reader, stdout_queue):
-        print("start to read parent logs...")
+        print("\cf1 start to read parent logs...\line")
         sys.stdout.flush()
         time.sleep(30)
         parent_logs = ""
@@ -70,11 +72,9 @@ class Messaging (unittest.TestCase):
             if '"quote":' in line:
                 parent_logs = "{"
                 while not "}" in line:
-                    # print("## ",line)
                     if "quote" in line:
                         line = line.split("HttpKeepersLogger: ")[1].split("\\r\\n'")[0].strip()
                         parent_logs = parent_logs + line.replace('\\"','').replace('\\','')
-                        # print(parent_logs)
                     else:
                         parent_logs = parent_logs + line.split("HttpKeepersLogger: ")[1].split("\\r\\n'")[0].strip()
                     line = str(stdout_queue.get())
@@ -93,7 +93,7 @@ class Messaging (unittest.TestCase):
                 return True
 
         driver.global_tests_result[-1]['results'].append(['False', "No logs received"])
-        print("No logs received in parent side")
+        print("\cf2 No logs received in parent side \line")
         sys.stdout.flush()
         return False
 
@@ -116,7 +116,7 @@ class Messaging (unittest.TestCase):
                 return True
 
         driver.global_tests_result[-1]['results'].append(['False', "No logs received"])
-        print("No logs received in child side")
+        print("\cf2 No logs received in child side \line")
         sys.stdout.flush()
         return False
 
@@ -130,16 +130,14 @@ class Messaging (unittest.TestCase):
         subprocess.run(['adb', '-s', driver.child_device, 'shell', 'am', 'broadcast', '-a',
                         'com.keepers.childmodule.ACTION_UPLOAD_CONVERSATIONS']) # uplaod the keepers logs
         time.sleep(20)
-        print("start to read child logs...")
+        print("\cf1 start to read child logs... \line")
         sys.stdout.flush()
         while not child_stdout_reader.stopped():  # the queue is empty and the thread terminated
             line = child_stdout_queue.get()
-            print("line removal: ", line)
+            print("\cf1 line removal: ", line, "\line")
             sys.stdout.flush()
             if "eventType" in str(line):
                 logs.append(str(line))
-
-        print("logs: ", logs)
         sys.stdout.flush()
         current_test = driver.current_test
 
@@ -150,14 +148,14 @@ class Messaging (unittest.TestCase):
             logs_dict = ast.literal_eval(specific_log)
             if logs_dict['eventData'] == current_test[sl.CHAT_NAME] and "CHILD_REMOVED_FROM" in logs_dict['eventType']:
                 driver.global_tests_result[-1]['results'].append(['True', logs_dict])
-                print("The found log is : ", logs_dict)
+                print("\cf1 \\b The found log is \\b0 : ", logs_dict, "\line")
                 sys.stdout.flush()
-                print(colored('SUCCESS, Removal from group Logs were received respectively', "green"))
+                print('\cf3 SUCCESS, Removal from group Logs were received respectively \line')
                 sys.stdout.flush()
                 return True
 
         driver.global_tests_result[-1]['results'].append(['False', "No matching logs"])
-        print(colored('No matching Removal from group logs', 'red'))
+        print('\cf2 No matching Removal from group logs \line')
         sys.stdout.flush()
         return False
 
@@ -169,48 +167,47 @@ class Messaging (unittest.TestCase):
     def get_keepers_logs(self, s_network, from_child=False):
         global logs
 
-        print("begin to listen to parent logs...")
+        print("\cf1 begin to listen to parent logs... \line")
         sys.stdout.flush()
         father_stdout_reader, father_stdout_queue = self.start_listen_to_logs(driver.father_device)
-        print("begin to listen to child logs...")
+        print("\cf1 begin to listen to child logs... \line")
         sys.stdout.flush()
         child_stdout_reader, child_stdout_queue = self.start_listen_to_logs(driver.child_device)
 
         self.child_open_chat_screen(s_network, from_child)  # child reed the message
         time.sleep(3)
-        print("!!!!!!!!!!!!!!..")
         sys.stdout.flush()
         subprocess.run(['adb', '-s', driver.child_device, 'shell', 'am', 'broadcast', '-a',
                         'com.keepers.childmodule.ACTION_UPLOAD_CONVERSATIONS']) # uplaod the keepers logs
         time.sleep(10)
-        print("starting to read child logs...")
+        print("\cf1 starting to read child logs... \line")
         sys.stdout.flush()
         while not child_stdout_reader.stopped():  # the queue is empty and the thread terminated
             line = child_stdout_queue.get()
             if "taggedText" in str(line):
                 logs.append(str(line))
 
-        print("checking child logs.")
+        print("\cf1 checking child logs. \line")
         sys.stdout.flush()
         child_logs = self.check_child_logs(s_network[sl.PARENT_NAME])
         if child_logs:
-            print(colored("SUCCESS, Child's Logs were received respectively", "green"))
+            print("{\cf3 SUCCESS, Child's Logs were received respectively \line}")
             sys.stdout.flush()
             driver.global_tests_result[-1]['results'].append(['True', "Child's Logs were received respectively"])
         else:
-            print(colored("FAILED, Child's Logs were not received respectively", 'red'))
+            print("\cf2 FAILED, Child's Logs were not received respectively \line")
             sys.stdout.flush()
             driver.global_tests_result[-1]['results'].append(['False', "Child's Logs were not received respectively"])
             return False
-        print("checking parent logs.")
+        print("\cf1 checking parent logs. \line")
         parent_logs = self.check_parent_logs(s_network[sl.PARENT_NAME], father_stdout_reader, father_stdout_queue)
         if parent_logs == strtobool(driver.current_test[sl.OFFENSIVE]):
-            print(colored("SUCCESS, Parent's Logs were received respectively","green"))
+            print("\cf3 SUCCESS, Parent's Logs were received respectively \line")
             sys.stdout.flush()
             driver.global_tests_result[-1]['results'].append(['True', "Logs were received respectively"])
             return True
 
-        print(colored("FAILED, Parent's Logs were not received respectively", 'red'))
+        print("\cf2 FAILED, Parent's Logs were not received respectively \line")
         sys.stdout.flush()
         driver.global_tests_result[-1]['results'].append(['False', "Logs were not received respectively"])
         return False
@@ -221,7 +218,7 @@ class Messaging (unittest.TestCase):
             description: A function that returns a device component coordinates by its resource id
     '''
     def get_coordinates_by_resource_id(self, step, parent_name):
-        print("searching for coordinates ")
+        print("\cf1 searching for coordinates \line")
         sys.stdout.flush()
         process = subprocess.Popen(['adb','-s', driver.child_device ,'exec-out', 'uiautomator', 'dump', '/dev/tty'],stdout=subprocess.PIPE)  # dump the uiautomator file
         content = str(process.stdout.read())
@@ -245,10 +242,10 @@ class Messaging (unittest.TestCase):
 
         bounds = re.search('bounds="\[([0-9]+),([0-9]+)\]', node)
         if not bounds:
-            print("bounds not fond.")
+            print("\cf2 bounds not fond. \line")
             sys.stdout.flush()
         else:
-            print("bounds fond: ", bounds)
+            print("\cf1 \\b bounds fond:\\b0 ", bounds, "\line")
             sys.stdout.flush()
         return bounds
 
@@ -259,34 +256,32 @@ class Messaging (unittest.TestCase):
     '''
     def child_open_chat_screen(self, s_network, from_child):
 
-        print("connecting to child device...")
+        print("\cf1 connecting to child device... \line")
         sys.stdout.flush()
         subprocess.run(['adb', '-s', driver.child_device, 'shell', 'am', 'start', '-n', s_network[sl.APP_PACKAGE]+"/" + s_network[sl.APP_ACTIVITY]]) # launch the application
         time.sleep(3)
-        print("running the opening steps")
+        print("\cf1 running the opening steps \line")
         sys.stdout.flush()
-        # print(s_network[sl.STEPS][1:])
-        # sys.stdout.flush()
         for step in s_network[sl.STEPS]:
             if step[sl.ACTION_STEP] == sl.ACTION_SEND_KEYS: # send keys action
                 if step[sl.CONTENT_STEP] == sl.MESSAGING_CONTENT and from_child == True:
                     driver.sending_time = datetime.datetime.now()  # save the sending time
-                    print('enter text. run command: adb -s ' + driver.child_device +' shell input text: "' +str(
-                        driver.current_test[sl.MESSAGING_CONTENT]) + '"')
+                    print('\cf1 enter text. run command: adb -s ' + driver.child_device +' shell input text: "' +str(
+                        driver.current_test[sl.MESSAGING_CONTENT]) + '"\line')
                     sys.stdout.flush()
                     subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'text', '"' +str(driver.current_test[sl.MESSAGING_CONTENT]) +'"'])
                 elif step[sl.CONTENT_STEP] == sl.MESSAGING_CONTENT and from_child == False:
-                    print('hide keyboard. run command: adb -s ' + driver.child_device + ' shell input keyevent 111')
+                    print('\cf1 hide keyboard. run command: adb -s ' + driver.child_device + ' shell input keyevent 111 \line')
                     sys.stdout.flush()
                     subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'keyevent', '111'])
                     return
                 else:
-                    print('enter text. run command: adb -s ' + driver.child_device + ' shell input text : "' + s_network[sl.PARENT_NAME][:-1] + '"')
+                    print('\cf1 enter text. run command: adb -s ' + driver.child_device + ' shell input text : "' + s_network[sl.PARENT_NAME][:-1] + '"\line')
                     sys.stdout.flush()
                     subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'text', s_network[sl.PARENT_NAME][:-1]])
             elif step[sl.ACTION_STEP] == sl.ACTION_CLICK: # click action
                 coordinates = self.get_coordinates_by_resource_id(step, s_network[sl.PARENT_NAME])
-                print('click. run command: adb -s' + driver.child_device + 'shell input tap ' +str(coordinates[1]) + ' ' + str(coordinates[2]))
+                print('\cf1 click. run command: adb -s' + driver.child_device + 'shell input tap ' +str(coordinates[1]) + ' ' + str(coordinates[2]),"\line")
                 sys.stdout.flush()
                 subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'tap', coordinates[1] , coordinates[2]])
             time.sleep(3)
@@ -320,15 +315,15 @@ class Messaging (unittest.TestCase):
                 else:
                     driver.current_test[sl.CHAT_NAME] = network[sl.PARENT_NAME]
                 if from_child == False: # send a message to the child
-                    print("connecting to appium server...")
+                    print("\cf1 connecting to appium server... \line")
                     sys.stdout.flush()
                     driver.connect_driver(network[sl.APP_PACKAGE],network[sl.APP_ACTIVITY])# connectind the driver
-                    print("starting to run the test steps")
+                    print("\cf1 starting to run the test steps \line")
                     sys.stdout.flush()
                     for step in network[sl.STEPS]:
                         driver.global_tests_result[-1]['results'].append(components_operations.component_operation(step))
                 time.sleep(3)
-                print("getting keepers logs from child and parent devices")
+                print("\cf1 getting keepers logs from child and parent devices \line")
                 sys.stdout.flush()
                 return self.get_keepers_logs(network, from_child)
 
@@ -348,11 +343,11 @@ class Messaging (unittest.TestCase):
                 driver.current_test[sl.CHILD_NAME] = network[sl.CHILD_NAME]
                 network[sl.PARENT_NAME] = network[sl.GROUP_NAME]
 
-                print("removing the child from group: ", network[sl.GROUP_NAME])
+                print("\cf1 removing the child from group: ", network[sl.GROUP_NAME], "\line")
                 sys.stdout.flush()
                 driver.connect_driver(network[sl.APP_PACKAGE], network[sl.APP_ACTIVITY])  # connect the driver
 
-                print("starting to run the test steps")
+                print("\cf1 starting to run the test steps \line")
                 sys.stdout.flush()
                 for step in network[sl.STEPS]:
                     if step[sl.CONTENT_STEP] == 'text':
@@ -361,12 +356,12 @@ class Messaging (unittest.TestCase):
                 for step in network[sl.REMOVAL_STEPS]:
                     driver.global_tests_result[-1]['results'].append(components_operations.component_operation(step))
 
-                print("open the chat screen in child device")
+                print("\cf1 open the chat screen in child device \line")
                 sys.stdout.flush()
                 self.child_open_chat_screen(network, False)
                 break
 
-        print("getting keepers logs from child device")
+        print("\cf1 getting keepers logs from child device \line")
         sys.stdout.flush()
         self.check_removal_from_group_logs(child_stdout_reader, child_stdout_queue)
 
@@ -377,14 +372,14 @@ class Messaging (unittest.TestCase):
     '''
     def test_run(self):
         if driver.current_test[sl.TEST_NAME] == sl.REMOVAL_TEST:
-            return self.remove_from_group()
+            driver.test_result = self.remove_from_group()
         elif driver.current_test[sl.TEST_SIDE] == sl.TEST_RECIVE_SIDE: # child recive a message
-            print("sending a message to the child...")
+            print("\cf1 sending a message to the child... \line")
             sys.stdout.flush()
-            self.send_message()
+            driver.test_result = self.send_message()
         elif driver.current_test[sl.TEST_SIDE] == sl.TEST_SEND_SIDE: # child send a message
-            print("sending a message from the child...")
+            print("\cf1 sending a message from the child... \line")
             sys.stdout.flush()
-            self.send_message(True)
+            driver.test_result = self.send_message(True)
 
 
