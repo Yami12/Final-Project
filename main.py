@@ -2,8 +2,6 @@ import sys
 import unittest
 import os
 import time
-from termcolor import colored
-from colorama import init
 
 from utils import driver
 from utils import xml_parsing
@@ -20,7 +18,6 @@ from components import components_tests
 
 if __name__ == '__main__':
     result = " "
-    init()
     try:
         # print(colored('One or more parametrs are missing', 'red'))
         # sys.stdout.flush()
@@ -28,7 +25,7 @@ if __name__ == '__main__':
         # sys.stdout.flush()
         # print(colored('SUCCESS, Logs were received respectively', "green"))
         # sys.stdout.flush()
-        os.system("start cmd.exe @cmd /k appium ")
+        # os.system("start cmd.exe @cmd /k appium ")
         time.sleep(5)
 
         if sys.argv[1] == sl.FEATURE_TEST: # feature test
@@ -84,11 +81,8 @@ if __name__ == '__main__':
                     suite = unittest.TestLoader().loadTestsFromTestCase(components_tests.ComponentsTest)
                     result = unittest.TextTestRunner(verbosity=1).run(suite)
 
-                    driver.global_tests_result.append({"name": test_name, "results": []})
-
     except:
         # print(Fore.RED + 'One or more parametrs are missing\nPlease try again.')
-        print (colored('One or more parametrs are missing\nPlease try again.', 'red'))
         # print(colored('One or more parametrs are missing\nPlease try again.', 'red'))
         sys.stdout.flush()
         for arg in sys.argv:

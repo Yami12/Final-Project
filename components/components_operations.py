@@ -37,7 +37,7 @@ def do_action(component, action , content):
             return ['Passed', component_text]
         print("SUCCESS")
         sys.stdout.flush()
-        return ['Passed', "SUCCESS"]
+        return ['Passed', "success do action"]
 
     except Exception as e:
         print("FAILED")

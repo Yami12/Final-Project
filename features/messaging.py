@@ -7,14 +7,11 @@ import subprocess
 from queue import Queue
 import re
 import sys
-from termcolor import colored
-
 from utils import utils_funcs
 from utils import driver
 from utils import read_messaging_logs
 from utils import xml_parsing
 from utils import string_list as sl
-
 from components import components_operations
 
 logs = []
@@ -22,8 +19,9 @@ logs = []
 
 class Messaging (unittest.TestCase):
 
-    def shortDescription(self):
-        return None
+    # def shortDescription(self):
+    #     return None
+
     '''
            function: check_messaging_logs
            description: A function that checks whether the message sent in a test match the received logs
@@ -89,10 +87,10 @@ class Messaging (unittest.TestCase):
 
             log_exist = self.check_messaging_logs(logs_dict, parent_name, True)
             if log_exist == True:
-                driver.global_tests_result[-1]['results'].append(['True', logs_dict])
+                driver.global_tests_result[-1]['results'].append(['Passed', logs_dict])
                 return True
 
-        driver.global_tests_result[-1]['results'].append(['False', "No logs received"])
+        driver.global_tests_result[-1]['results'].append(['Failed', "No logs received"])
         print("\cf2 No logs received in parent side \line")
         sys.stdout.flush()
         return False
@@ -112,10 +110,10 @@ class Messaging (unittest.TestCase):
             logs_dict = ast.literal_eval(specific_log)
             log_exist = self.check_messaging_logs(logs_dict, parent_name)
             if log_exist == True:
-                driver.global_tests_result[-1]['results'].append(['True', logs_dict])
+                driver.global_tests_result[-1]['results'].append(['Passed', logs_dict])
                 return True
 
-        driver.global_tests_result[-1]['results'].append(['False', "No logs received"])
+        driver.global_tests_result[-1]['results'].append(['Faild', "No logs received"])
         print("\cf2 No logs received in child side \line")
         sys.stdout.flush()
         return False
@@ -147,14 +145,14 @@ class Messaging (unittest.TestCase):
             specific_log = specific_log.split("\\r\\n")[0]
             logs_dict = ast.literal_eval(specific_log)
             if logs_dict['eventData'] == current_test[sl.CHAT_NAME] and "CHILD_REMOVED_FROM" in logs_dict['eventType']:
-                driver.global_tests_result[-1]['results'].append(['True', logs_dict])
+                driver.global_tests_result[-1]['results'].append(['Passed', logs_dict])
                 print("\cf1 \\b The found log is \\b0 : ", logs_dict, "\line")
                 sys.stdout.flush()
                 print('\cf3 SUCCESS, Removal from group Logs were received respectively \line')
                 sys.stdout.flush()
                 return True
 
-        driver.global_tests_result[-1]['results'].append(['False', "No matching logs"])
+        driver.global_tests_result[-1]['results'].append(['Failed', "No matching logs"])
         print('\cf2 No matching Removal from group logs \line')
         sys.stdout.flush()
         return False
@@ -193,23 +191,23 @@ class Messaging (unittest.TestCase):
         if child_logs:
             print("{\cf3 SUCCESS, Child's Logs were received respectively \line}")
             sys.stdout.flush()
-            driver.global_tests_result[-1]['results'].append(['True', "Child's Logs were received respectively"])
+            driver.global_tests_result[-1]['results'].append(['Passed', "Child's Logs were received respectively"])
         else:
             print("\cf2 FAILED, Child's Logs were not received respectively \line")
             sys.stdout.flush()
-            driver.global_tests_result[-1]['results'].append(['False', "Child's Logs were not received respectively"])
+            driver.global_tests_result[-1]['results'].append(['Failed', "Child's Logs were not received respectively"])
             return False
         print("\cf1 checking parent logs. \line")
         parent_logs = self.check_parent_logs(s_network[sl.PARENT_NAME], father_stdout_reader, father_stdout_queue)
         if parent_logs == strtobool(driver.current_test[sl.OFFENSIVE]):
             print("\cf3 SUCCESS, Parent's Logs were received respectively \line")
             sys.stdout.flush()
-            driver.global_tests_result[-1]['results'].append(['True', "Logs were received respectively"])
+            driver.global_tests_result[-1]['results'].append(['Passed', "Logs were received respectively"])
             return True
 
         print("\cf2 FAILED, Parent's Logs were not received respectively \line")
         sys.stdout.flush()
-        driver.global_tests_result[-1]['results'].append(['False', "Logs were not received respectively"])
+        driver.global_tests_result[-1]['results'].append(['Failed', "Logs were not received respectively"])
         return False
 
 

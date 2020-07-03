@@ -29,7 +29,7 @@ class DeviceLocked (unittest.TestCase):
                 if utils_funcs.time_in_range(int(logs[i].split('"start": ')[1].split(",\\r\\n")[0]), 1) == True and (
                     utils_funcs.time_in_range(int(logs[i+1].split('"end": ')[1].split("\\r\\n")[0]), 4) == True) and (
                     logs[i+2].split('"didStart":')[1].split("}\\r\\n")[0] == "true"):
-                    driver.global_tests_result[-1]['results'].append(['True', "The child device is locked"])
+                    driver.global_tests_result[-1]['results'].append(['Passed', "The child device is locked"])
                     print("The found log is : ", logs[i])
                     sys.stdout.flush()
                     print("The child device is locked")
@@ -40,7 +40,7 @@ class DeviceLocked (unittest.TestCase):
         sys.stdout.flush()
         print("The child device is not locked")
         sys.stdout.flush()
-        driver.global_tests_result[-1]['results'].append(['False', "The child device is not locked"])
+        driver.global_tests_result[-1]['results'].append(['Failed', "The child device is not locked"])
 
     '''
         A function that performs the child device lock test 

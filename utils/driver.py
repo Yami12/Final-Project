@@ -7,22 +7,20 @@ current_test: the current test that run on the android phone
 
 import os
 import subprocess
-
 from appium import webdriver
-
 
 global_driver = None
 global_tests_result = []
-#[{name: name_test, results:[[True, 'device lock'], [false, 'command not found']},{...}]
+#the results in format: [{name: name_test, results:[[True, 'device lock'], [false, 'command not found']},{...}]
 
 current_test = None
 current_app = None
+tests_folders_names = ""
 desired_caps = {}
 sending_time = ""
 child_device = ""
 father_device = ""
 tester_device = ""
-test_result = ""
 
 '''
 function:initialize
