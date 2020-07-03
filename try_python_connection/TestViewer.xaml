@@ -1,0 +1,20 @@
+﻿<UserControl x:Class="try_python_connection.TestViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:try_python_connection"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    
+    <Grid>
+        <StackPanel x:Name="stMain">
+            <Button FontFamily="Segoe MDL2 Assets"
+                    Width="20"
+                    Height="20"
+                    x:Name="btnAdd"
+                    >&#xE710;</Button>
+        </StackPanel>    
+    </Grid>
+</UserControl>

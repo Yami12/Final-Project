@@ -1,0 +1,33 @@
+<tests>
+    <test>
+        <name>Recive an offensive message</name>
+        <text>rrr drugged</text>
+        <isGroup>False</isGroup>
+        <side>recive</side>
+        <offensive>True</offensive>
+    </test>
+    <test>
+        <name>Recive a message</name>
+        <text>my love</text>
+        <isGroup>False</isGroup>
+        <side>recive</side>
+        <offensive>False</offensive>
+    </test>
+    <test>
+        <name>Send an offensive message through whatsapp</name>
+        <text>kill you</text>
+        <isGroup>False</isGroup>
+        <side>send</side>
+    </test>
+    <test>
+        <name>Removal from group</name>
+        <groupName>check-group</groupName>
+    </test>
+    <test>
+        <name>Signing in is not allowed</name>
+        <website_address>amazon.com</website_address>
+    </test>
+    <test>
+        <name>device lock</name>
+    </test>
+</tests>

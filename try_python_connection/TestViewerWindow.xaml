@@ -1,0 +1,87 @@
+﻿<Window x:Class="try_python_connection.TestViewerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:try_python_connection"
+        mc:Ignorable="d"
+        Title="TestViewerWindow" Height="600" Width="450"
+        >
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        
+    </Window.Resources>
+    <Grid>
+        <StackPanel>
+            <ListView ItemsSource="{Binding testViewerItems}"
+                      Margin="20 20 20 0"
+                      BorderBrush="{x:Null}">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                    <ContentPresenter />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="Visibility" Value="{Binding isShowen, Converter={StaticResource BoolToVis}}"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition  Width="1*"/>
+                                <ColumnDefinition  Width="1*"/>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition  Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="btnRemoveOptional" Grid.Column="1" FontFamily="Segoe MDL2 Assets" FontSize="12" Width="15" Height="15" Visibility="{Binding isOptional, Converter={StaticResource BoolToVis}}" Background="{x:Null}" BorderBrush="{x:Null}" Click="BtnRemoveOptional_Click">&#xE738;</Button>
+                            <TextBlock x:Name="key" Grid.Column="2" Text="{Binding key}"/>
+                            <TextBox x:Name="value" Grid.Column="3" Text="{Binding value}"/>
+
+                        </Grid>
+
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+
+            </ListView>
+            
+            <Button FontFamily="Segoe MDL2 Assets"
+                    FontSize="12" 
+                    Width="20" 
+                    Height="20" 
+                    Visibility="{Binding isAdd, Converter={StaticResource BoolToVis}}" 
+                    Background="{x:Null}" 
+                    BorderBrush="{x:Null}"
+                    HorizontalAlignment="Left"
+                    Margin="20 0 5 5"
+                    x:Name="btnAdd"
+                    Click="BtnAdd_Click"
+                    >
+                &#xE710;
+                <Button.ContextMenu>
+                    <ContextMenu>
+                        <ContextMenu.ItemContainerStyle>
+                            <Style TargetType="MenuItem">
+                                <EventSetter Event="Click" Handler="MenuItem_Click"/>
+                            </Style>
+                        </ContextMenu.ItemContainerStyle>
+                        <ContextMenu.ItemTemplate>
+                            <DataTemplate DataType="local:TestViewerItem">
+                                
+                                <TextBlock Text="{Binding key}"/>
+                            </DataTemplate>
+                        </ContextMenu.ItemTemplate>
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
+            
+        </StackPanel>
+        
+    </Grid>
+</Window>
