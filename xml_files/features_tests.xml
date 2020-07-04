@@ -26,7 +26,7 @@
     </test>
     <test>
         <name>Signing in is not allowed</name>
-        <website_address>kikar.co.il</website_address>
+        <website_address>m.calcalist.co.il</website_address>
     </test>
     <test>
         <name>device lock</name>

@@ -14,15 +14,16 @@ class WebFiltering (unittest.TestCase):
     '''
     def check_lock_page(self):
         print("check if the website is blocked")
+        time.sleep(3)
         process = subprocess.Popen(['adb', '-s', driver.child_device, 'exec-out', 'uiautomator', 'dump', '/dev/tty'],
                                    stdout=subprocess.PIPE)  # dump the uiautomator file
         content = str(process.stdout.read())
-        if "Keepers has identified this website as a malicious website and blocked it for your protection." in content:
+        if "Website Is Blocked" in content:
             # the text that appears when the website is locked
             print("passed, the website is blocked")
             driver.global_tests_result[-1]['results'].append(['Passed', 'website is blocked'])
         else:
-            print("faild, the website is not blocked")
+            print("failed, the website is not blocked")
             driver.global_tests_result[-1]['results'].append(['Failed', 'website is not blocked'])
 
     '''
@@ -40,7 +41,7 @@ class WebFiltering (unittest.TestCase):
                         subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'text',
                                         driver.current_test[sl.WEBSITE_ADDRESS]])
                     elif step[sl.ACTION_STEP] == sl.ACTION_CLICK:
-                        coordinates = messaging.Messaging.return_coordinates_by_resource_id(messaging.Messaging, step, "")
+                        coordinates = messaging.Messaging.get_coordinates_by_resource_id(messaging.Messaging, step, "")
                         subprocess.run(
                             ['adb', '-s', driver.child_device, 'shell', 'input', 'tap', coordinates[1], coordinates[2]])
                     time.sleep(1)

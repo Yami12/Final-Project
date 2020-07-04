@@ -3,7 +3,6 @@ This file interacts with the user
 The user is given options for various actions, he chooses the one he wants, fills in the required details and the program executes it
 '''
 from tkinter import *
-from utils import xml_parsing
 from utils import driver
 from utils import string_list as sl
 

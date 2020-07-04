@@ -1,9 +1,6 @@
 import sys
 import unittest
 import os
-import time
-from termcolor import colored
-from colorama import init
 
 from utils import driver
 from utils import xml_parsing
@@ -20,7 +17,6 @@ from components import components_tests
 
 if __name__ == '__main__':
     result = " "
-    init()
     try:
         print("{\\rtf1\\ansi\deff0{\colortbl;\\red0\green0\\blue0;\\red255\green0\\blue0;\\red0\green255\\blue0;}}")
         sys.stdout.flush()
