@@ -6,6 +6,7 @@ import smtplib
 import glob
 import os
 from email.mime.application import MIMEApplication
+import pathlib
 
 from utils import driver
 from utils import utils_funcs as uf
@@ -36,6 +37,9 @@ def create_html_file(test_name):
     file_ = open("..\\" + driver.tests_folders_names + "\\" + test_name + '.html', 'w')
     file_.write(html)
     file_.close()
+    uf.print_log("TEST RESULTS: ")
+    uf.print_log("{\colortbl ;\red0\green0\blue238;}")
+    uf.print_log('{\\field{\*\\fldinst HYPERLINK "URL""}{\\fldrslt{\\ul\cf1', os.path.join(pathlib.Path(__file__).parent.absolute(),driver.tests_folders_names, test_name + '.html') ,'}}}')
 
 
 
