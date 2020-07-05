@@ -1,13 +1,21 @@
+'''
+This file create HTML file and send an email
+'''
+
 import smtplib
-from utils import driver
 import glob
 import os
 from email.mime.application import MIMEApplication
 
+from utils import driver
+from utils import utils_funcs as uf
+
+
 '''
-    get test_name and create html file with the result of this test
+    function: create_html_file
+    description: get test_name and create html file with the result of this test
 '''
-def create(test_name):
+def create_html_file(test_name):
     html = """<html>"""
     html += "<h1>{}</h1>".format(test_name)
     html += '<table border="1"><tr><th style="width:50px">description</th><th style="width:50px">result</th></tr>'
@@ -22,27 +30,28 @@ def create(test_name):
     try:
         os.mkdir("..\\" + driver.tests_folders_names)
     except FileExistsError:
-        print("add test result to exists folder")
+        uf.print_log("\cf1 adding test result to exists folder \line")
 
+    uf.print_log("\cf1 write the results to the file \line")
     file_ = open("..\\" + driver.tests_folders_names + "\\" + test_name + '.html', 'w')
     file_.write(html)
     file_.close()
-    return html
+
 
 
 '''
-    send email that contains all the files with the results of the requested tests
+    function: send_email
+    description: send email that contains all the files with the results of the requested tests
 '''
-def send_email():
+def send_email(address):
     from email.mime.multipart import MIMEMultipart
-    me = "keepersAutomation@gmail.com"
-    you = "yamushkach@gmail.com"
+    reciepent = "keepersAutomation@gmail.com"
 
     # Create message container - the correct MIME type is multipart/alternative.
     msg = MIMEMultipart('alternative')
     msg['Subject'] = "keepers Automation Result"
-    msg['From'] = me
-    msg['To'] = you
+    msg['From'] = reciepent
+    msg['To'] = address
 
     mylist = [f for f in glob.glob(os.path.join("..\\" + driver.tests_folders_names, '*.html'))]
     # Create the body of the message
@@ -51,11 +60,12 @@ def send_email():
         attachment = MIMEApplication(open(file_path, "rb").read(), _subtype="txt")
         attachment.add_header('Content-Disposition', 'attachment', filename=file.split("\\")[-1])
         msg.attach(attachment)
+
     # Send the message via local SMTP server.
     mail = smtplib.SMTP('smtp.gmail.com', 587)
     mail.ehlo()
     mail.starttls()
-    mail.login(me, 'keepers123')
-    mail.sendmail(me, you, msg.as_string())
+    mail.login(reciepent, 'keepers123')
+    mail.sendmail(reciepent, address, msg.as_string())
     mail.quit()
 

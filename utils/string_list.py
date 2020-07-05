@@ -1,10 +1,9 @@
-"this file contains consts for all the other files"
+"This file contains consts for all the other files"
 
 #xml files names
 APPS_FILE ="applications.xml"
 MESSAGING_FEATURE_FILE = "features_tests.xml"
 COMPONENTS_FILE = "components_behavior_tests.xml"
-WEB_FILTERING_FILE = "web_filtering_feature_tests.xml"
 XML_FOLDER = "xml_files"
 
 #xml_parsing
@@ -44,11 +43,14 @@ GROUP_NAME = "group_name"
 OFFENSIVE = "offensive"
 BROWSER = "browser"
 ALL = "all"
+TEST_RESULTS = "results"
+TEST_RESULTS_NAME = "name"
+TEST_PASSED = "Passed"
+TEST_FAILED = "Failed"
 
 #steps
 MESSAGING_CONTENT = "text"
 CHAT_NAME = "chat_name"
-
 TYPE_STEP = "type"
 ID_STEP = "id"
 ACTION_STEP = "action"
@@ -75,3 +77,5 @@ DEVICE_LOCK_TEST = "device lock"
 #apps names
 KEEPERS_DEVICE_LOCKED = "Keepers device lock"
 NOT_SELECTED = 'Not Selected'
+
+MAIL = "mail"

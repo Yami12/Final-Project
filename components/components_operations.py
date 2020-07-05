@@ -1,8 +1,12 @@
+"""
+This file performs actions on requested components
+"""
 import datetime
-import sys
 
 from utils import driver
 from utils import string_list as sl
+from utils import utils_funcs as uf
+
 
 '''
 accepts: component, action, content
@@ -11,38 +15,33 @@ if the action is send key, do the action by her content
 return: if the action succeeded or not
 '''
 def do_action(component, action , content):
+    uf.print_log("\cf1 ", action)
     try:
-        if action == sl.ACTION_CLICK:
-            print("click")
-            sys.stdout.flush()
+        if action == sl.ACTION_CLICK: # click on the component
             component.click()
-        elif action == sl.ACTION_SEND_KEYS:
-            print("send keys")
-            sys.stdout.flush()
-            if content == sl.MESSAGING_CONTENT:
+        elif action == sl.ACTION_SEND_KEYS: # send keys to the components
+            if content == sl.MESSAGING_CONTENT: #send message content
                 component.send_keys(driver.current_test[sl.MESSAGING_CONTENT])
                 driver.sending_time = datetime.d
-            elif content == sl.TEST_CONTACT:
+            elif content == sl.TEST_CONTACT: # sent chat name
                 component.send_keys(driver.current_test[sl.CHAT_NAME][:-1])
-            elif content == sl.CHILD_NAME:
+            elif content == sl.CHILD_NAME: # send child name
                 component.send_keys(driver.current_test[sl.CHILD_NAME][:-1])
-            else:
+            else: # send content
                 component.send_keys(content)
 
-        elif action == sl.ACTION_GET:
-            print("get component content")
-            sys.stdout.flush()
+        elif action == sl.ACTION_GET: # get component content
             #get the component text
             component_text = component.get_attribute("text")
-            return ['Passed', component_text]
-        print("SUCCESS")
-        sys.stdout.flush()
-        return ['Passed', "success do action"]
+            uf.print_log("\cf1  SUCCESS \line")
+            return [sl.TEST_PASSED, component_text]
+
+        uf.print_log("\cf1  SUCCESS \line")
+        return [sl.TEST_PASSED, "success do action"]
 
     except Exception as e:
-        print("FAILED")
-        sys.stdout.flush()
-        return ['Failed', e]
+        uf.print_log("\cf2  FAILED \line")
+        return [sl.TEST_FAILED, e]
 
 '''
 get the component by resource id
@@ -50,11 +49,12 @@ send to do_action function
 return: if succeeded to find the component or not
 '''
 def id_operation(resource_id, action, content):
+    uf.print_log("\cf1 ", resource_id, "  ")
     try:
         component = driver.global_driver.find_element_by_id(resource_id)
         return do_action(component, action, content)
     except Exception as e:
-        return ['Failed', e]
+        return [sl.TEST_FAILED, e]
 
 '''
 get the component by class
@@ -62,11 +62,12 @@ send to do_action function
 return: if succeeded to find the component or not
 '''
 def class_operation(resource_id, action, content):
+    uf.print_log("\cf1 ",resource_id,"  ")
     try:
         component = driver.global_driver.find_elements_by_class_name(resource_id)
         return do_action(component[0], action, content)
     except Exception as e:
-        return ['Failed', e]
+        return [sl.TEST_FAILED, e]
 
 
 '''
@@ -75,11 +76,12 @@ send to do_action function
 return: if succeeded to find the component or not
 '''
 def uiautomator_operation(resource_id, action, content):
+    uf.print_log("\cf1 ", resource_id, "  ")
     try:
         component = driver.global_driver.find_element_by_android_uiautomator(resource_id)
         return do_action(component, action, content)
     except Exception as e:
-        return ['Failed', e]
+        return [sl.TEST_FAILED, e]
 
 
 '''
