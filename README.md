@@ -1,7 +1,7 @@
 # Final-Project
-our project is :
 
-Automation Enviroment for testing Keepers application\n
+Automation Enviroment for testing Keepers application
+
 
 code's files:
 
@@ -11,6 +11,7 @@ components:
 *components_operations.py: This file performs actions on requested components
 
 *components_tests.py: This file handles the components tests
+
 
 features:
 
@@ -45,4 +46,4 @@ xml_files:
 *features_tests.xml: contains all the features tests
 
 
-keepers_automation.py: the amin file that run all the tests
+keepers_automation.py: the main file that run all the tests
