@@ -15,7 +15,7 @@ if the action is send key, do the action by her content
 return: if the action succeeded or not
 '''
 def do_action(component, action , content):
-    uf.print_log("\cf1 ", action)
+    uf.print_log("\cf1 " + action)
     try:
         if action == sl.ACTION_CLICK: # click on the component
             component.click()
@@ -49,7 +49,7 @@ send to do_action function
 return: if succeeded to find the component or not
 '''
 def id_operation(resource_id, action, content):
-    uf.print_log("\cf1 ", resource_id, "  ")
+    uf.print_log("\cf1 " + resource_id + "  ")
     try:
         component = driver.global_driver.find_element_by_id(resource_id)
         return do_action(component, action, content)
@@ -62,7 +62,7 @@ send to do_action function
 return: if succeeded to find the component or not
 '''
 def class_operation(resource_id, action, content):
-    uf.print_log("\cf1 ",resource_id,"  ")
+    uf.print_log("\cf1 " + resource_id + "  ")
     try:
         component = driver.global_driver.find_elements_by_class_name(resource_id)
         return do_action(component[0], action, content)
@@ -76,7 +76,7 @@ send to do_action function
 return: if succeeded to find the component or not
 '''
 def uiautomator_operation(resource_id, action, content):
-    uf.print_log("\cf1 ", resource_id, "  ")
+    uf.print_log("\cf1 " + resource_id + "  ")
     try:
         component = driver.global_driver.find_element_by_android_uiautomator(resource_id)
         return do_action(component, action, content)

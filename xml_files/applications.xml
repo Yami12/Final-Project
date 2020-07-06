@@ -3,9 +3,9 @@
 		<name>WhatsApp</name>
 		<app_package>com.whatsapp</app_package>
 		<app_activity>com.whatsapp.HomeActivity t475</app_activity>
-		<parent_name>Child</parent_name>
-		<child_name>Father</child_name>
-		<group_name>chnai</group_name>
+		<parent_name>Yami</parent_name>
+		<child_name>Yechiel</child_name>
+		<group_name>Re</group_name>
 		<steps>
 			<step>
 				<type>id</type>

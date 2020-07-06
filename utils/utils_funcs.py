@@ -28,8 +28,8 @@ def time_in_range(time, range):
         function: get_coordinates_by_resource_id
         description: A function that returns a device component coordinates by its resource id
 '''
-def get_coordinates_by_resource_id(self, step, parent_name):
-    self.print_log("\cf1 searching for coordinates \line")
+def get_coordinates_by_resource_id(step, parent_name):
+    print_log("\cf1 searching for coordinates \line")
     process = subprocess.Popen(['adb','-s', driver.child_device ,'exec-out', 'uiautomator', 'dump', '/dev/tty'],stdout=subprocess.PIPE)  # dump the uiautomator file
     content = str(process.stdout.read())
     splitted_content = re.split("<node", content)
@@ -52,9 +52,9 @@ def get_coordinates_by_resource_id(self, step, parent_name):
 
     bounds = re.search('bounds="\[([0-9]+),([0-9]+)\]', node)
     if not bounds:
-        self.print_log("\cf2 bounds not fond. \line")
+        print_log("\cf2 bounds not fond. \line")
     else:
-        self.print_log("\cf1 \\b bounds fond:\\b0 ", bounds, "\line")
+        print_log("\cf1 \\b bounds fond:\\b0 " + str(bounds)[0] + str(bounds)[1] + "\line")
     return bounds
 
 

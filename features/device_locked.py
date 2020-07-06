@@ -33,7 +33,7 @@ class DeviceLocked (unittest.TestCase):
                     uf.time_in_range(int(logs[i+1].split('"end": ')[1].split("\\r\\n")[0]), 4) == True) and (
                     logs[i+2].split('"didStart":')[1].split("}\\r\\n")[0] == "true"):
                     driver.global_tests_result[-1][sl.TEST_RESULTS].append([sl.TEST_PASSED, "The child device is locked"])
-                    uf.print_log("\cf1 The found log is : ", logs[i],"\line \cf3 The child device is locked \line")
+                    uf.print_log("\cf1 The found log is : " + logs[i] + "\line \cf3 The child device is locked \line")
                     return True
         uf.print_log("\cf2 No matching logs \line The child device is not locked \line")
         driver.global_tests_result[-1][sl.TEST_RESULTS].append([sl.TEST_FAILED, "The child device is not locked"])

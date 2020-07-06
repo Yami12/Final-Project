@@ -49,23 +49,23 @@ class WebFiltering (unittest.TestCase):
             if application[sl.APP_NAME] == driver.current_test[sl.TEST_APP_NAME]: #open the app
                 uf.print_log("\cf1 connecting to child device... \line")
                 subprocess.run(['adb', '-s', driver.child_device, 'shell', 'am', 'start', '-n',
-                                application[sl.APP_PACKAGE] + "/" + application[sl.APP_ACTIVITY]]).kill()
+                                application[sl.APP_PACKAGE] + "/" + application[sl.APP_ACTIVITY]])
                 uf.print_log("\cf1 try to open the requested website \line")
                 for step in application[sl.STEPS]:  # run all the steps to open the website
                     if step[sl.ACTION_STEP] == sl.ACTION_SEND_KEYS:
                         uf.print_log('\cf1 enter text. run command: adb -s ' + driver.child_device + ' shell input text: "' + str(
                                 driver.current_test[sl.WEBSITE_ADDRESS]) + '"\line')
                         subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'text',
-                                        driver.current_test[sl.WEBSITE_ADDRESS]]).kill()
+                                        driver.current_test[sl.WEBSITE_ADDRESS]])
                     elif step[sl.ACTION_STEP] == sl.ACTION_CLICK:
                         coordinates = messaging.Messaging.get_coordinates_by_resource_id(messaging.Messaging, step, "")
                         uf.print_log('\cf1 click. run command: adb -s' + driver.child_device + 'shell input tap ' + str(
                             coordinates[1]) + ' ' + str(coordinates[2]), "\line")
                         subprocess.run(
-                            ['adb', '-s', driver.child_device, 'shell', 'input', 'tap', coordinates[1], coordinates[2]]).kill()
+                            ['adb', '-s', driver.child_device, 'shell', 'input', 'tap', coordinates[1], coordinates[2]])
                     time.sleep(1)
 
-                subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'keyevent', '66']).kill() # click 'enter'
+                subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'keyevent', '66']) # click 'enter'
         driver.test_result = self.check_lock_page()
 
 

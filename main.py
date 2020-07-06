@@ -40,9 +40,10 @@ if __name__ == '__main__':
 
             tests = xml_parsing.feature_xml_to_dictionary(
                 sl.MESSAGING_FEATURE_FILE)  # gets the list of all the tests
+
             for test in tests:
                 if test[sl.TEST_NAME] == test_name:
-                    uf.print_log("\cf1 start to run test: ", test_name, "\line")
+                    uf.print_log("\cf1 start to run test: " + str(test_name) + "\line")
 
                     test[sl.TEST_APP_NAME] = app_name
                     driver.current_test = test
@@ -74,7 +75,7 @@ if __name__ == '__main__':
                 sl.COMPONENTS_FILE)  # gets the list of all the tests
             for test in tests:
                 if test[sl.TEST_NAME] == test_name or test_name == sl.ALL:
-                    uf.print_log("\cf1 start to run test: ", test_name, "\line")
+                    uf.print_log("\cf1 start to run test: " + test_name + "\line")
                     driver.current_test = test
                     driver.global_tests_result.append({sl.TEST_RESULTS_NAME: test_name, sl.TEST_RESULTS: []})# saves the current test results
                     #run the test

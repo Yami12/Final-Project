@@ -9,7 +9,6 @@ from distutils.util import strtobool
 import subprocess
 from queue import Queue
 
-from utils import utils_funcs
 from utils import driver
 from utils import read_messaging_logs
 from utils import xml_parsing
@@ -49,8 +48,8 @@ class Messaging (unittest.TestCase):
                                         break
                             else:
                                 break
-                    if utils_funcs.time_in_range(message['timeReceived'], 2) == True:
-                        uf.print_log("\cf1 \\b The found log is: \\b0", logs_dict,"\line")
+                    if uf.time_in_range(message['timeReceived'], 2) == True:
+                        uf.print_log("\cf1 \\b The found log is: \\b0" + logs_dict + "\line")
                         return True
         return False
 
@@ -142,7 +141,7 @@ class Messaging (unittest.TestCase):
             logs_dict = ast.literal_eval(specific_log)
             if logs_dict['eventData'] == current_test[sl.CHAT_NAME] and "CHILD_REMOVED_FROM" in logs_dict['eventType']:
                 driver.global_tests_result[-1]['results'].append(['Passed', logs_dict])
-                uf.print_log("\cf1 \\b The found log is \\b0 : ", logs_dict, "\line \cf3 SUCCESS, Removal from group Logs were received respectively \line")
+                uf.print_log("\cf1 \\b The found log is \\b0 : " + logs_dict + "\line \cf3 SUCCESS, Removal from group Logs were received respectively \line")
                 return True
 
         driver.global_tests_result[-1][sl.TEST_RESULTS].append([sl.TEST_FAILED, "No matching logs"])
@@ -168,7 +167,7 @@ class Messaging (unittest.TestCase):
         time.sleep(3)
 
         subprocess.run(['adb', '-s', driver.child_device, 'shell', 'am', 'broadcast', '-a',
-                        'com.keepers.childmodule.ACTION_UPLOAD_CONVERSATIONS']).kill() # uplaod the keepers logs
+                        'com.keepers.childmodule.ACTION_UPLOAD_CONVERSATIONS'])# uplaod the keepers logs
         time.sleep(10)
         uf.print_log("\cf1 starting to read child logs... \line")
         while not child_stdout_reader.stopped():  # the queue is empty and the thread terminated
@@ -206,9 +205,8 @@ class Messaging (unittest.TestCase):
     def child_open_chat_screen(self, s_network, from_child):
 
         uf.print_log("\cf1 connecting to child device... \line")
-        subprocess.run(['adb', '-s', driver.child_device, 'shell', 'am', 'start', '-n', s_network[sl.APP_PACKAGE]+"/" + s_network[sl.APP_ACTIVITY]]).kill() # launch the application
+        proc = subprocess.run(['adb', '-s', driver.child_device, 'shell', 'am', 'start', '-n', s_network[sl.APP_PACKAGE]+"/" + s_network[sl.APP_ACTIVITY]]) # launch the application
         time.sleep(3)
-
         uf.print_log("\cf1 running the opening steps \line")
         for step in s_network[sl.STEPS]:
             if step[sl.ACTION_STEP] == sl.ACTION_SEND_KEYS: # send keys action
@@ -216,18 +214,18 @@ class Messaging (unittest.TestCase):
                     driver.sending_time = datetime.datetime.now()  # save the sending time
                     uf.print_log('\cf1 enter text. run command: adb -s ' + driver.child_device +' shell input text: "' +str(
                         driver.current_test[sl.MESSAGING_CONTENT]) + '"\line')
-                    subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'text', '"' +str(driver.current_test[sl.MESSAGING_CONTENT]) +'"']).kill()
+                    subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'text', '"' +str(driver.current_test[sl.MESSAGING_CONTENT]) +'"'])
                 elif step[sl.CONTENT_STEP] == sl.MESSAGING_CONTENT and from_child == False:
                     uf.print_log('\cf1 hide keyboard. run command: adb -s ' + driver.child_device + ' shell input keyevent 111 \line')
-                    subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'keyevent', '111']).kill()
+                    subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'keyevent', '111'])
                     return
                 else:
                     uf.print_log('\cf1 enter text. run command: adb -s ' + driver.child_device + ' shell input text : "' + s_network[sl.PARENT_NAME][:-1] + '"\line')
-                    subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'text', s_network[sl.PARENT_NAME][:-1]]).kill()
+                    subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'text', s_network[sl.PARENT_NAME][:-1]])
             elif step[sl.ACTION_STEP] == sl.ACTION_CLICK: # click action
-                coordinates = self.get_coordinates_by_resource_id(step, s_network[sl.PARENT_NAME])
-                uf.print_log('\cf1 click. run command: adb -s' + driver.child_device + 'shell input tap ' +str(coordinates[1]) + ' ' + str(coordinates[2]),"\line")
-                subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'tap', coordinates[1] , coordinates[2]]).kill()
+                coordinates = uf.get_coordinates_by_resource_id(step, s_network[sl.PARENT_NAME])
+                uf.print_log("\cf1 click. run command: adb -s" + driver.child_device + "shell input tap " +str(coordinates[1]) + " " + str(coordinates[2]) + "\line")
+                subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'tap', coordinates[1] , coordinates[2]])
             time.sleep(3)
 
 
@@ -285,7 +283,7 @@ class Messaging (unittest.TestCase):
                 driver.current_test[sl.CHILD_NAME] = network[sl.CHILD_NAME]
                 network[sl.PARENT_NAME] = network[sl.GROUP_NAME]
 
-                uf.print_log("\cf1 removing the child from group: ", network[sl.GROUP_NAME], "\line connecting to appium server...")
+                uf.print_log("\cf1 removing the child from group: " + network[sl.GROUP_NAME] + "\line connecting to appium server...")
                 driver.connect_driver(network[sl.APP_PACKAGE], network[sl.APP_ACTIVITY])  # connect the driver
 
                 uf.print_log("\cf1 starting to run the test steps \line")

@@ -25,12 +25,12 @@ class ComponentsTest(unittest.TestCase):
             if re.search("labelMessage:.*", driver.current_test[sl.TEST_EXPECTED_RES]):# label message
                 result = components_operations.id_operation('com.keepers:id/textinput_error',sl.ACTION_GET, "")
                 if (result[0] == sl.TEST_PASSED) and (result[1] == expected_result.split(":")[1]):
-                    uf.print_log("\cf1 ", result[0], ", ", result[1], "\line")
+                    uf.print_log("\cf1 " + result[0] + ", " + result[1] + "\line")
                     return result
             elif re.search("wrongMessage:.*", driver.current_test[sl.TEST_EXPECTED_RES]):# wrong message
                 result = components_operations.id_operation('com.keepers:id/snackbar_text',sl.ACTION_GET, "")
                 if (result[0] == sl.TEST_PASSED) and (result[1] == expected_result.split(":")[1]):
-                    uf.print_log("\cf1 ", result[0], ", ", result[1], "\line")
+                    uf.print_log("\cf1 " + result[0] + ", " + result[1] + "\line")
                     return result
             elif re.search("disabled:.*", driver.current_test[sl.TEST_EXPECTED_RES]): # button disabled
                 element = driver.global_driver.find_element_by_id(expected_result.split("disabled:id:")[1])
