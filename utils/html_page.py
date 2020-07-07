@@ -18,7 +18,7 @@ from utils import utils_funcs as uf
 '''
 def create_html_file(test_name):
     html = """<html>"""
-    html += "<h1>{}</h1>".format(test_name)
+    html += "<h1 style='text-align: center'>{}</h1>".format(test_name)
     html += '<table border="1"><tr><th style="width:50px">description</th><th style="width:50px">result</th></tr>'
     for test_result in driver.global_tests_result:
         if test_result['name'] == test_name:    #the requested test
@@ -26,6 +26,14 @@ def create_html_file(test_name):
                 html += "<tr><td>{}</td>".format(result[1])
                 html += "<td>{}</td></tr>".format(result[0])
     html += "</table></html>"
+    if driver.test_result == True:
+        html += "<h1 style='color: green; text-align: center'>PASSED</h1>"
+    elif driver.test_result == False:
+        html += "<h1 style='color: red; text-align: center'>FAILED</h1>"
+    else:
+        html += "<h1 style='color: red; text-align: center'>ERROR</h1>"
+
+
 
     # Create directory
     try:
