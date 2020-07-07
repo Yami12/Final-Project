@@ -52,10 +52,9 @@ def connect_driver(appPackage, appActivity):
     description: return the device version
 """
 def get_device_version(device):
-    print(device)
     process = subprocess.Popen(['adb', '-s', device, 'shell', 'getprop', 'ro.build.version.release'],
                                stdout=subprocess.PIPE)
-    print(str(process.stdout.read())[2:])
+
     device_ver = str(process.stdout.read())[2:].split("\\r\\n")[0]
 
     process.kill()

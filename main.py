@@ -42,6 +42,7 @@ if __name__ == '__main__':
                 sl.MESSAGING_FEATURE_FILE)  # gets the list of all the tests
 
             for test in tests:
+
                 if test[sl.TEST_NAME] == test_name:
                     uf.print_log("\cf1 start to run test: " + str(test_name) + "\line")
 
@@ -84,6 +85,8 @@ if __name__ == '__main__':
 
 
         elif sys.argv[1] == sl.MAIL: # send the test's result to mail
+            driver.tests_folders_name = sys.argv[3]
+
             html_page.send_email(sys.argv[2])
             os._exit(0)
 
@@ -102,6 +105,6 @@ if __name__ == '__main__':
             os._exit(-1)
 
     except:
-        uf.print_log("\cf3 \\b TEST ERROR \\b0 \line")
+        uf.print_log("\cf2 \\b TEST ERROR \\b0 \line")
         os._exit(-1)
 

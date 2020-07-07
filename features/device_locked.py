@@ -6,7 +6,7 @@ import time
 import subprocess
 from queue import Queue
 import datetime
-import sys
+import json
 
 from utils import driver
 from utils import read_messaging_logs
@@ -32,10 +32,12 @@ class DeviceLocked (unittest.TestCase):
                 if uf.time_in_range(int(logs[i].split('"start": ')[1].split(",\\r\\n")[0]), 1) == True and (
                     uf.time_in_range(int(logs[i+1].split('"end": ')[1].split("\\r\\n")[0]), 4) == True) and (
                     logs[i+2].split('"didStart":')[1].split("}\\r\\n")[0] == "true"):
+                    driver.global_tests_result[-1][sl.TEST_RESULTS].append([sl.TEST_PASSED, "The found log is : " + json.dumps(logs[i])])
                     driver.global_tests_result[-1][sl.TEST_RESULTS].append([sl.TEST_PASSED, "The child device is locked"])
-                    uf.print_log("\cf1 The found log is : " + logs[i] + "\line \cf3 The child device is locked \line")
+                    uf.print_log("\cf1 The found log is : " + json.dumps(logs[i]) + "\line \cf3 The child device is locked \line")
                     return True
         uf.print_log("\cf2 No matching logs \line The child device is not locked \line")
+        driver.global_tests_result[-1][sl.TEST_RESULTS].append(["WIP", "No matching logs"])
         driver.global_tests_result[-1][sl.TEST_RESULTS].append([sl.TEST_FAILED, "The child device is not locked"])
         return False
 
@@ -45,7 +47,9 @@ class DeviceLocked (unittest.TestCase):
     '''
     def test_device_locked(self):
         global logs
-        uf.print_log("\cf1 locking child device... \line begin to listen to parent logs... \line")
+        uf.print_log("\cf1 locking child device. \line begin to listen to child logs \line")
+        driver.global_tests_result[-1][sl.TEST_RESULTS].append(["WIP", "locking child device"])
+        driver.global_tests_result[-1][sl.TEST_RESULTS].append(["WIP", "begin to listen to child logs"])
         # get keepers logcats in child device
         process = subprocess.Popen(['adb', '-s', driver.child_device, 'logcat', '-s', 'HttpKeepersLogger'],
                                    stdout=subprocess.PIPE)
@@ -61,6 +65,7 @@ class DeviceLocked (unittest.TestCase):
                 time.sleep(6)
 
                 uf.print_log("\cf1 starting to run the test steps \line")
+                driver.global_tests_result[-1][sl.TEST_RESULTS].append(["WIP", "starting to run the test steps"])
                 #  run all the steps on the parent device to lock the child device
                 for step in application[sl.STEPS]:
                     if step[sl.TYPE_STEP] == sl.TYPE_CLASS: #this is the step that define the end time
@@ -83,6 +88,7 @@ class DeviceLocked (unittest.TestCase):
         time.sleep(10)
 
         uf.print_log("\cf1 checking if the child's device is locked \line")
+        driver.global_tests_result[-1][sl.TEST_RESULTS].append(["WIP", "checking if the child's device is locked"])
         upload_process = subprocess.run(['adb', '-s', driver.child_device, 'shell', 'am', 'broadcast', '-a',
                         'com.keepers.childmodule.ACTION_UPLOAD_CONVERSATIONS']) # upload keepers locked
         time.sleep(15)
@@ -99,6 +105,7 @@ class DeviceLocked (unittest.TestCase):
                 logs.append(line)
 
         uf.print_log("\cf1 checking child logs \line")
+        driver.global_tests_result[-1][sl.TEST_RESULTS].append(["WIP", "checking child logs"])
         driver.test_result = self.check_keepers_logs()
         process.kill()
         upload_process.kill()

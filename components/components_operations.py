@@ -19,16 +19,21 @@ def do_action(component, action , content):
     try:
         if action == sl.ACTION_CLICK: # click on the component
             component.click()
+            return [sl.TEST_PASSED, "Click" ]
         elif action == sl.ACTION_SEND_KEYS: # send keys to the components
             if content == sl.MESSAGING_CONTENT: #send message content
                 component.send_keys(driver.current_test[sl.MESSAGING_CONTENT])
                 driver.sending_time = datetime.d
+                return [sl.TEST_PASSED, "Send keys: " + driver.current_test[sl.MESSAGING_CONTENT]]
             elif content == sl.TEST_CONTACT: # sent chat name
                 component.send_keys(driver.current_test[sl.CHAT_NAME][:-1])
+                return [sl.TEST_PASSED, "Send keys: " + driver.current_test[sl.CHAT_NAME][:-1]]
             elif content == sl.CHILD_NAME: # send child name
                 component.send_keys(driver.current_test[sl.CHILD_NAME][:-1])
+                return [sl.TEST_PASSED, "Send keys: " + driver.current_test[sl.CHILD_NAME][:-1]]
             else: # send content
                 component.send_keys(content)
+                return [sl.TEST_PASSED, "Send keys: " + content]
 
         elif action == sl.ACTION_GET: # get component content
             #get the component text
@@ -36,11 +41,10 @@ def do_action(component, action , content):
             uf.print_log("\cf1  SUCCESS \line")
             return [sl.TEST_PASSED, component_text]
 
-        uf.print_log("\cf1  SUCCESS \line")
-        return [sl.TEST_PASSED, "success do action"]
+        uf.print_log("\cf1  success \line")
 
     except Exception as e:
-        uf.print_log("\cf2  FAILED \line")
+        uf.print_log("\cf2  failed \line")
         return [sl.TEST_FAILED, e]
 
 '''

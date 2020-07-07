@@ -52,9 +52,12 @@ def get_coordinates_by_resource_id(step, parent_name):
 
     bounds = re.search('bounds="\[([0-9]+),([0-9]+)\]', node)
     if not bounds:
-        print_log("\cf2 bounds not fond. \line")
+        print_log("\cf2 bounds not fond \line")
+        driver.global_tests_result[-1][sl.TEST_RESULTS].append([sl.TEST_FAILED, "bounds not fond"])
     else:
-        print_log("\cf1 \\b bounds fond:\\b0 " + str(bounds)[0] + str(bounds)[1] + "\line")
+        print_log("\cf1 bounds fond: " + str(bounds[1]) + str(bounds[2]) + "\line")
+        driver.global_tests_result[-1][sl.TEST_RESULTS].append([sl.TEST_PASSED, "bounds fond: " + str(bounds[1]) + str(bounds[2])])
+
     return bounds
 
 

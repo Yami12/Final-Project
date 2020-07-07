@@ -49,17 +49,20 @@ class ComponentsTest(unittest.TestCase):
     '''
     def test_run(self):
         test = driver.current_test
-        uf.print_log("\cf1 connecting to appium server... \line")
+        uf.print_log("\cf1 connecting to appium server \line")
+        driver.global_tests_result[-1][sl.TEST_RESULTS].append(["WIP", "connecting to appium server"])
         driver.connect_driver('com.keepers', 'com.keeper.common.splash.SplashActivity')
         time.sleep(4)
 
         uf.print_log("\cf1 starting to run the test steps \line")
+        driver.global_tests_result[-1][sl.TEST_RESULTS].append(["WIP", "starting to run the test steps"])
         # run all the steps in the test
         for step in test[sl.STEPS]:
             driver.global_tests_result[-1][sl.TEST_RESULTS].append(components_operations.component_operation(step))
             time.sleep(2)
 
         uf.print_log("\cf1 checking expected results \line")
+        driver.global_tests_result[-1][sl.TEST_RESULTS].append(["WIP", "checking expected results"])
         result = self.check_expected_result(test[sl.TEST_EXPECTED_RES])
         driver.global_tests_result[-1][sl.TEST_RESULTS].append(result)
         if result[0] == sl.TEST_PASSED:
