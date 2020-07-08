@@ -11,8 +11,6 @@ from utils import xml_parsing
 from utils import string_list as sl
 from utils import utils_funcs as uf
 
-from features import messaging
-
 
 class WebFiltering (unittest.TestCase):
 
@@ -63,9 +61,9 @@ class WebFiltering (unittest.TestCase):
                         subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'text',
                                         driver.current_test[sl.WEBSITE_ADDRESS]])
                     elif step[sl.ACTION_STEP] == sl.ACTION_CLICK:
-                        coordinates = messaging.Messaging.get_coordinates_by_resource_id(messaging.Messaging, step, "")
+                        coordinates = uf.get_coordinates_by_resource_id(step, "")
                         uf.print_log('\cf1 click. run command: adb -s' + driver.child_device + 'shell input tap ' + str(
-                            coordinates[1]) + ' ' + str(coordinates[2]), "\line")
+                            coordinates[1]) + ' ' + str(coordinates[2]) + "\line")
                         driver.global_tests_result[-1][sl.TEST_RESULTS].append(["WIP", 'click. run command: adb -s' + driver.child_device + 'shell input tap ' + str(
                             coordinates[1]) + ' ' + str(coordinates[2])])
                         subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'tap', coordinates[1], coordinates[2]])

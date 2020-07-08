@@ -2,7 +2,7 @@
     <test>
         <name>Recive an offensive message</name>
         <supportedApps>WhatsApp Telegram Instagram</supportedApps>
-        <text>fat anorexic</text>
+        <text> kill you monkey fat </text>
         <isGroup>False</isGroup>
         <side>recive</side>
         <offensive>True</offensive>
@@ -39,7 +39,7 @@
     <test>
         <name>Signing in is not allowed</name>
          <supportedApps>Chrome</supportedApps>
-        <website_address>m.calcalist.co.il</website_address>
+        <website_address>13tv.co.il</website_address>
     </test>
     <test>
         <name>device lock</name>

@@ -40,8 +40,6 @@ def tests_xml_to_dictionary(file_name):
     tree = et.fromstring(file_content)
     if file_name == sl.APPS_FILE:
         tests = tree.findall(sl.app)  # first node in the xml file
-    elif file_name == sl.WEB_FILTERING_FILE:
-        tests = tree.findall(sl.BROWSER)
     else:
         tests = tree.findall(sl.TEST)  # first node in the xml file
 

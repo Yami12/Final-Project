@@ -57,7 +57,7 @@ class DeviceLocked (unittest.TestCase):
         stdout_reader = read_messaging_logs.AsynchronousFileReader(process.stdout, stdout_queue)
         stdout_reader.start()
 
-        applications = xml_parsing.tests_xml_to_dictionary(sl.APPSS_FILE) # get the list of all the apps
+        applications = xml_parsing.tests_xml_to_dictionary(sl.APPS_FILE) # get the list of all the apps
         for application in applications:
             if application[sl.APP_NAME] == sl.KEEPERS_DEVICE_LOCKED:   # Keepers app
                 uf.print_log("\cf1 connecting to appium server \line")

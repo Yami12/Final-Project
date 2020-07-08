@@ -5,7 +5,6 @@ This file handles the components tests
 import unittest
 import re
 import time
-import sys
 
 from components import components_operations
 

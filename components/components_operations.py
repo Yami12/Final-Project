@@ -23,7 +23,7 @@ def do_action(component, action , content):
         elif action == sl.ACTION_SEND_KEYS: # send keys to the components
             if content == sl.MESSAGING_CONTENT: #send message content
                 component.send_keys(driver.current_test[sl.MESSAGING_CONTENT])
-                driver.sending_time = datetime.d
+                driver.sending_time = datetime.datetime.now()
                 return [sl.TEST_PASSED, "Send keys: " + driver.current_test[sl.MESSAGING_CONTENT]]
             elif content == sl.TEST_CONTACT: # sent chat name
                 component.send_keys(driver.current_test[sl.CHAT_NAME][:-1])
