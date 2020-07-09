@@ -28,6 +28,7 @@ class Messaging (unittest.TestCase):
            description: A function that checks whether the message that been sent/received in the test match the received logs
     '''
     def check_messaging_logs(self, logs_dict, chat_name, isParent = False):
+        uf.print_log(json.dumps(logs_dict))
         current_test = driver.current_test
         if logs_dict['applicationName'] == current_test['application']:
             if logs_dict['isGroup'] == strtobool(current_test['isGroup']):
@@ -91,7 +92,7 @@ class Messaging (unittest.TestCase):
                 return True
 
         driver.global_tests_result[-1][sl.TEST_RESULTS].append([sl.TEST_FAILED, "No logs received in parent side"])
-        uf.print_log("\cf2 No logs received in parent side \line")
+        uf.print_log("\cf2 \line No logs received in parent side \line")
         return False
 
 
@@ -114,7 +115,7 @@ class Messaging (unittest.TestCase):
                 return True
 
         driver.global_tests_result[-1][sl.TEST_RESULTS].append([sl.TEST_FAILED, "No logs received in child side"])
-        uf.print_log("\cf2 No logs received in child side \line")
+        uf.print_log("\cf2 \line No logs received in child side \line")
         return False
 
 

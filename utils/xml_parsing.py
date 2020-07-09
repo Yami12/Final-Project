@@ -7,7 +7,7 @@ import os
 
 from utils import string_list as sl
 
-parentDirectory = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
+parentDirectory = os.path.abspath(os.getcwd())
 
 """
     function: feature_xml_to_dictionary
