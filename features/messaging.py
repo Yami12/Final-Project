@@ -28,7 +28,6 @@ class Messaging (unittest.TestCase):
            description: A function that checks whether the message that been sent/received in the test match the received logs
     '''
     def check_messaging_logs(self, logs_dict, chat_name, isParent = False):
-        uf.print_log(json.dumps(logs_dict))
         current_test = driver.current_test
         if logs_dict['applicationName'] == current_test['application']:
             if logs_dict['isGroup'] == strtobool(current_test['isGroup']):
@@ -202,7 +201,7 @@ class Messaging (unittest.TestCase):
         parent_logs = self.check_parent_logs(s_network[sl.PARENT_NAME], father_stdout_reader, father_stdout_queue)
         if parent_logs == strtobool(driver.current_test[sl.OFFENSIVE]):# parent's Logs were received respectively
             uf.print_log("\cf3 SUCCESS, Parent's Logs were received respectively \line")
-            driver.global_tests_result[-1][sl.TEST_RESULTS].append([sl.TEST_PASSED, "Logs were received respectively"])
+            driver.global_tests_result[-1][sl.TEST_RESULTS].append([sl.TEST_PASSED, "Parent's Logs were received respectively"])
             return True
 
         uf.print_log("\cf2 FAILED, Parent's Logs were not received respectively \line")
@@ -243,7 +242,7 @@ class Messaging (unittest.TestCase):
                     subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'text', s_network[sl.PARENT_NAME][:-1]])
             elif step[sl.ACTION_STEP] == sl.ACTION_CLICK: # click action
                 coordinates = uf.get_coordinates_by_resource_id(step, s_network[sl.PARENT_NAME])
-                uf.print_log("\cf1 click. run command: adb -s" + driver.child_device + "shell input tap " +str(coordinates[1]) + " " + str(coordinates[2]) + "\line")
+                uf.print_log("\cf1 click. run command: adb -s" + driver.child_device + " shell input tap " +str(coordinates[1]) + " " + str(coordinates[2]) + "\line")
                 driver.global_tests_result[-1][sl.TEST_RESULTS].append(["WIP", "click. run command: adb -s" + driver.child_device + "shell input tap " +str(coordinates[1]) + " " + str(coordinates[2])])
                 subprocess.run(['adb', '-s', driver.child_device, 'shell', 'input', 'tap', coordinates[1] , coordinates[2]])
             time.sleep(3)

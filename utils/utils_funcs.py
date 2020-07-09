@@ -55,7 +55,7 @@ def get_coordinates_by_resource_id(step, parent_name):
         print_log("\cf2 bounds not fond \line")
         driver.global_tests_result[-1][sl.TEST_RESULTS].append([sl.TEST_FAILED, "bounds not fond"])
     else:
-        print_log("\cf1 bounds fond: " + str(bounds[1]) + str(bounds[2]) + "\line")
+        print_log("\cf1 bounds fond: " + str(bounds[1]) + " " + str(bounds[2]) + "\line")
         driver.global_tests_result[-1][sl.TEST_RESULTS].append([sl.TEST_PASSED, "bounds fond: " + str(bounds[1]) + str(bounds[2])])
 
     return bounds

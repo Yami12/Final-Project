@@ -14,20 +14,23 @@ parentDirectory = os.path.abspath(os.getcwd())
     description: returns all the features tests from the xml file
 """
 def feature_xml_to_dictionary(file_name):
-    file = open(os.path.join(parentDirectory, sl.XML_FOLDER, file_name))
+    file = open(os.path.join(os.getcwd(), sl.XML_FOLDER, file_name))
     file_content = file.read()
     tree = et.fromstring(file_content)
 
     tests = tree.findall(sl.TEST)  # first node in the xml file
-
     tests_arr = []
     # go over the all tests
     for test in tests:
         test_dict = {}
-        test_dict[sl.TEST_NAME] = test.text
         for i in test:
-            test_dict[i.tag] = i.text
+            if i.tag == sl.TEST_NAME:
+                test_dict[i.tag] = i.text.split(':')[1]
+            else:
+                test_dict[i.tag] = i.text
+
         tests_arr.append(test_dict)
+    print(tests_arr)
     return tests_arr
 
 """
