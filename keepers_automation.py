@@ -37,10 +37,9 @@ if __name__ == '__main__':
 
             uf.print_log("\cf1 initializing parent driver.\line")
             driver.initialize(driver.father_device)
-            uf.print_log("\cf1 start \line")
+
             tests = xml_parsing.feature_xml_to_dictionary(
                 sl.MESSAGING_FEATURE_FILE)  # gets the list of all the tests
-            uf.print_log("\cf1 start \line")
 
             for test in tests:
                 if test[sl.TEST_NAME] == test_name:
