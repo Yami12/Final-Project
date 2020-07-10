@@ -34,6 +34,8 @@ utils:
 
 *string_list.py : This file contains consts for all the other files
 
+*keepers automation: contains the exe files of our project - Keepers Automation.exe
+
 *utils_funcs.py : this file contains utils functions
 
 
