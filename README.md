@@ -49,3 +49,10 @@ xml_files:
 
 
 keepers_automation.py: the main file that run all the tests
+
+
+
+Keepers Automation: contains the exe file of our project - Keepers Automation.exe
+
+
+
