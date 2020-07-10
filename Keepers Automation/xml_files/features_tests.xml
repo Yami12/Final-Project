@@ -1,0 +1,48 @@
+<tests>
+    <test>
+        <name>Messaging:Recive an offensive message</name>
+        <supportedApps>WhatsApp Telegram Instagram</supportedApps>
+        <text>fat anorexic</text>
+        <isGroup>False</isGroup>
+        <side>recive</side>
+        <offensive>True</offensive>
+    </test>
+    <test>
+        <name>Messaging:Recive a message</name>
+        <supportedApps>WhatsApp Telegram Instagram</supportedApps>
+        <text>Hi Guy</text>
+        <isGroup>False</isGroup>
+        <side>recive</side>
+        <offensive>False</offensive>
+    </test>
+    <test>
+        <name>Messaging:Send an offensive message</name>
+        <supportedApps>WhatsApp Telegram Instagram</supportedApps>
+        <text>fat guy</text>
+        <isGroup>False</isGroup>
+        <side>send</side>
+        <offensive>True</offensive>
+    </test>
+    <test>
+        <name>Messaging:Send a message</name>
+        <supportedApps>WhatsApp Telegram Instagram</supportedApps>
+        <text>Hi guy</text>
+        <isGroup>False</isGroup>
+        <side>send</side>
+        <offensive>False</offensive>
+    </test>
+    <test>
+        <name>Removal from Group:Removal from group</name>
+         <supportedApps>WhatsApp</supportedApps>
+        <groupName>check11</groupName>
+    </test>
+    <test>
+        <name>Web Filtering:Signing in is not allowed</name>
+         <supportedApps>Chrome</supportedApps>
+        <website_address>m.calcalist.co.il</website_address>
+    </test>
+    <test>
+        <name>Device Locked:device lock</name>
+        <supportedApps>Keepers</supportedApps>
+    </test>
+</tests>

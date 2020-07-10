@@ -2,7 +2,7 @@
 
 #xml files names
 APPS_FILE ="applications.xml"
-MESSAGING_FEATURE_FILE = "features_tests.xml"
+FEATURE_FILE = "features_tests.xml"
 COMPONENTS_FILE = "components_behavior_tests.xml"
 XML_FOLDER = "xml_files"
 
@@ -75,7 +75,7 @@ WEB_TEST = "Signing in is not allowed"
 DEVICE_LOCK_TEST = "device lock"
 
 #apps names
-KEEPERS_DEVICE_LOCKED = "Keepers device lock"
+KEEPERS_DEVICE_LOCKED = "Keepers"
 NOT_SELECTED = 'Not Selected'
 
 MAIL = "mail"

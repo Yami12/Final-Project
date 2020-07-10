@@ -1,7 +1,7 @@
 '''
 this file handles the tests and apps xml file
 '''
-
+import sys
 import xml.etree.cElementTree as et
 import os
 
@@ -17,7 +17,6 @@ def feature_xml_to_dictionary(file_name):
     file = open(os.path.join(os.getcwd(), sl.XML_FOLDER, file_name))
     file_content = file.read()
     tree = et.fromstring(file_content)
-
     tests = tree.findall(sl.TEST)  # first node in the xml file
     tests_arr = []
     # go over the all tests
@@ -30,7 +29,6 @@ def feature_xml_to_dictionary(file_name):
                 test_dict[i.tag] = i.text
 
         tests_arr.append(test_dict)
-    print(tests_arr)
     return tests_arr
 
 """

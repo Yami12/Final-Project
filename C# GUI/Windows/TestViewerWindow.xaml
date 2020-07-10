@@ -1,0 +1,182 @@
+﻿<Window x:Class="Keepers_Automation.TestViewerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Keepers_Automation"
+        mc:Ignorable="d"
+        Title="TestViewerWindow" Height="600" Width="500"  
+        TextBlock.FontSize="12">
+    <Window.Resources>
+        <local:MyDataTemplateSelector x:Key="myDataTemplateSelector"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <ControlTemplate x:Key="ButtonTemplate" TargetType="Button">
+            <Button FontFamily="Segoe MDL2 Assets"
+                    FontSize="12" 
+                    Width="20" 
+                    Height="20" 
+                    Background="{x:Null}" 
+                    BorderBrush="{x:Null}"
+                    HorizontalAlignment="Left"
+                    Margin="20 0 5 5"
+                    >
+                &#xE710;
+                <Button.ContextMenu>
+                    <ContextMenu>
+                        <ContextMenu.ItemContainerStyle>
+                            <Style TargetType="MenuItem">
+                                <EventSetter Event="Click" Handler="MenuItem_Click"/>
+                            </Style>
+                        </ContextMenu.ItemContainerStyle>
+                        <ContextMenu.ItemTemplate>
+                            <DataTemplate DataType="local:TestViewerItem">
+
+                                <TextBlock Text="{Binding key}"/>
+                            </DataTemplate>
+                        </ContextMenu.ItemTemplate>
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
+        </ControlTemplate>
+        <Style x:Key="ItemContainerStyle" TargetType="ListViewItem">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Visibility" Value="{Binding isShowen, Converter={StaticResource BoolToVis}}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                        <ContentPresenter />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <DataTemplate x:Key="oneT">
+            <Grid HorizontalAlignment="Stretch"
+                   Margin="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition   Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="key" 
+                           Grid.Column="0"
+                           Text="{Binding key}"
+                           TextAlignment="Left"
+                           HorizontalAlignment="Left"
+                            FontWeight="Bold"
+                           Margin="2 0"/>
+                <TextBox x:Name="value" 
+                         Grid.Column="2"
+                         Text="{Binding value}"
+                         IsReadOnly="{Binding isReadOnly}"
+                         TextAlignment="Left"
+                         HorizontalAlignment="Right"
+                         Width="200"
+                         Padding="2"
+                          Margin="2 0"/>
+
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="listT1">
+            <Grid HorizontalAlignment="Left"
+                  Margin="5,30,0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  Width="1*"/>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="5*"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="btnRemoveOptional" 
+                        Grid.Column="0" 
+                        FontFamily="Segoe MDL2 Assets" 
+                        FontSize="10" 
+                        Width="15"
+                        Height="15" 
+                        Visibility="{Binding isOptional, Converter={StaticResource BoolToVis}}" 
+                        Background="{x:Null}" 
+                        BorderBrush="{x:Null}" 
+                        Click="BtnRemoveOptional_Click"
+                        FontWeight="Bold"
+                       TextBlock.Foreground="Red"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Margin="1">&#xE711;
+                </Button>
+                <TextBlock x:Name="key" 
+                           Grid.Column="1"
+                           Text="{Binding key}"
+                           TextAlignment="Left"
+                           HorizontalAlignment="Left"
+                            FontWeight="Bold"/>
+                <ListView Grid.Column="2" 
+                          ItemContainerStyle="{StaticResource ItemContainerStyle}" 
+                          ItemsSource="{Binding value}" 
+                          ItemTemplate="{StaticResource oneT}"
+                          Margin="20 20 20 0"
+                          BorderBrush="{x:Null}"
+                              HorizontalAlignment="Right"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="listT">
+            <Grid HorizontalAlignment="Left"
+                   Margin="5,5,0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  Width="2*"/>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="5*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="key" 
+                           Grid.Column="0"
+                           Text="{Binding key}"
+                           TextAlignment="Left"
+                           HorizontalAlignment="Left"
+                           FontWeight="Bold"/>
+                <StackPanel Grid.Column="2" 
+                            Margin="2"
+                            HorizontalAlignment="Right">
+                    <ListView 
+                          BorderBrush="{x:Null}" 
+                          ItemContainerStyle="{StaticResource ItemContainerStyle}" 
+                          ItemsSource="{Binding value}" 
+                          ItemTemplate="{StaticResource listT1}"
+                          HorizontalAlignment="Right"/>
+                    <Button Template="{StaticResource ButtonTemplate}" 
+                            x:Name="btnAddStep"
+                            Click="btnAddStep_Click"
+                            DataContext="{Binding value}"/>
+                </StackPanel>
+
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+    <StackPanel>
+        <ScrollViewer MaxHeight="500">
+                <StackPanel>
+                    <ListView ItemsSource="{Binding testViewerItems}"
+                              Margin="20 20 20 0"
+                                BorderBrush="{x:Null}"
+                                ItemContainerStyle="{StaticResource ItemContainerStyle}"
+                                 ItemTemplateSelector="{StaticResource myDataTemplateSelector}">
+                       
+                    </ListView>
+
+                    <Button Template="{StaticResource ButtonTemplate}"
+                    Visibility="{Binding isAdd, Converter={StaticResource BoolToVis}}" 
+                    x:Name="btnAdd"
+                    Click="BtnAdd_Click"/>
+                </StackPanel>
+            </ScrollViewer>
+            <Button Content="Save" 
+                    Height="25"
+                    Margin="30"
+                    VerticalAlignment="Bottom"
+                    x:Name="btnSave"
+                    Click="btnSave_Click" 
+                    Background="#FF19BCCF" 
+                    Foreground="White" 
+                    FontWeight="Bold" 
+                    FontSize="14"/>
+        
+     
+        
+        
+    </StackPanel>
+</Window>

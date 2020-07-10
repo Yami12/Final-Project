@@ -37,12 +37,12 @@ def create_html_file(test_name):
 
     # Create directory
     try:
-        os.mkdir("..\\" + driver.tests_folders_names)
+        os.mkdir("tests_results\\" + driver.tests_folders_names)
     except FileExistsError:
         uf.print_log("\cf1 adding test result to exists folder \line")
 
     uf.print_log("\cf1 write the results to the file \line")
-    file_ = open("..\\" + driver.tests_folders_names + "\\" + test_name + '.html', 'w')
+    file_ = open("tests_results\\" + driver.tests_folders_names + "\\" + test_name + '.html', 'w')
     file_.write(html)
     file_.close()
 
@@ -60,7 +60,7 @@ def send_email(address):
     msg['From'] = reciepent
     msg['To'] = address
 
-    mylist = [f for f in glob.glob(os.path.join("..\\" + driver.tests_folders_names, '*.html'))]
+    mylist = [f for f in glob.glob(os.path.join("tests_results\\" + driver.tests_folders_names, '*.html'))]
     # Create the body of the message
     for file in mylist:
         file_path = os.path.join(file)

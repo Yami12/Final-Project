@@ -15,7 +15,7 @@ if the action is send key, do the action by her content
 return: if the action succeeded or not
 '''
 def do_action(component, action , content):
-    uf.print_log("\cf1 " + action)
+    uf.print_log(" \cf1 " + action + " \line")
     try:
         if action == sl.ACTION_CLICK: # click on the component
             component.click()

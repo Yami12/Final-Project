@@ -11,114 +11,149 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Data;
 using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Globalization;
 
-namespace try_python_connection
+namespace Keepers_Automation
 {
     public class Data : INotifyPropertyChanged
     {
         public Data()
         {
 
+            fPlaylist = new ObservableCollection<PlaylistItem>();
+            cPlaylist = new ObservableCollection<PlaylistItem>();
 
+            cTests = new ObservableCollection<XMLItem>(loadFromXML(COMPONETS_XML_PATH));
+            fTests = new ObservableCollection<FTest>(loadFromXML(FEATURE_XML_PATH).ConvertAll(x=> new FTest(x.details)));
+            supportedApps = new ObservableCollection<XMLItem>(loadFromXML(APPS_XML_PATH));
 
-            cTests = new ObservableCollection<CTest>(loadCtestsFromXML());
-            fTests = new ObservableCollection<FTest>(loadFtestsFromXML());
-
-            //SaveToXML("tests", fTests.ToList().ConvertAll(x => x.details));
-            //SaveToXML("tests","test", cTests.ToList().ConvertAll(x => x.details));
-
-            //loadAppsFromXML();
-            //nd = fTests[0].test;
-            fTestViewerItems = newFtestViewerItems();
-            devices = new ObservableCollection<string>();
 
         }
 
+        
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        const string FEATURE_XML_PATH = "/xml files\\feature_tests.xml";
-        const string COMPONETS_XML_PATH = "/xml files\\components_behavior_tests.xml";
-        const string APPS_XML_PATH = "/xml files\\apps.xml";
+        
+        const string FEATURE_XML_PATH = "xml_files\\features_tests.xml";
+        const string COMPONETS_XML_PATH = "xml_files\\components_behavior_tests.xml";
+        const string APPS_XML_PATH = "xml_files\\applications.xml";
+        const string MAIL_XML_PATH = "xml_files\\mail.xml";
 
-        public List<string> fTestNecessaryDetails { get { return new List<string>() { "name" }; } }
-        public List<string> fTestOptionalDetails { get { return new List<string>() { "supportedApps", "groupName", "website_address" }; } }
-
-
-        public ObservableCollection<TestViewerItem> fTestViewerItems { get; set; }
-        public ObservableCollection<TestViewerItem> cTestViewerItems { get; set; }
-
-        public ObservableCollection<TestViewerItem> newFtestViewerItems()
-        {
-            ObservableCollection<TestViewerItem> testViewerItems = new ObservableCollection<TestViewerItem>();
-
-            fTestNecessaryDetails.ForEach(x => testViewerItems.Add(new TestViewerItem() { key = x, isOptional = false, isShowen = true }));
-            fTestOptionalDetails.ForEach(x => testViewerItems.Add(new TestViewerItem() { key = x, isOptional = true }));
-
-            return testViewerItems;
-        }
-        //public ObservableCollection<TestViewerItem> editCtestViewerItems(CTest cTest)
-        //{
-        //    ObservableCollection<TestViewerItem> testViewerItems = new ObservableCollection<TestViewerItem>();
-
-        //    foreach (var d in cTest.details)
-        //    {
-        //        TestViewerItem testViewerItem = new TestViewerItem() { key = d.Key };
-
-        //        if (d.Value.GetType() == typeof(List<Dictionary<string, string>>))
-        //        {
-        //            var tviList = new List<TestViewerItem>();
-        //            foreach (var l in ((List<Dictionary<string, string>>)d.Value))
-        //            {
-        //                tviList.Add(new TestViewerItem() { key =})
-        //            }
-        //            ((List<Dictionary<string, string>>)d.Value).ConvertAll(x => new List<TestViewerItem>() { new TestViewerItem() { key = x.} })
-        //        }
-
-        //        testViewerItems.Add(testViewerItem);
-        //    }
-
-        //    return testViewerItems;
-        //}
-
+        //get / set the mail adress
+        public string mail { get { return XElement.Load(System.AppDomain.CurrentDomain.BaseDirectory + MAIL_XML_PATH).Value; } set { new XElement("mail", value).Save(System.AppDomain.CurrentDomain.BaseDirectory + MAIL_XML_PATH); OnPropertyChanged("mail"); } }
 
         public ObservableCollection<FTest> fTests { get; set; }
+        public ObservableCollection<XMLItem> cTests { get; set; }
+
+        private ObservableCollection<XMLItem> _supportedApps;
+        public ObservableCollection<XMLItem> supportedApps { get => _supportedApps; set { _supportedApps = value; OnPropertyChanged(); } }
 
         public HashSet<string> featuresList { get { return fTests.ToList().ConvertAll(x => x.details["name"].ToString().Split(':')[0]).ToHashSet(); } }
         public ICollectionView featureTests { get { return CollectionViewSource.GetDefaultView(fTests); } }
 
 
-        public ObservableCollection<CTest> cTests { get; set; }
-
-        
-
         private ObservableCollection<PlaylistItem> _fPlaylist;
-        public ObservableCollection<PlaylistItem> fPlaylist { get => _fPlaylist; set { _fPlaylist = value;  OnPropertyChanged();  } }
+        public ObservableCollection<PlaylistItem> fPlaylist { get => _fPlaylist; set { _fPlaylist = value; OnPropertyChanged(); } }
+        private ObservableCollection<PlaylistItem> _cPlaylist;
+        public ObservableCollection<PlaylistItem> cPlaylist { get => _cPlaylist; set { _cPlaylist = value; OnPropertyChanged(); } }
 
-        public ObservableCollection<PlaylistItem> cPlaylist { get; set; }
-
-
-        private string _output;
-        public string output { get { return _output; } set { _output = value; OnPropertyChanged(); } }
-
-
-
-        public int currentTest { get; set; }
 
         private ObservableCollection<string> _devices;
-        
-
         public ObservableCollection<string> devices { get { return _devices; } set { _devices = value; OnPropertyChanged(); } }
 
-        public ICollectionView fdevices { get { return CollectionViewSource.GetDefaultView(devices); } }
 
+        /// <summary>
+        /// convert the choosen test / app to testViewer format
+        /// </summary>
+        /// <param name="xmlItem"></param>
+        /// <returns></returns>
+        public ObservableCollection<TestViewerItem> EditTestViewerItems(XMLItem xmlItem)
+        {
+            ObservableCollection<TestViewerItem> testViewerItems = new ObservableCollection<TestViewerItem>();
+
+            foreach (var dt in xmlItem.details)
+            {
+
+                if (dt.Key == "name")
+                    testViewerItems.Add(new TestViewerItem() { key = dt.Key, value = xmlItem.name, isOptional = false, isShowen = true, isReadOnly = false });
+                else if(dt.Value != null && dt.Value.GetType() == typeof(List<Dictionary<string, object>>)) //steps
+                {
+                    var StepsTvi = new TestViewerItem() { key = dt.Key,value= new ObservableCollection<TestViewerItem>(), isOptional = false, isReadOnly = true, isShowen = true };
+                    foreach(var step in (List<Dictionary<string, object>>)dt.Value) //step 
+                    {
+                        var StepTvi = new TestViewerItem() { key = "step", value = new ObservableCollection<TestViewerItem>(), isOptional = true, isReadOnly = true, isShowen = true };
+                        foreach (var de in step) //step detalis
+                        {
+                            ((ObservableCollection<TestViewerItem>)StepTvi.value).Add(new TestViewerItem() { key = de.Key, value = de.Value, isOptional = false, isReadOnly = false, isShowen = true });
+                        }
+                        ((ObservableCollection<TestViewerItem>)StepsTvi.value).Add(StepTvi);
+                    }
+                    testViewerItems.Add(StepsTvi);
+
+
+
+                }
+                else
+                    testViewerItems.Add(new TestViewerItem() { key = dt.Key, value = dt.Value, isOptional = false, isShowen = true, isReadOnly = false });
+            }
+            
+            return testViewerItems;
+        }
+
+        /// <summary>
+        /// convert the edited / addeed test / app  testViewer format to dictinary
+        /// </summary>
+        /// <param name="testViewrItems"></param>
+        /// <returns></returns>
+        public Dictionary<string,object> ConvertTestViewrItemsToXmlItem(ObservableCollection<TestViewerItem> testViewrItems)
+        {
+            Dictionary<string, object> dictionary = new Dictionary<string, object>();
+            foreach(var tvi in testViewrItems)
+            {
+
+                if(tvi.value != null&& tvi.value.GetType() == typeof(ObservableCollection<TestViewerItem>)) // steps
+                {
+                    var listSteps = new List<Dictionary<string, object>>();
+                    foreach(var step in tvi.value as ObservableCollection<TestViewerItem>) //step
+                    {
+                        var dictStep = new Dictionary<string, object>();
+                        //var listStep = new List<Dictionary<string, object>>();
+                        foreach(var dt in step.value as ObservableCollection<TestViewerItem>) // step detalis
+                        {
+                            dictStep.Add(dt.key, dt.value);
+                            //listSteps.Add(new Dictionary<string, object>() { [dt.key] = dt.value });
+                        }
+                        listSteps.Add(dictStep);
+
+                    }
+                    dictionary.Add(tvi.key, listSteps);
+
+                }
+                else
+                {
+                    dictionary.Add(tvi.key, tvi.value);
+                }
+            }
+
+
+            return dictionary;
+        }
+        
+        /// <summary>
+        /// update the features playlist
+        /// </summary>
+        /// <param name="fTest"></param>
         public void UpdatePlaylist(FTest fTest)
         {
+
+
             if (fTest.supportedApps.Count == 0) //test without supported apps
-                if (fPlaylist.Any(x => x.name == fTest.name)) fPlaylist.Remove(fPlaylist.First(x => x.name == fTest.name)); else fPlaylist.Add(new PlaylistItem() { name = fTest.name });
+                if (fPlaylist.Any(x => x.name == fTest.name)) fPlaylist.Remove(fPlaylist.First(x => x.name == fTest.name)); else fPlaylist.Add(new PlaylistItem() { name = fTest.name,appName = "Keepers" });
             foreach (var app in fTest.supportedApps)
             {
                 if (fPlaylist.Any(x => x.name == fTest.name && x.appName == app.name) && !app.IsSelected)
@@ -131,291 +166,196 @@ namespace try_python_connection
 
         }
 
-        public List<CTest> loadCtestsFromXML()
+        /// <summary>
+        /// update the components playlist
+        /// </summary>
+        public void UpdateCPlaylist()
         {
 
-            XDocument xdoc = XDocument.Load(System.AppDomain.CurrentDomain.BaseDirectory + COMPONETS_XML_PATH);
-            //var listTest = new List<CTest>();
-            //foreach(var xe in xdoc.Descendants("test"))
-            //{
-            //    var dict = convertXMLelemtToDict(xe, new Dictionary<string, object>());
-            //    listTest.Add(new CTest() { details = dict });
-            //}
-            //return listTest;
-
-
-
-
-
-
-
-            List<CTest> cTests = new List<CTest>();
-            foreach (var lv1 in xdoc.Root.Elements())
+            foreach (var ct in cTests)
             {
-                CTest ctest = new CTest() { details = new Dictionary<string, object>() };
-                foreach (var lv2 in lv1.Elements())
+                if (ct.IsSelected && !cPlaylist.Any(x => x.name == ct.name))
+                    cPlaylist.Add(new PlaylistItem() { name = ct.name });
+                else if (!ct.IsSelected && cPlaylist.Any(x => x.name == ct.name))
+                    cPlaylist.Remove(cPlaylist.First(x => x.name == ct.name));
+
+
+            }
+
+
+        }
+
+
+        /// <summary>
+        /// load the xml file
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public List<XMLItem> loadFromXML(string path)
+        {
+
+            XDocument xdoc = XDocument.Load(System.AppDomain.CurrentDomain.BaseDirectory + path);
+
+            List<XMLItem> xmlItems = new List<XMLItem>();
+            foreach (var lv1 in xdoc.Root.Elements()) // test
+            {
+                XMLItem xmlItem = new XMLItem() { details = new Dictionary<string, object>() };
+                foreach (var lv2 in lv1.Elements()) // test detailes
                 {
                     object value;
-                    if (lv2.HasElements)
+                    if (lv2.HasElements)//steps
                     {
                         value = new List<Dictionary<string, object>>();
-                        foreach (var lv3 in lv2.Elements())
+                        foreach (var lv3 in lv2.Elements()) // step detailes
                         {
                             ((List<Dictionary<string, object>>)value).Add(lv3.Elements().ToDictionary(x => x.Name.LocalName, x => (object)x.Value));
                         }
                     }
                     else
                         value = lv2.Value;
-                    ctest.details.Add(lv2.Name.LocalName, value);
+                    xmlItem.details.Add(lv2.Name.LocalName, value);
                 }
-                cTests.Add(ctest);
+                xmlItems.Add(xmlItem);
             }
-            return cTests;
+            return xmlItems;
 
         }
 
-        public List<FTest> loadFtestsFromXML()
+        /// <summary>
+        /// save to the xml file
+        /// </summary>
+        /// <param name="type"></param>
+        public void SaveToXML(DetalisType type)
         {
-            XDocument xdoc = XDocument.Load(System.AppDomain.CurrentDomain.BaseDirectory + FEATURE_XML_PATH);
-
-            //var listTest = new List<FTest>();
-            //foreach (var xe in xdoc.Descendants("test"))
-            //{
-            //    var dict = convertXMLelemtToDict(xe, new Dictionary<string, object>());
-            //    listTest.Add(new FTest(dict));
-            //}
-            //return listTest;
-
-            var ldict = from lv1 in xdoc.Descendants("test")
-                        select new FTest(lv1.Descendants().ToDictionary(x => x.Name.LocalName, x => (object)x.Value));
-
-
-            return ldict.ToList();
-
-        }
-
-        public void SaveToXML(string title, string subTitle, List<Dictionary<string, object>> dictList)
-        {
-            Dictionary<string, object> ddd = new Dictionary<string, object>();
-
-            XElement xElement = new XElement(title);
-            XElement xElement1 = new XElement(subTitle);
-            //foreach (var dict in dictList)
-            //{
-            //    foreach(var dict2 in dict)
-            //    {
-            //        xElement1 = convertXMLelemtToDict2(dict2, xElement1);
-            //    }
-            //    xElement.Add(xElement1);
-            //}
-            dictList.ForEach(l => l.ToList().ForEach(d => { xElement = convertXMLelemtToDict2(d, xElement, subTitle); }));
-            //xElement.Add(xElement1);
-            //xElement = convertXMLelemtToDict2(dict, xElement);
-
-            //foreach(var ft in fTests)
-            //{
-            //    xElement.Add(new XElement("test"));
-            //    foreach (var t in ft.details)
-            //    {
-            //        Debug.WriteLine(t.Key.ToString() + "        " + t.Value);
-            //        xElement.Elements().LastOrDefault(x=> x.Name == "test").Add(new XElement(t.Key.ToString(), t.Value));
-            //    }
-
-            //}
-
-            //foreach (var e in xElement.Elements())
-            //    Debug.WriteLine(e.Name + "    -----    " + e.Value);
-
-
-
-
-
-            xElement.Save(@"D:\try_python_connection\try_python_connection\xml files\feature_tests2.xml");
-
-
-
-
-        }
-
-        //public List<Dictionary<string, object>> loadAppsFromXML()
-        //{
-
-        //    XDocument xdoc = XDocument.Load(@"C:\Users\israel\source\repos\try_python_connection\try_python_connection\xml files\apps.xml");
-        //    var appsList = new List<Dictionary<string, object>>();
-        //    foreach(var des in xdoc.Descendants("app").Elements())
-        //    {
-        //        var app = new Dictionary<string, object>();
-        //        if (des.HasElements)
-        //            app.Add(des.Name.LocalName, new List<Dictionary<string, object>>().Append(des.Descendants(des.Name.LocalName).Descendants().ToDictionary(x => x.Name.LocalName, x => (object)x.Value)));
-        //        else
-        //            app.Add(des.Name.LocalName, des.Value);
-        //    }
-        //    return appsList;
-
-        //}
-
-
-
-
-        public Dictionary<string, object> convertXMLelemtToDict(XElement xElement, Dictionary<string, object> parentDict)
-        {
-
-            Dictionary<string, object> dict = new Dictionary<string, object>();
-            List<Dictionary<string, object>> dictList = new List<Dictionary<string, object>>();
-            if (!xElement.HasElements)
+            string rootName ="";
+            List<XMLItem> xmlItems = new List<XMLItem>(); 
+            string path ="";
+            switch (type)
             {
-
-                parentDict.Add(xElement.Name.LocalName, xElement.Value);
-                return parentDict;
+                case DetalisType.cTest:
+                    rootName = "tests";
+                    xmlItems = cTests.ToList();
+                    path = COMPONETS_XML_PATH;
+                    break;
+                case DetalisType.fTest:
+                    rootName = "tests";
+                    xmlItems = new List<XMLItem>(fTests.ToList());
+                    path = FEATURE_XML_PATH;
+                    break;
+                case DetalisType.app:
+                    rootName = "apps";
+                    xmlItems = supportedApps.ToList();
+                    path = APPS_XML_PATH;
+                    break;
             }
-            else if (xElement.Name.LocalName == "steps")
-            {
 
-                foreach (var x in xElement.Elements("step"))
-                    dictList.Add(new Dictionary<string, object>() { ["step"] = x.Elements().ToDictionary(k => k.Name.LocalName, v => (object)v.Value) });
 
-                parentDict.Add(xElement.Name.LocalName, dictList);
-                return parentDict;
-            }
-            else
+            XElement xElement = new XElement(rootName);//tests
+            foreach(var test in xmlItems)
             {
-                foreach (var x in xElement.Elements())
+                var lv1 = new XElement(rootName.TrimEnd('s'));//test
+                foreach(var detail in test.details)
                 {
-                    if (xElement.Name.LocalName == "steps")
+                    var lv2 = new XElement(detail.Key);
+                    if(detail.Value != null)
                     {
+                        if (detail.Value.GetType() == typeof(List<Dictionary<string, object>>)) //steps
+                        {
+                            foreach (var step in (List<Dictionary<string, object>>)detail.Value) // step
+                            {
+                                var lv3 = new XElement("step");
+                                lv3.Add(step.Select(de => new XElement(de.Key, de.Value)));
+                                lv2.Add(lv3);
+                            }
 
-                        foreach (var x1 in xElement.Elements("step"))
-                            dictList.Add(new Dictionary<string, object>() { ["step"] = x1.Elements().ToDictionary(k => k.Name.LocalName, v => (object)v.Value) });
-
-                        parentDict.Add(xElement.Name.LocalName, dictList);
-
-                    }
-                    else
-                    {
-                        parentDict.Add(x.Name.LocalName, x.Value);
+                        }
+                        else
+                            lv2.Value = detail.Value.ToString();
                     }
 
-                }
-                //    dict.Add(x.Name.LocalName,convertXMLelemtToDict(x, new Dictionary<string, object>()));
-                //parentDict.Add(xElement.Name.LocalName,dictList);
-                return parentDict;
-            }
+                   
 
+                    lv1.Add(lv2);
+
+                    
+                    
+                }
+                xElement.Add(lv1);
+               
+               
+            }
+            xElement.Save(System.AppDomain.CurrentDomain.BaseDirectory + path);
 
         }
-
-        public XElement convertXMLelemtToDict2(KeyValuePair<string, object> detail, XElement parentXElement, string title)
-        {
-
-            Dictionary<string, object> dict = new Dictionary<string, object>();
-            if (detail.Value.GetType() == typeof(string))
-            {
-
-                parentXElement.Add(detail.Key, detail.Value);
-                return parentXElement;
-            }
-            else if (detail.Key == "steps")
-            {
-                List<XElement> elementsLv1 = new List<XElement>();
-                foreach (var step in (List<Dictionary<string, object>>)detail.Value)
-                {
-                    List<XElement> elementsLv2 = new List<XElement>();
-                    foreach (var d in step)
-                    {
-                        elementsLv2.Add(new XElement(d.Key, d.Value));
-                    }
-                    var xe = new XElement("step");
-                    xe.Add(elementsLv2);
-                    elementsLv1.Add(xe);
-
-                }
-                parentXElement.Add(elementsLv1);
-                return parentXElement;
-                //List<Dictionary<string, object>> dictList = new List<Dictionary<string, object>>();
-                //foreach (var x in xElement.Elements("step"))
-                //    dictList.Add(x.Elements().ToDictionary(k => k.Name.LocalName, v => (object)v.Value));
-                //parentDict.Add(xElement.Name.LocalName, dictList);
-                //return parentDict;
-            }
-            else
-            {
-                List<XElement> elementsLv1 = new List<XElement>();
-                foreach (var v in (Dictionary<string, object>)detail.Value)
-                {
-                    elementsLv1.Add(new XElement(v.Key, v.Value));
-                }
-                var xe = new XElement(detail.Key);
-                var xe1 = new XElement(title);
-                xe.Add(elementsLv1);
-                xe1.Add(xe);
-                parentXElement.Add(xe1);
-                return parentXElement;
-                //parentDict.Add(xElement.Name.LocalName, xElement.Elements().ToDictionary(k => k.Name.LocalName, v => (object)v.Value));
-                //return parentDict;
-            }
-
-
-        }
-
-
 
 
     }
 
 
-
-    public class FTest
+    public class FTest : XMLItem
     {
         public FTest(Dictionary<string, object> testXml)
         {
             details = testXml;
-            supportedApps = new List<SupportedApp>();
-            if(details.Keys.Contains("supportedApps")) 
-                supportedApps.AddRange(details["supportedApps"].ToString().Split(' ').ToList().ConvertAll(x => new SupportedApp() { name = x }));
+         
         }
 
-        public Dictionary<string, object> details { get; set; }
-
-        public string name { get { return details["name"].ToString().Split(':')[1]; } }
+        new public string name { get { return details["name"].ToString().Split(':')[1]; } }
 
         public string featureType { get { return details["name"].ToString().Split(':')[0]; } }
 
-        public List<SupportedApp> supportedApps { get; set; }
 
-        public bool IsSelected { get; set; }
+        private ObservableCollection<SupportedApp> _supportedApps;
+        public ObservableCollection<SupportedApp> supportedApps
+        {
+            get
+            {
+                if (details.Keys.Contains("supportedApps"))
+                {
+                    var list = details["supportedApps"].ToString().Split(' ').ToList();
+                    if (_supportedApps == null)
+                        _supportedApps = new ObservableCollection<SupportedApp>(list.ConvertAll(x => new SupportedApp() { name = x }));
+                    else if (_supportedApps.Count != list.Count)
+                    {
+                        foreach(var s in list)
+                        {
+                            if (_supportedApps.All(x => x.name != s))
+                                _supportedApps.Add(new SupportedApp() { name = s });
+                        }
+                    }
+                       
+                    
+                    return _supportedApps;
+                }
+                    
+                else return new ObservableCollection<SupportedApp>();
+            }
+
+        }
+
+ 
+    }
+
+    public  class SupportedApp : XMLItem
+    {
+         new public string name { get; set; }
 
     }
-        
-    public class CTest
+
+    public class XMLItem : INotifyPropertyChanged
     {
-        
         public string name { get { return details["name"].ToString(); } }
 
-        public Dictionary<string,object> details { get; set; }
+        private Dictionary<string, object> _details;
+        public Dictionary<string, object> details { get => _details; set { _details = value;  OnPropertyChanged("name"); OnPropertyChanged("supportedApps"); } }
 
         public bool IsSelected { get; set; }
 
-
-
-    }
-
-    public  class SupportedApp
-    {
-
-        public bool IsSelected { get; set; }
-
-        public string name { get; set; }
-    }
-
-    public class Test
-    {
-        public string name { get { return details["name"].ToString(); } }
-
-        public Dictionary<string, object> details { get; set; }
-
-        public bool IsChecked { get; set; }
-
-
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
     }
 
     public class PlaylistItem : INotifyPropertyChanged
@@ -431,6 +371,10 @@ namespace try_python_connection
         private string _output;
         public string output { get => _output; set { _output = value; OnPropertyChanged(); } }
 
+
+        private Uri _htmlLink;
+        public Uri htmlLink { get => _htmlLink; set { _htmlLink = value; OnPropertyChanged(); } }
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
@@ -443,18 +387,70 @@ namespace try_python_connection
     public enum Status
     {
         
-        waiting,
-        runing,
+        WAITING,
+        RUNNING,
         PASSED,
         FAILED,
-        ERROR
+        ERROR,
+        CANCELLED
 
 
     }
 
+    public enum DetalisType
+    {
+        fTest,
+        cTest,
+        app
+    }
 
-    
+    /// <summary>
+    /// check if the test supported app is exist in the apps list
+    /// </summary>
+    public class IsAppExistConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            Data data = new Data();
+            if (data.supportedApps.Any(x => x.name == (string)value))
+                return value;
+            else
+                return null;
 
-    
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    /// <summary>
+    /// convert bool value to visiblty value
+    /// </summary>
+    public class BoolToVisibiltyHiddenConverter : IValueConverter
+    {
+       
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool flag = false;
+            if (value is bool)
+            {
+                flag = (bool)value;
+            }
+            else if (value is bool?)
+            {
+                bool? nullable = (bool?)value;
+                flag = nullable.HasValue ? nullable.Value : false;
+            }
+            return (flag ? Visibility.Visible : Visibility.Hidden);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
 }
